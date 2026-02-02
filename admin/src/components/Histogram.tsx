@@ -4,7 +4,7 @@ import {
   Tooltip,
 } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
-import { Histogram } from 'src/utils/types';
+import { Histogram } from '../utils/types';
 
 interface HistogramChartProps {
     data: Histogram['data'];
