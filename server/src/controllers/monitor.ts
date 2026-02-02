@@ -24,10 +24,19 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getMonitorUptimeStats(ctx) {
     const monitorId = ctx.params.id;
-    const uptimeStatsData = await service( { strapi }).makeBackendRequest(`/user/monitors/${monitorId}/uptime-stats`, {
+    const uptimeStatsData = await service( { strapi }).makeBackendRequest(`/user/monitors/${monitorId}/uptime-stats?uptime_stats_time_frames=day,week,month`, {
         method: 'GET',
     });
+    
     ctx.body = { uptimeStatsData };
+  },
+
+  async getMonitorHistogram(ctx) {
+    const monitorId = ctx.params.id;
+    const histogramData = await service( { strapi }).makeBackendRequest(`/user/monitors/${monitorId}/histogram`, {
+        method: 'GET',
+    });
+    ctx.body = { histogramData };
   },
 
   async set(ctx) {

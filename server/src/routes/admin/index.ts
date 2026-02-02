@@ -36,6 +36,15 @@ export default () => ({
         policies: [],
         auth: false,
       }
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/histogram',
+      handler: 'monitor.getMonitorHistogram',
+      config: {
+        policies: [],
+        auth: false,
+      }
     }
   ],
 });
