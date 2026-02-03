@@ -9,8 +9,8 @@ export default function Settings() {
 
   useEffect(() => {
     request('/settings', {
-        method: 'GET'
-    }).then(res => {
+      method: 'GET',
+    }).then((res) => {
       setToken(res.token || '');
     });
   }, []);
@@ -26,22 +26,22 @@ export default function Settings() {
 
   return (
     <Box padding={8}>
-        <Typography variant="alpha">Token Settings</Typography>
+      <Typography variant="alpha">Token Settings</Typography>
 
-        <Box marginTop={6} width="50%">
+      <Box marginTop={6} width="50%">
         <TextInput
-            label="API Token"
-            type="password"
-            value={token}
-            onChange={(e: any) => setToken(e.target.value)}
+          label="API Token"
+          type="password"
+          value={token}
+          onChange={(e: any) => setToken(e.target.value)}
         />
 
         <Box marginTop={4}>
-            <Button loading={loading} onClick={save}>
+          <Button loading={loading} onClick={save}>
             Save
-            </Button>
+          </Button>
         </Box>
-        </Box>
+      </Box>
     </Box>
   );
 }

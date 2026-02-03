@@ -1,14 +1,11 @@
 import styled from 'styled-components';
-import {
-  Box,
-  Tooltip,
-} from '@strapi/design-system';
+import { Box, Tooltip } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { Histogram } from '../utils/types';
 
 interface HistogramChartProps {
-    data: Histogram['data'];
-    isLoading: boolean;
+  data: Histogram['data'];
+  isLoading: boolean;
 }
 const HistogramContainer = styled(Box)`
   display: flex;
@@ -23,7 +20,7 @@ const HistogramPill = styled.div`
   border-radius: 4px;
   transition: all 0.3s ease;
   background-color: ${(props) => props.color};
-  
+
   &:hover {
     transform: scaleY(1.1);
     filter: brightness(1.2);
@@ -47,7 +44,6 @@ const formatUptimePercentage = (uptime: number | null | undefined) => {
   if (uptime === null || uptime === undefined) return 0;
   return Math.round(uptime * 100);
 };
-
 
 export function HistogramChart({ data, isLoading }: HistogramChartProps) {
   const LOADING_PILLS = 24;
@@ -74,11 +70,7 @@ export function HistogramChart({ data, isLoading }: HistogramChartProps) {
     return (
       <HistogramContainer>
         {Array.from({ length: LOADING_PILLS }).map((_, i) => (
-          <Tooltip
-            key={i}
-            label="Loading..."
-            position="top"
-          >
+          <Tooltip key={i} label="Loading..." position="top">
             <HistogramPill
               color={activeIndex === i ? '#10B981' : '#E5E7EB'}
               style={{
@@ -114,11 +106,7 @@ export function HistogramChart({ data, isLoading }: HistogramChartProps) {
         }
 
         return (
-          <Tooltip
-            key={i}
-            label={tooltipLabel}
-            position="top"
-          >
+          <Tooltip key={i} label={tooltipLabel} position="top">
             <HistogramPill color={getColorByUptime(bucket.uptime)} />
           </Tooltip>
         );

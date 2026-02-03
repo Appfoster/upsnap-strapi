@@ -35,7 +35,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -44,7 +44,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
-    }
+      },
+    },
   ],
 });

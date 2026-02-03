@@ -12,7 +12,7 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     key: 'settings',
   }),
   async getToken() {
-    const settings = await this.settingsStore.get() as UpsnapSettings;
+    const settings = (await this.settingsStore.get()) as UpsnapSettings;
     return settings?.token || null;
   },
   async makeBackendRequest(endpoint: string, options: RequestInit) {
@@ -20,11 +20,11 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     if (!token) {
       throw new Error('No token found in settings');
     }
-    
+
     const response = await fetch(`${BACKEND_URL}${endpoint}`, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
         ...(options.headers || {}),
       },

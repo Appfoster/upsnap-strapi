@@ -12,8 +12,11 @@ interface Props {
 
 export const HealthCards = ({ monitorData, uptimeStats, histogramData, isLoading }: Props) => {
   return (
-    <Box display="flex" style={{ flexDirection: 'column', gap: '16px'}}
-      flex={{ initial: '1 1 auto', medium: '1', large: '1 1 0' }}>
+    <Box
+      display="flex"
+      style={{ flexDirection: 'column', gap: '16px' }}
+      flex={{ initial: '1 1 auto', medium: '1', large: '1 1 0' }}
+    >
       <Card>
         <CardBody>
           <CardContent paddingLeft={1}>
@@ -31,8 +34,7 @@ export const HealthCards = ({ monitorData, uptimeStats, histogramData, isLoading
             <CardTitle fontSize={3}>Last check</CardTitle>
             <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
               {formatDate(
-                monitorData?.monitor?.service_last_checks?.default?.uptime?.last_checked_at ||
-                  'N/A'
+                monitorData?.monitor?.service_last_checks?.default?.uptime?.last_checked_at || 'N/A'
               )}
             </CardSubtitle>
           </CardContent>
@@ -44,10 +46,7 @@ export const HealthCards = ({ monitorData, uptimeStats, histogramData, isLoading
           <CardContent paddingLeft={1}>
             <CardTitle fontSize={3}>Last 24 hours</CardTitle>
             <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
-              <HistogramChart
-                data={histogramData?.histogram?.data || []}
-                isLoading={isLoading}
-              />
+              <HistogramChart data={histogramData?.histogram?.data || []} isLoading={isLoading} />
             </CardSubtitle>
           </CardContent>
         </CardBody>
