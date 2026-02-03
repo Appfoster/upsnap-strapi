@@ -20,7 +20,9 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     if (!token) {
       throw new Error('No token found in settings');
     }
-
+    console.log('Making backend request to ', `${BACKEND_URL}${endpoint}`);
+    console.log('Request options ', options);
+    console.log('Request token ', token);
     const response = await fetch(`${BACKEND_URL}${endpoint}`, {
       ...options,
       headers: {

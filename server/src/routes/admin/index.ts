@@ -46,5 +46,68 @@ export default () => ({
         auth: false,
       },
     },
+    {
+      method: 'POST',
+      path: '/monitor/health-check',
+      handler: 'monitor.getHealthChecks',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/uptime',
+      handler: 'monitor.getUptimeHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/ssl',
+      handler: 'monitor.getSslHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/domain',
+      handler: 'monitor.getDomainHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/lighthouse',
+      handler: 'monitor.getLighthouseHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/broken-links',
+      handler: 'monitor.getBrokenLinksHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/mixed-content',
+      handler: 'monitor.getMixedContentHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
 });

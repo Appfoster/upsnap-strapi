@@ -19,6 +19,11 @@ export interface Monitor {
       };
     };
   };
+  config: {
+    meta: {
+      url: string;
+    }
+  }
   is_enabled: boolean;
 }
 
