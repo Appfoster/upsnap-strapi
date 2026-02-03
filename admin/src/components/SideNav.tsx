@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { SubNav, SubNavHeader, SubNavLink, SubNavSection } from '@strapi/design-system';
-import { Cog, House } from '@strapi/icons';
+import { Cog, Earth, House } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 import '../styles/custom-styles.css';
 
@@ -20,6 +20,14 @@ const SideNav = () => {
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Dashboard
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`reachability`}
+          icon={<Earth />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Reachability
         </SubNavLink>
 
         <SubNavLink

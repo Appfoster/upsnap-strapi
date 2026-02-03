@@ -64,3 +64,14 @@ export const formatCheckType = (key?: string | null) => {
     const parts = k.split("_").filter(Boolean);
     return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 };
+
+export function formatDateTime(isoTimestamp: string) {
+  if (!isoTimestamp) return "-";
+
+  const date = new Date(isoTimestamp);
+
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+}

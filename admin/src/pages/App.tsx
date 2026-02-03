@@ -4,6 +4,7 @@ import SideNav from '../components/SideNav';
 import { HomePage } from './HomePage';
 import Settings from './Settings';
 import Dashboard from './Dashboard';
+import Reachability from './Reachability';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/reachability" element={<Reachability />} />
           <Route path="*" element={<Page.Error />} />
         </Routes>
       </Layouts.Content>

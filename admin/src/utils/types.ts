@@ -80,3 +80,29 @@ export interface RegionResponseTimeData {
   max_response_time: number;
   min_response_time: number;
 }
+
+export interface Region {
+    id: string;
+    name: string;
+    is_primary?: boolean;
+}
+
+export interface UptimeHealthCheckData {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      uptime: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+export interface Summary {
+  ok: boolean;
+  message: string;
+}
