@@ -6,10 +6,11 @@ import {
   CardContent,
   CardTitle,
   CardSubtitle,
+  CardBadge
 } from '@strapi/design-system';
-import { formatDate } from '../utils/helpers';
-import { HistogramData, MonitorData, UptimeStatsData } from '../utils/types';
-import { HistogramChart } from '../components/Histogram';
+import { formatDate } from '../../utils/helpers';
+import { HistogramData, MonitorData, UptimeStatsData } from '../../utils/types';
+import { HistogramChart } from './Histogram';
 
 interface Props {
   monitorData: MonitorData | null;
@@ -19,6 +20,9 @@ interface Props {
 }
 
 export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoading }: Props) => {
+const getIncidentCount = (time: 'day' | 'month' | 'week') => {
+  return uptimeStats?.uptime_stats?.[time]?.incident_count || 0;
+}
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Grid.Root gap={2}>
@@ -96,6 +100,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
                     : 'N/A'}
                 </CardSubtitle>
               </CardContent>
+              <CardBadge>{getIncidentCount('day')} incident{getIncidentCount('day') > 1 ? 's' : ''}</CardBadge>
             </CardBody>
           </Card>
         </Grid.Item>
@@ -115,6 +120,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
                     : 'N/A'}
                 </CardSubtitle>
               </CardContent>
+              <CardBadge>{getIncidentCount('week')} incident{getIncidentCount('week') > 1 ? 's' : ''}</CardBadge>
             </CardBody>
           </Card>
         </Grid.Item>
@@ -134,6 +140,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
                     : 'N/A'}
                 </CardSubtitle>
               </CardContent>
+              <CardBadge>{getIncidentCount('month')} incident{getIncidentCount('month') > 1 ? 's' : ''}</CardBadge>
             </CardBody>
           </Card>
         </Grid.Item>

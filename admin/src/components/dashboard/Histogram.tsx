@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Box, Tooltip } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
-import { Histogram } from '../utils/types';
+import { Histogram } from '../../utils/types';
 
 interface HistogramChartProps {
   data: Histogram['data'];

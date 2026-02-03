@@ -109,5 +109,23 @@ export default () => ({
         auth: false,
       },
     },
+    {
+      method: 'GET',
+      path: '/monitor/:id/response-time',
+      handler: 'monitor.getMonitorResponseTime',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/incidents',
+      handler: 'monitor.getMonitorIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    }
   ],
 });

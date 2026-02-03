@@ -8,22 +8,19 @@ import {
   CardSubtitle,
   CardHeader,
 } from '@strapi/design-system';
-import { formatDate, formatTitleToUppercase, request } from '../utils/helpers';
-import { HistogramData, MonitorData, UptimeStatsData } from '../utils/types';
-import { HistogramChart } from '../components/Histogram';
+import { formatDate, formatTitleToUppercase, request } from '../../utils/helpers';
+import {  MonitorData } from '../../utils/types';
 import { useState, useEffect } from 'react';
 import { ArrowRight, ArrowsCounterClockwise, CrossCircle, SealCheck } from '@strapi/icons';
 import { Typography } from '@strapi/design-system';
 
 interface Props {
   monitorData: MonitorData | null;
-  uptimeStats: UptimeStatsData | null;
-  histogramData: HistogramData | null;
   isLoading: boolean;
 }
 
-export const HealthCards = ({ monitorData, uptimeStats, histogramData, isLoading }: Props) => {
-  console.log('monitor data ', monitorData);
+export const HealthCards = ({ monitorData, isLoading }: Props) => {
+
   const [uptimeHealthCheck, setUptimeHealthCheck] = useState<any>(null);
   const [sslHealthCheck, setSslHealthCheck] = useState<any>(null);
   const [lighthouseHealthCheck, setLighthouseHealthCheck] = useState<any>(null);
@@ -39,42 +36,36 @@ export const HealthCards = ({ monitorData, uptimeStats, histogramData, isLoading
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('uptime health check res ', res);
       setUptimeHealthCheck(res.uptimeHealthCheckData || null);
     });
     request('/monitor/health-check/ssl', {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('ssl health check res ', res);
       setSslHealthCheck(res.sslHealthCheckData || null);
     });
     request('/monitor/health-check/lighthouse', {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('lighthouse health check res ', res);
       setLighthouseHealthCheck(res.lighthouseHealthCheckData || null);
     });
     request('/monitor/health-check/domain', {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('domain health check res ', res);
       setDomainHealthCheck(res.domainHealthCheckData || null);
     });
     request('/monitor/health-check/broken-links', {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('broken links health check res ', res);
       setBrokenLinksHealthCheck(res.brokenLinksHealthCheckData || null);
     });
     request('/monitor/health-check/mixed-content', {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('mixed content health check res ', res);
       setMixedContentHealthCheck(res.mixedContentHealthCheckData || null);
     });
   }, [monitorData]);

@@ -34,6 +34,7 @@
     "@strapi/design-system": "^2.0.0-rc.30",
     "@strapi/icons": "^2.0.0-rc.30",
     "axios": "^1.13.4",
+    "react-apexcharts": "^1.9.0",
     "react-intl": "^8.1.1"
   },
   "devDependencies": {

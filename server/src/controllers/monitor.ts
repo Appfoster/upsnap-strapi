@@ -46,7 +46,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getHealthChecks(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
     const healthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -64,7 +64,6 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getUptimeHealthCheck(ctx) {
-    console.log('Request body:', ctx.request.body); 
     const { monitorUrl } = ctx.request.body;
     const uptimeHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -77,11 +76,11 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         force_fetch: false,
       }),
     });
-    console.log('uptime health check data ', uptimeHealthCheckData);
+
     ctx.body = { uptimeHealthCheckData };
   },
   async getSslHealthCheck(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
     const sslHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -97,7 +96,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     ctx.body = { sslHealthCheckData };
   },
   async getDomainHealthCheck(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
     const domainHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -113,27 +112,24 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     ctx.body = { domainHealthCheckData };
   },
   async getLighthouseHealthCheck(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
-    const lighthouseHealthCheckData = await service({ strapi }).makeBackendRequest(
-      `/healthcheck`,
-      {
-        method: 'POST',
-        headers: {
-          'X-Requested-From': 'craft',
-        },
-        body: JSON.stringify({
-          url: monitorUrl,
-          checks: ['lighthouse'],
-          strategy: 'desktop',
-          force_fetch: false,
-        }),
-      }
-    );
+    const lighthouseHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-From': 'craft',
+      },
+      body: JSON.stringify({
+        url: monitorUrl,
+        checks: ['lighthouse'],
+        strategy: 'desktop',
+        force_fetch: false,
+      }),
+    });
     ctx.body = { lighthouseHealthCheckData };
   },
   async getBrokenLinksHealthCheck(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
     const brokenLinksHealthCheckData = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -152,7 +148,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     ctx.body = { brokenLinksHealthCheckData };
   },
   async getMixedContentHealthCheck(ctx) {
-        const { monitorUrl } = ctx.request.body;
+    const { monitorUrl } = ctx.request.body;
 
     const mixedContentHealthCheckData = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -170,6 +166,28 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     );
     ctx.body = { mixedContentHealthCheckData };
   },
+  async getMonitorResponseTime(ctx) {
+    const monitorId = ctx.params.id;
+    const { start, end } = ctx.query;
+    console.log('start ', start, end);
+    const responseTimeData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/${monitorId}/response-time?start=${start}&end=${end}`,
+      {
+        method: 'GET',
+      }
+    );
+    ctx.body = { responseTimeData };
+  },
+  async getMonitorIncidents(ctx) {
+    const monitorId = ctx.params.id;
+    const incidentsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/incidents?monitorId=${monitorId}&page=1&page_size=20&time_range=7D`,
+      {
+        method: 'GET',
+      }
+    );
+    ctx.body = { incidentsData };
+  }
 });
 
 export default monitor;

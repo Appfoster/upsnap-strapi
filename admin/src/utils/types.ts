@@ -25,6 +25,8 @@ export interface Monitor {
     }
   }
   is_enabled: boolean;
+  regions: Array<{ id: string; name: string }>;
+  name: string;
 }
 
 export interface HistogramData {
@@ -54,4 +56,27 @@ export interface UptimeStat {
   uptime_percentage: number | null;
   incident_count: number | null;
   total_uptime: number | null;
+}
+
+export interface ResponseTimeData {
+  response_time: ResponseTime;
+}
+
+export interface ResponseTime {
+  avg_response_time: number | null;
+  max_response_time: number | null;
+  min_response_time: number | null;
+  chart_data: ResponseTimePoint[];
+}
+
+export interface ResponseTimePoint {
+  timestamp: number;
+  response_time: number | null;
+}
+
+export interface RegionResponseTimeData {
+  chart_data: Array<{ timestamp: number; response_time: number }>;
+  avg_response_time: number;
+  max_response_time: number;
+  min_response_time: number;
 }
