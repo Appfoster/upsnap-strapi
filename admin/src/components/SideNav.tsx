@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { SubNav, SubNavHeader, SubNavLink, SubNavSection } from '@strapi/design-system';
-import { Cog, Earth, House, Link, Lock } from '@strapi/icons';
+import { Cog, Earth, ExternalLink, Globe, House, Link, Lock, Palette } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 import '../styles/custom-styles.css';
 
@@ -44,6 +44,30 @@ const SideNav = () => {
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Broken Links
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`lighthouse`}
+          icon={<Palette />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Lighthouse
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`domain-check`}
+          icon={<Globe />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Domain Check
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`mixed-content`}
+          icon={<ExternalLink />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Mixed Content
         </SubNavLink>
         <SubNavLink
           as={NavLink}

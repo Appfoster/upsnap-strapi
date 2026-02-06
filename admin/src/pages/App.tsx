@@ -7,6 +7,9 @@ import Dashboard from './Dashboard';
 import Reachability from './Reachability';
 import SecurityCertificates from './SecurityCertificates';
 import BrokenLinks from './BrokenLinks';
+import Lighthouse from './Lighthouse';
+import DomainCheck from './DomainCheck';
+import MixedContent from './MixedContent';
 
 const App = () => {
   return (
@@ -19,6 +22,9 @@ const App = () => {
           <Route path="/reachability" element={<Reachability />} />
           <Route path="/security-certificates" element={<SecurityCertificates />} />
           <Route path="/broken-links" element={<BrokenLinks />} />
+          <Route path="/lighthouse" element={<Lighthouse />} />
+          <Route path="/domain-check" element={<DomainCheck />} />
+          <Route path="/mixed-content" element={<MixedContent />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Page.Error />} />
         </Routes>

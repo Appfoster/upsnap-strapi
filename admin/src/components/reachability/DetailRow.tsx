@@ -24,7 +24,6 @@ const DetailRow: React.FC<DetailRowProps> = ({
 }) => {
   const renderValue = () => {
     if (value === undefined || value === null) return "N/A";
-    console.log('vlue ', value, 'type ', typeof value);
     if (Array.isArray(value)) {
       return value.map((item, index) => (
         <Typography key={index} variant="pi" textColor="neutral800" style={{ display: "block" }}>

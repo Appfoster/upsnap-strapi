@@ -2,15 +2,13 @@ import { BACKEND_URL } from '../utils/constants';
 import service from '../services/service';
 import { UpsnapSettings } from '../types';
 import type { Core } from '@strapi/strapi';
+import { buildSuccessResponse } from '../services/monitor';
 
 // server/controllers/settings.ts
 const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   async getById(ctx) {
     const monitorId = ctx.params.id;
     const token = await service({ strapi }).getToken();
-    console.log('token ', token);
-    console.log('id ', monitorId);
-    console.log('backend url ', BACKEND_URL);
     const monitorResponse = await fetch(`${BACKEND_URL}/user/monitors/${monitorId}`, {
       method: 'GET',
       headers: {
@@ -79,6 +77,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
     ctx.body = { uptimeHealthCheckData };
   },
+
   async getSslHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
@@ -95,6 +94,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     });
     ctx.body = { sslHealthCheckData };
   },
+
   async getDomainHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
@@ -111,8 +111,9 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     });
     ctx.body = { domainHealthCheckData };
   },
+
   async getLighthouseHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, strategy } = ctx.request.body;
 
     const lighthouseHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -122,12 +123,13 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       body: JSON.stringify({
         url: monitorUrl,
         checks: ['lighthouse'],
-        strategy: 'desktop',
+        strategy: strategy || 'desktop',
         force_fetch: false,
       }),
     });
     ctx.body = { lighthouseHealthCheckData };
   },
+
   async getBrokenLinksHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
@@ -147,6 +149,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     );
     ctx.body = { brokenLinksHealthCheckData };
   },
+
   async getMixedContentHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
@@ -164,8 +167,10 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         }),
       }
     );
-    ctx.body = { mixedContentHealthCheckData };
+    ;
+    ctx.body = { mixedContentHealthCheckData: buildSuccessResponse(mixedContentHealthCheckData)};
   },
+
   async getMonitorResponseTime(ctx) {
     const monitorId = ctx.params.id;
     const { start, end, region } = ctx.query;
@@ -178,6 +183,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     );
     ctx.body = { responseTimeData };
   },
+
   async getMonitorIncidents(ctx) {
     const monitorId = ctx.params.id;
     const incidentsData = await service({ strapi }).makeBackendRequest(
@@ -187,7 +193,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
     );
     ctx.body = { incidentsData };
-  }
+  },
 });
 
 export default monitor;

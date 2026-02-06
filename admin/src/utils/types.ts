@@ -132,6 +132,59 @@ export interface BrokenLinksCheckData {
   }
 }
 
+export interface LighthouseCheckData {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      lighthouse: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+export interface DomainCheckData {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      domain: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+export interface MixedContentData {
+  status: "success" | "warning" | "error";
+  message: string;
+  error: string;
+  data : MixedContent;
+}
+
+export interface MixedContent {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      mixed_content: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+
 export interface Summary {
   ok: boolean;
   message: string;

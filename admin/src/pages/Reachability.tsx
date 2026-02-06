@@ -57,13 +57,11 @@ export default function Reachability() {
     }
   };
 
-  console.log('data ', data);
   // Fetch monitor details
   useEffect(() => {
     if (monitorId) {
       setLoading(true);
       request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
-        console.log('monitor details ', res);
         setSelectedMonitor(res.monitor?.data || null);
         // Fetch region data after monitorData is set
         if (res.monitor?.data?.monitor?.regions) {
@@ -110,9 +108,7 @@ export default function Reachability() {
   // Initial fetch
   useEffect(() => {
     if (selectedMonitor) {
-      console.log('selected monitor ', selectedMonitor);
       const primaryRegion = selectedMonitor?.monitor?.regions?.find((r: Region) => r.is_primary);
-      console.log('primary region ', primaryRegion);
       setRegionId(primaryRegion?.id || null);
       getReachabilityData(selectedMonitor?.monitor?.config?.meta?.url, primaryRegion?.id || null);
     }
@@ -152,7 +148,6 @@ export default function Reachability() {
     }
   };
   const handleTimeRangeChange = (range: string) => {
-    console.log('time range change event ', range);
     setResponseTimeRange(range);
     // Fetch region data if monitorData is available
     if (selectedMonitor?.monitor?.regions) {
@@ -177,7 +172,7 @@ export default function Reachability() {
   const meta = data?.result?.details?.uptime?.meta;
   const tls = meta?.tls;
   const regions = selectedMonitor?.monitor?.regions || [];
-  console.log('meta ', meta);
+
   return (
     <Main>
       <Box padding={4}>
