@@ -168,10 +168,10 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
   async getMonitorResponseTime(ctx) {
     const monitorId = ctx.params.id;
-    const { start, end } = ctx.query;
+    const { start, end, region } = ctx.query;
     console.log('start ', start, end);
     const responseTimeData = await service({ strapi }).makeBackendRequest(
-      `/user/monitors/${monitorId}/response-time?start=${start}&end=${end}`,
+      `/user/monitors/${monitorId}/response-time?start=${start}&end=${end}&region=${region || 'default'}`,
       {
         method: 'GET',
       }

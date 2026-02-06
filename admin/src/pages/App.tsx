@@ -5,6 +5,8 @@ import { HomePage } from './HomePage';
 import Settings from './Settings';
 import Dashboard from './Dashboard';
 import Reachability from './Reachability';
+import SecurityCertificates from './SecurityCertificates';
+import BrokenLinks from './BrokenLinks';
 
 const App = () => {
   return (
@@ -14,8 +16,10 @@ const App = () => {
         <Routes>
           <Route index element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/reachability" element={<Reachability />} />
+          <Route path="/security-certificates" element={<SecurityCertificates />} />
+          <Route path="/broken-links" element={<BrokenLinks />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Page.Error />} />
         </Routes>
       </Layouts.Content>

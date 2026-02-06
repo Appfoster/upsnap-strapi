@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { SubNav, SubNavHeader, SubNavLink, SubNavSection } from '@strapi/design-system';
-import { Cog, Earth, House } from '@strapi/icons';
+import { Cog, Earth, House, Link, Lock } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 import '../styles/custom-styles.css';
 
@@ -29,7 +29,22 @@ const SideNav = () => {
         >
           Reachability
         </SubNavLink>
-
+        <SubNavLink
+          as={NavLink}
+          to={`security-certificates`}
+          icon={<Lock />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Security Certificates
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`broken-links`}
+          icon={<Link />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Broken Links
+        </SubNavLink>
         <SubNavLink
           as={NavLink}
           to={`settings`}

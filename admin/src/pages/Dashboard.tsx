@@ -1,8 +1,4 @@
-import {
-  Box,
-  Grid,
-  Typography,
-} from '@strapi/design-system';
+import { Box, Grid, Typography } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { getRangeTimestamps, request } from '../utils/helpers';
@@ -29,10 +25,12 @@ export default function Dashboard() {
   >({});
   const [monitorIncidents, setMonitorIncidents] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const id = '9bd97575-21ae-4d59-9dc9-e9b31b4dea92';
+  const [selectedRegion, setSelectedRegion] = useState<string>('default');
+
+  const id = '06cc228a-92fd-4474-a955-8914f5670a01';
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
-
+    console.log('monitor data regions ', monitorData?.monitor.regions);
     if (!rt) return {};
     // If it's already a map of regions
     if (
@@ -47,8 +45,8 @@ export default function Dashboard() {
     }
     // If it's a single region (object with chart_data)
     if (typeof rt === 'object' && rt !== null && 'chart_data' in rt) {
-      setRegionResponseTimeData({ default: rt as RegionResponseTimeData });
-      return { default: rt as RegionResponseTimeData };
+      setRegionResponseTimeData({ [selectedRegion]: rt as RegionResponseTimeData });
+      return { [selectedRegion]: rt as RegionResponseTimeData };
     }
     return {};
   }
@@ -57,7 +55,7 @@ export default function Dashboard() {
     console.log('time range change event ', range);
     setResponseTimeRange(range);
     const { start, end } = getRangeTimestamps(range || 'last_24_hours');
-    request(`/monitor/${id}/response-time?start=${start}&end=${end}`, {
+    request(`/monitor/${id}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);
@@ -84,7 +82,7 @@ export default function Dashboard() {
       setIsLoading(false);
     });
 
-    request(`/monitor/${id}/response-time?start=${start}&end=${end}`, {
+    request(`/monitor/${id}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);

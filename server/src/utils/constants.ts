@@ -1,1 +1,1 @@
-export const BACKEND_URL = 'https://api.upsnap.ai/v1'
+export const BACKEND_URL = 'https://upsnap-api.appfoster.site/v1'

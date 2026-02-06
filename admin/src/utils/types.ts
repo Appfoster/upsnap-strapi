@@ -25,7 +25,7 @@ export interface Monitor {
     }
   }
   is_enabled: boolean;
-  regions: Array<{ id: string; name: string }>;
+  regions: Array<{ id: string; is_primary: boolean; name: string }>;
   name: string;
 }
 
@@ -94,6 +94,36 @@ export interface UptimeHealthCheckData {
     summary: Summary;
     details: {
       uptime: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+export interface SSLCheckData {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      ssl: {
+        ok: boolean;
+        meta: any;
+      }
+    };
+    durationMs: number;
+  }
+}
+
+export interface BrokenLinksCheckData {
+  checkedAt: string;
+  url: string;
+  result: {
+    summary: Summary;
+    details: {
+      broken_links: {
         ok: boolean;
         meta: any;
       }

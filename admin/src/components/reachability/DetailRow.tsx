@@ -51,7 +51,7 @@ const DetailRow: React.FC<DetailRowProps> = ({
 
   return (
     <Box paddingBottom={2} display='flex' paddingTop={2}>
-      <Typography variant="omega" fontWeight="bold" style={{ width: "30%", display: "inline-block" }}>
+      <Typography variant="omega" fontWeight="bold" style={{ width: "40%", display: "inline-block" }}>
         {label}
       </Typography>
       <Typography variant="omega" style={{ width: "70%", display: "inline-block", ...(Array.isArray(value) && { overflow: 'auto', height: '48px'}) }}>{renderValue()}</Typography>

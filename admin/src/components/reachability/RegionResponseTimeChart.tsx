@@ -12,7 +12,7 @@ import {
 } from '@strapi/design-system';
 import { MonitorData, ResponseTimeData, RegionResponseTimeData } from '../../utils/types';
 
-interface ResponseTimeChartProps {
+interface RegionResponseTimeChartProps {
   monitor: MonitorData['monitor'] | undefined;
   regionResponseTimeData: Record<string, RegionResponseTimeData>;
   timeRange: string;
@@ -43,12 +43,12 @@ const formatTime = (ms: number) => {
   return ms >= 1000 ? `${(ms / 1000).toFixed(2)} s` : `${ms.toFixed(2)} ms`;
 };
 
-export const ResponseTimeChart = ({
+export const RegionResponseTimeChart = ({
   monitor,
   regionResponseTimeData,
   timeRange,
   onTimeRangeChange,
-}: ResponseTimeChartProps) => {
+}: RegionResponseTimeChartProps) => {
   const [visibleSeries, setVisibleSeries] = useState<Set<string>>(new Set());
   console.log('regionResponseTimeData ', regionResponseTimeData);
   const regionNames = useMemo(() => {
@@ -142,6 +142,10 @@ export const ResponseTimeChart = ({
       show: true,
       onItemClick: { toggleDataSeries: true },
       position: 'top' as const,
+      labels: {
+        colors: '#9ca2b7', // <-- set legend text color here
+        useSeriesColors: false,
+      },
     },
     markers: { size: 0, strokeWidth: 0, strokeColors: 'transparent' },
     stroke: { curve: 'smooth' as const, width: 2 },
@@ -207,7 +211,7 @@ export const ResponseTimeChart = ({
         </Box>
       </CardHeader>
       <CardBody>
-        <CardContent style={{ width: '650px' }}>
+        <CardContent style={{ width: '950px' }}>
           {monitor?.is_enabled === false ? (
             <Box padding={4} background="neutral100">
               <Typography variant="omega" textColor="neutral600">
