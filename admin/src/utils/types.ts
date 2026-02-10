@@ -22,8 +22,8 @@ export interface Monitor {
   config: {
     meta: {
       url: string;
-    }
-  }
+    };
+  };
   is_enabled: boolean;
   regions: Array<{ id: string; is_primary: boolean; name: string }>;
   name: string;
@@ -82,12 +82,19 @@ export interface RegionResponseTimeData {
 }
 
 export interface Region {
-    id: string;
-    name: string;
-    is_primary?: boolean;
+  id: string;
+  name: string;
+  is_primary?: boolean;
 }
 
 export interface UptimeHealthCheckData {
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  error: string;
+  data: Uptime;
+}
+
+export interface Uptime {
   checkedAt: string;
   url: string;
   result: {
@@ -96,13 +103,20 @@ export interface UptimeHealthCheckData {
       uptime: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface SSLCheckData {
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  error: string;
+  data: SSL;
+}
+
+export interface SSL {
   checkedAt: string;
   url: string;
   result: {
@@ -111,13 +125,20 @@ export interface SSLCheckData {
       ssl: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface BrokenLinksCheckData {
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  error: string;
+  data: BrokenLinks;
+}
+
+export interface BrokenLinks {
   checkedAt: string;
   url: string;
   result: {
@@ -126,13 +147,20 @@ export interface BrokenLinksCheckData {
       broken_links: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface LighthouseCheckData {
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  error: string;
+  data: Lighthouse;
+}
+
+export interface Lighthouse {
   checkedAt: string;
   url: string;
   result: {
@@ -141,13 +169,20 @@ export interface LighthouseCheckData {
       lighthouse: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface DomainCheckData {
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  error: string;
+  data: Domain;
+}
+
+export interface Domain {
   checkedAt: string;
   url: string;
   result: {
@@ -156,17 +191,17 @@ export interface DomainCheckData {
       domain: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface MixedContentData {
-  status: "success" | "warning" | "error";
+  status: 'success' | 'warning' | 'error';
   message: string;
   error: string;
-  data : MixedContent;
+  data: MixedContent;
 }
 
 export interface MixedContent {
@@ -178,12 +213,11 @@ export interface MixedContent {
       mixed_content: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
-
 
 export interface Summary {
   ok: boolean;

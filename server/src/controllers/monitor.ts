@@ -1,8 +1,22 @@
 import { BACKEND_URL } from '../utils/constants';
 import service from '../services/service';
-import { UpsnapSettings } from '../types';
+import { UpsnapSettings, Uptime } from '../types';
 import type { Core } from '@strapi/strapi';
-import { buildSuccessResponse } from '../services/monitor';
+import { buildSuccessResponse } from '../services/mixed-content-healthcheck';
+import {
+  buildReachabilityErrorResponse,
+  buildReachabilitySuccessResponse,
+} from '../services/reachability-healthcheck';
+import { buildSslErrorResponse, buildSslSuccessResponse } from '../services/ssl-healthcheck';
+import {
+  buildDomainErrorResponse,
+  buildDomainSuccessResponse,
+} from '../services/domain-healthcheck';
+import {
+  buildLighthouseErrorResponse,
+  buildLighthouseSuccessResponse,
+} from '../services/lighthouse-healthcheck';
+import { buildBrokenLinksErrorResponse, buildBrokenLinksSuccessResponse } from '../services/broken-links-healthcheck';
 
 // server/controllers/settings.ts
 const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
@@ -63,25 +77,38 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getUptimeHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
-    const uptimeHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
-      method: 'POST',
-      headers: {
-        'X-Requested-From': 'craft',
-      },
-      body: JSON.stringify({
-        url: monitorUrl,
-        checks: ['uptime'],
-        force_fetch: false,
-      }),
-    });
+    const uptimeHealthCheckData: any = await service({ strapi }).makeBackendRequest(
+      `/healthcheck`,
+      {
+        method: 'POST',
+        headers: {
+          'X-Requested-From': 'craft',
+        },
+        body: JSON.stringify({
+          url: monitorUrl,
+          checks: ['uptime'],
+          force_fetch: false,
+        }),
+      }
+    );
 
-    ctx.body = { uptimeHealthCheckData };
+    const summaryOk = uptimeHealthCheckData?.result?.summary?.ok;
+    const uptimeOk = uptimeHealthCheckData?.result?.details?.uptime?.ok;
+
+    if (summaryOk === false || uptimeOk === false) {
+      const errorResponse = buildReachabilityErrorResponse(uptimeHealthCheckData);
+      ctx.body = { uptimeHealthCheckData: errorResponse };
+      return;
+    }
+
+    // Success path: rebuild normalized success response
+    ctx.body = { uptimeHealthCheckData: buildReachabilitySuccessResponse(uptimeHealthCheckData) };
   },
 
   async getSslHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
-    const sslHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
+    const sslHealthCheckData: any = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
       headers: {
         'X-Requested-From': 'craft',
@@ -92,48 +119,85 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         force_fetch: false,
       }),
     });
-    ctx.body = { sslHealthCheckData };
+    const summaryOk = sslHealthCheckData?.result?.summary?.ok;
+    const sslOk = sslHealthCheckData?.result?.details?.ssl?.ok;
+    const sslError = sslHealthCheckData?.result?.details?.ssl?.error;
+
+    // Microservice returned error even with 200
+    if ((summaryOk === false || sslOk === false) && sslError) {
+      ctx.body = { sslHealthCheckData: buildSslErrorResponse(sslHealthCheckData) };
+      return;
+    }
+    ctx.body = { sslHealthCheckData: buildSslSuccessResponse(sslHealthCheckData) };
   },
 
   async getDomainHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
-    const domainHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
-      method: 'POST',
-      headers: {
-        'X-Requested-From': 'craft',
-      },
-      body: JSON.stringify({
-        url: monitorUrl,
-        checks: ['domain'],
-        force_fetch: false,
-      }),
-    });
-    ctx.body = { domainHealthCheckData };
+    const domainHealthCheckData: any = await service({ strapi }).makeBackendRequest(
+      `/healthcheck`,
+      {
+        method: 'POST',
+        headers: {
+          'X-Requested-From': 'craft',
+        },
+        body: JSON.stringify({
+          url: monitorUrl,
+          checks: ['domain'],
+          force_fetch: false,
+        }),
+      }
+    );
+    const summaryOk = domainHealthCheckData?.result?.summary?.ok;
+    const domainOk = domainHealthCheckData?.result?.details?.domain?.ok;
+    const domainError = domainHealthCheckData?.result?.details?.domain?.error;
+
+    // Microservice returned error even with 200
+    if ((summaryOk === false || domainOk === false) && domainError) {
+      ctx.body = { domainHealthCheckData: buildDomainErrorResponse(domainHealthCheckData) };
+      return;
+    }
+    ctx.body = { domainHealthCheckData: buildDomainSuccessResponse(domainHealthCheckData) };
   },
 
   async getLighthouseHealthCheck(ctx) {
     const { monitorUrl, strategy } = ctx.request.body;
 
-    const lighthouseHealthCheckData = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
-      method: 'POST',
-      headers: {
-        'X-Requested-From': 'craft',
-      },
-      body: JSON.stringify({
-        url: monitorUrl,
-        checks: ['lighthouse'],
-        strategy: strategy || 'desktop',
-        force_fetch: false,
-      }),
-    });
-    ctx.body = { lighthouseHealthCheckData };
+    const lighthouseHealthCheckData: any = await service({ strapi }).makeBackendRequest(
+      `/healthcheck`,
+      {
+        method: 'POST',
+        headers: {
+          'X-Requested-From': 'craft',
+        },
+        body: JSON.stringify({
+          url: monitorUrl,
+          checks: ['lighthouse'],
+          strategy: strategy || 'desktop',
+          force_fetch: false,
+        }),
+      }
+    );
+    const summaryOk = lighthouseHealthCheckData?.result?.summary?.ok;
+    const lighthouseOk = lighthouseHealthCheckData?.result?.details?.lighthouse?.ok;
+    const lighthouseError = lighthouseHealthCheckData?.result?.details?.lighthouse?.error;
+
+    // Error from microservice
+    if ((summaryOk === false || lighthouseOk === false) && lighthouseError) {
+      ctx.body = {
+        lighthouseHealthCheckData: buildLighthouseErrorResponse(lighthouseHealthCheckData),
+      };
+      return;
+    }
+    ctx.body = {
+      lighthouseHealthCheckData: buildLighthouseSuccessResponse(lighthouseHealthCheckData),
+    };
   },
 
   async getBrokenLinksHealthCheck(ctx) {
     const { monitorUrl } = ctx.request.body;
 
-    const brokenLinksHealthCheckData = await service({ strapi }).makeBackendRequest(
+    const brokenLinksHealthCheckData: any = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
       {
         method: 'POST',
@@ -147,7 +211,18 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         }),
       }
     );
-    ctx.body = { brokenLinksHealthCheckData };
+    
+    const summaryOk = brokenLinksHealthCheckData?.result?.summary?.ok;
+    const checkOk = brokenLinksHealthCheckData?.result?.details?.broken_links?.ok;
+    const isError = brokenLinksHealthCheckData?.result?.details?.broken_links?.error;
+
+    // When microservice itself returns ok: false but with 200
+    if ((summaryOk === false || checkOk === false ) && isError) {
+      ctx.body = { brokenLinksHealthCheckData: buildBrokenLinksErrorResponse(brokenLinksHealthCheckData)};
+      return;
+    }
+
+    ctx.body = { brokenLinksHealthCheckData: buildBrokenLinksSuccessResponse(brokenLinksHealthCheckData) };
   },
 
   async getMixedContentHealthCheck(ctx) {
@@ -167,8 +242,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         }),
       }
     );
-    ;
-    ctx.body = { mixedContentHealthCheckData: buildSuccessResponse(mixedContentHealthCheckData)};
+    ctx.body = { mixedContentHealthCheckData: buildSuccessResponse(mixedContentHealthCheckData) };
   },
 
   async getMonitorResponseTime(ctx) {

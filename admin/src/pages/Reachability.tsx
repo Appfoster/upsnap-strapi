@@ -168,8 +168,8 @@ export default function Reachability() {
   if (loading || !selectedMonitor) return <LoadingCard />;
   if (!data) return null;
 
-  const isSuccess = data?.result?.details?.uptime?.ok === true;
-  const meta = data?.result?.details?.uptime?.meta;
+  const isSuccess = data?.data?.result?.details?.uptime?.ok === true;
+  const meta = data?.data?.result?.details?.uptime?.meta;
   const tls = meta?.tls;
   const regions = selectedMonitor?.monitor?.regions || [];
 
@@ -179,7 +179,7 @@ export default function Reachability() {
         <Typography variant="beta" as="h2" marginBottom={4}>
           Reachability ({selectedMonitor.monitor?.name || ''})
         </Typography>
-        {/* <StatusCard status={data.status} message={data.message} error={data.error} cardData={data.data} /> */}
+        <StatusCard status={data.status} message={data.message} error={data.error} cardData={data.data} />
         {isSuccess && meta && (
           <Grid.Root
             gap={{

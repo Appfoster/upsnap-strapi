@@ -50,7 +50,7 @@ export const RegionResponseTimeChart = ({
   onTimeRangeChange,
 }: RegionResponseTimeChartProps) => {
   const [visibleSeries, setVisibleSeries] = useState<Set<string>>(new Set());
-  console.log('regionResponseTimeData ', regionResponseTimeData);
+
   const regionNames = useMemo(() => {
     const names: Record<string, string> = {};
     if (monitor?.regions && Array.isArray(monitor.regions)) {

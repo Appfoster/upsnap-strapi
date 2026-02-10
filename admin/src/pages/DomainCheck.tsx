@@ -75,9 +75,9 @@ export default function DomainCheck() {
   if (loading) return <LoadingCard />;
   if (!data) return null;
 
-  const isSuccess = true; //data?.status === "success";
-  const meta = data?.result?.details?.domain?.meta;
-  const durationSec = data ? (data?.result?.durationMs / 1000).toFixed(2) : 'N/A';
+  const isSuccess = data?.status === "success";
+  const meta = data?.data?.result?.details?.domain?.meta;
+  const durationSec = data ? (data?.data?.result?.durationMs / 1000).toFixed(2) : 'N/A';
 
   return (
     <Main>
@@ -89,12 +89,12 @@ export default function DomainCheck() {
         refreshing={refreshing}
       />
       {/* Status summary card */}
-      {/* <StatusCard
+      <StatusCard
         status={data.status}
         message={data.message}
         error={data.error}
         cardData={data.data}
-      /> */}
+      />
 
       {/* Details Card */}
       {isSuccess && meta && (

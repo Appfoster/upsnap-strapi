@@ -72,9 +72,9 @@ export default function BrokenLinks() {
   if (!data) return null;
 
   const isSuccess = true; // data.status === "success";
-  const meta = data.result?.details?.broken_links?.meta || {};
-  const brokenLinks = data.result?.details?.broken_links?.meta?.brokenLinks || [];
-  const blockedLinks = data.result?.details?.broken_links?.meta?.blockedLinks || [];
+  const meta = data?.data.result?.details?.broken_links?.meta || {};
+  const brokenLinks = data?.data.result?.details?.broken_links?.meta?.brokenLinks || [];
+  const blockedLinks = data?.data.result?.details?.broken_links?.meta?.blockedLinks || [];
   const monitorUrl = selectedMonitor?.monitor?.config?.meta?.url;
 
   return (
@@ -88,12 +88,12 @@ export default function BrokenLinks() {
         />
 
         {/* Status summary card */}
-        {/* <StatusCard
+        <StatusCard
           status={data.status}
           message={data.message}
           error={data.error}
           cardData={data.data}
-        /> */}
+        />
 
         {/* Details Card */}
         {(isSuccess || data?.status === 'warning') && meta && (

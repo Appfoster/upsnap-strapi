@@ -81,7 +81,7 @@ export default function Lighthouse() {
   if (loading) return <LoadingCard />;
   if (!data) return null;
   console.log('light house ', data);
-  const meta = data.result?.details?.lighthouse?.meta;
+  const meta = data?.data.result?.details?.lighthouse?.meta;
   const performance = meta?.performance;
 
   return (
@@ -94,12 +94,12 @@ export default function Lighthouse() {
           refreshing={refreshing}
         />
 
-        {/* <StatusCard
+        <StatusCard
           status={data.status}
           message={data.message}
           error={data.error}
           cardData={data.data}
-        /> */}
+        />
 
         {meta && (
           <Card style={{ marginTop: 24, marginBottom: 24 }}>

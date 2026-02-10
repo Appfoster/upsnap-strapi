@@ -76,8 +76,8 @@ export default function SecurityCertificates() {
   if (loading) return <LoadingCard />;
   if (!data) return null;
 
-  const isSuccess = true; // data.status === 'success';
-  const meta = data.result?.details?.ssl?.meta;
+  const isSuccess = data.status === 'success';
+  const meta = data?.data.result?.details?.ssl?.meta;
   const leafCertificate = meta?.chain?.find((c: any) => c.depth === 0)?.info;
   const certificateChain = meta?.chain || [];
   const domainCoverage = meta?.domainCoverage;
@@ -94,12 +94,12 @@ export default function SecurityCertificates() {
           refreshing={refreshing}
         />
         {/* Status summary card */}
-        {/* <StatusCard
+        <StatusCard
           status={data.status}
           message={data.message}
           error={data.error}
           cardData={data.data}
-        /> */}
+        />
 
         {/* Details Card */}
         {isSuccess && meta && (

@@ -35,7 +35,7 @@ export default function MixedContent() {
         method: 'POST',
         data: { monitorUrl: url, force_fetch: forceFetch },
       });
-      console.log('res broken links ', res);
+
       setData(res?.mixedContentHealthCheckData || null);
     } catch (err) {
       setData(null);
@@ -121,12 +121,7 @@ export default function MixedContent() {
               {meta.mixedContentItems && meta.mixedContentItems.length > 0 ? (
                 <Flex wrap={'wrap'} gap={2}>
                   {meta.mixedContentItems.map((url: string, idx: number) => (
-                    <Link
-                      key={idx}
-                      href={url}
-                      isExternal
-                      rel="noopener noreferrer"
-                    >
+                    <Link key={idx} href={url} isExternal rel="noopener noreferrer">
                       <Badge
                         value={url}
                         size="sm"
@@ -139,9 +134,7 @@ export default function MixedContent() {
                   ))}
                 </Flex>
               ) : (
-                <Typography variant="omega">
-                  No mixed content found.
-                </Typography>
+                <Typography variant="omega">No mixed content found.</Typography>
               )}
             </CardContent>
           </CardBody>
