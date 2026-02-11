@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export interface MonitorResponseData {
   data: {
     monitor: Monitor;
@@ -28,6 +30,8 @@ export interface Monitor {
   regions: Array<{ id: string; is_primary: boolean; name: string }>;
   name: string;
 }
+
+
 
 export interface HistogramData {
   histogram: Histogram;
@@ -223,3 +227,45 @@ export interface Summary {
   ok: boolean;
   message: string;
 }
+
+export type PlanLimits = {
+    max_integrations: number;
+    max_monitors: number;
+    max_notifications_per_day: number;
+    min_monitoring_interval: number;
+    max_status_pages: number;
+};
+
+type UserInfo = {
+    id: string;
+    email: string;
+    fullname?: string;
+    created_at?: string;
+    updated_at?: string;
+    notifications_enabled?: boolean;
+    organisation_id?: string;
+    role?: string;
+    status?: string;
+    subscription_type?: string;
+};
+
+export type UserDetails = {
+    plan_limits: PlanLimits;
+    user: UserInfo;
+    updated_at?: string; // local cache timestamp (ISO string)
+};
+
+export interface StatusPage {
+  id: string;
+  name: string;
+  monitor_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export const statusPageSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+  monitor_ids: z.array(z.string()).min(1, "At least one monitor is required"),
+});
+
+export type StatusPageFormData = z.infer<typeof statusPageSchema>;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Box, Card, CardContent, CardBody, Typography, Grid, Divider } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getRangeTimestamps, request } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
@@ -18,7 +18,7 @@ interface RegionResponseTimeData {
 }
 
 export default function Reachability() {
-  const monitorId = '06cc228a-92fd-4474-a955-8914f5670a01'; // useParams<{ monitorId: string }>();
+  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<UptimeHealthCheckData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
@@ -28,7 +28,7 @@ export default function Reachability() {
   >({});
   const [loadingRegions, setLoadingRegions] = useState<Set<string>>(new Set());
   const [responseTimeRange, setResponseTimeRange] = useState<string | null>('last_24_hours');
-
+  const navigate = useNavigate();
   const fetchResponseTimeDataForRegions = async (
     regions: { id: string; is_primary: boolean; name: string }[],
     timeRange: string
@@ -62,6 +62,12 @@ export default function Reachability() {
     if (monitorId) {
       setLoading(true);
       request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
+        console.log('Monitor details:', res);
+        if (res?.monitor?.message === 'Invalid authentication token') {
+          setSelectedMonitor(null);
+          console.log('Invalid token, redirecting to settings');
+          navigate('/plugins/upsnap/settings')
+        }
         setSelectedMonitor(res.monitor?.data || null);
         // Fetch region data after monitorData is set
         if (res.monitor?.data?.monitor?.regions) {
@@ -154,6 +160,7 @@ export default function Reachability() {
       fetchResponseTimeDataForRegions(selectedMonitor.monitor.regions, range || 'last_24_hours');
     }
   };
+
 
   const regionNames = useMemo(() => {
     const names: Record<string, string> = {};

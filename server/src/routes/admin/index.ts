@@ -30,6 +30,15 @@ export default () => ({
     },
     {
       method: 'GET',
+      path: '/monitor',
+      handler: 'monitor.get',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
       path: '/monitor/:id/uptime-stats',
       handler: 'monitor.getMonitorUptimeStats',
       config: {
@@ -122,6 +131,60 @@ export default () => ({
       method: 'GET',
       path: '/monitor/:id/incidents',
       handler: 'monitor.getMonitorIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/status-pages',
+      handler: 'statusPage.getStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/status-pages/:id',
+      handler: 'statusPage.getStatusPagesByID',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'POST',
+      path: '/status-pages',
+      handler: 'statusPage.saveStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'PUT',
+      path: '/status-pages',
+      handler: 'statusPage.updateStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'POST',
+      path: '/status-pages/reset',
+      handler: 'statusPage.resetLink',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'DELETE',
+      path: '/status-pages/:id',
+      handler: 'statusPage.deleteStatusPages',
       config: {
         policies: [],
         auth: false,

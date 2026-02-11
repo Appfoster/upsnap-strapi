@@ -20,7 +20,7 @@ import PageHeader from '../components/PageHeader'; // You may need to create or 
 import { MonitorData, Region, SSLCheckData } from '../utils/types';
 
 export default function SecurityCertificates() {
-  const monitorId = '06cc228a-92fd-4474-a955-8914f5670a01'; // useParams<{ monitorId: string }>();
+  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<SSLCheckData | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(true);

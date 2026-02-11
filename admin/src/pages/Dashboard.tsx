@@ -13,6 +13,7 @@ import { StatisticsCards } from '../components/dashboard/StatisticsCards';
 import { HealthCards } from '../components/dashboard/HealthCards';
 import { ResponseTimeChart } from '../components/dashboard/ResponseTimeChart';
 import { IncidentsTable } from '../components/dashboard/IncidentsTable';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
   const [monitorData, setMonitorData] = useState<MonitorData | null>(null);
@@ -26,11 +27,10 @@ export default function Dashboard() {
   const [monitorIncidents, setMonitorIncidents] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string>('default');
-
-  const id = '06cc228a-92fd-4474-a955-8914f5670a01';
+  const navigate = useNavigate();
+  const id = '51c21876-208d-4920-8407-310b25d1f8e6';
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
-    console.log('monitor data regions ', monitorData?.monitor.regions);
     if (!rt) return {};
     // If it's already a map of regions
     if (
@@ -68,6 +68,10 @@ export default function Dashboard() {
     request(`/monitor/${id}`, {
       method: 'GET',
     }).then((res) => {
+      if (res?.monitor?.message === 'Invalid authentication token') {
+        console.log('Invalid token, redirecting to settings');
+        navigate('/plugins/upsnap/settings')
+      }
       setMonitorData(res.monitor?.data || null);
     });
     request(`/monitor/${id}/uptime-stats`, {

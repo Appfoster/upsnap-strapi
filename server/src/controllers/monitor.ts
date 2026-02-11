@@ -16,7 +16,10 @@ import {
   buildLighthouseErrorResponse,
   buildLighthouseSuccessResponse,
 } from '../services/lighthouse-healthcheck';
-import { buildBrokenLinksErrorResponse, buildBrokenLinksSuccessResponse } from '../services/broken-links-healthcheck';
+import {
+  buildBrokenLinksErrorResponse,
+  buildBrokenLinksSuccessResponse,
+} from '../services/broken-links-healthcheck';
 
 // server/controllers/settings.ts
 const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
@@ -32,6 +35,16 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     });
     const monitor = await monitorResponse.json();
     ctx.body = { monitor };
+  },
+
+  async get(ctx) {
+    const monitorsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors`,
+      {
+        method: 'GET',
+      }
+    );
+    ctx.body = { monitorsData };
   },
 
   async getMonitorUptimeStats(ctx) {
@@ -211,18 +224,22 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         }),
       }
     );
-    
+
     const summaryOk = brokenLinksHealthCheckData?.result?.summary?.ok;
     const checkOk = brokenLinksHealthCheckData?.result?.details?.broken_links?.ok;
     const isError = brokenLinksHealthCheckData?.result?.details?.broken_links?.error;
 
     // When microservice itself returns ok: false but with 200
-    if ((summaryOk === false || checkOk === false ) && isError) {
-      ctx.body = { brokenLinksHealthCheckData: buildBrokenLinksErrorResponse(brokenLinksHealthCheckData)};
+    if ((summaryOk === false || checkOk === false) && isError) {
+      ctx.body = {
+        brokenLinksHealthCheckData: buildBrokenLinksErrorResponse(brokenLinksHealthCheckData),
+      };
       return;
     }
 
-    ctx.body = { brokenLinksHealthCheckData: buildBrokenLinksSuccessResponse(brokenLinksHealthCheckData) };
+    ctx.body = {
+      brokenLinksHealthCheckData: buildBrokenLinksSuccessResponse(brokenLinksHealthCheckData),
+    };
   },
 
   async getMixedContentHealthCheck(ctx) {

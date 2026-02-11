@@ -21,7 +21,7 @@ import PageHeader from '../components/PageHeader';
 import { MonitorData, BrokenLinksCheckData } from '../utils/types';
 
 export default function BrokenLinks() {
-  const monitorId = '06cc228a-92fd-4474-a955-8914f5670a01'; // useParams<{ monitorId: string }>();
+  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<BrokenLinksCheckData | null>(null);
   const [showMore, setShowMore] = useState(true);
   const [loading, setLoading] = useState(true);

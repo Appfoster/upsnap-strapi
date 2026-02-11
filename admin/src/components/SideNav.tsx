@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { SubNav, SubNavHeader, SubNavLink, SubNavSection } from '@strapi/design-system';
-import { Cog, Earth, ExternalLink, Globe, House, Link, Lock, Palette } from '@strapi/icons';
+import { Cog, Earth, ExternalLink, Globe, House, Link, Lock, Monitor, Palette } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 import '../styles/custom-styles.css';
 
@@ -68,6 +68,14 @@ const SideNav = () => {
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Mixed Content
+        </SubNavLink>
+        <SubNavLink
+          as={NavLink}
+          to={`status-pages`}
+          icon={<Monitor />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Status Pages
         </SubNavLink>
         <SubNavLink
           as={NavLink}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { UserDetails } from './types';
 
 export const request = async (url: string, options = {}) => {
   const response = await axios({
@@ -74,4 +75,26 @@ export function formatDateTime(isoTimestamp: string) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
+}
+
+export const getUserDetails = async (): Promise<UserDetails | null> => {
+    try {
+        const response = await request("/user-details", {
+            method: "GET"
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.status !== "success") {
+            console.error('Failed to fetch user details');
+        } else {
+            // Store user details data as a JSON string in localStorage
+            // localStorage.setItem("userDetails", JSON.stringify(result.data));
+            // setUserDetails(result.data);
+            return result.data;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error while fetching user details ', error);
+        return null;
+    }
 }
