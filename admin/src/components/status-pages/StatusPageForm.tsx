@@ -69,7 +69,6 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
       const data = await request('/monitor', {
         method: 'GET',
       });
-      console.log('data montir ', data);
       if (!data) return;
 
       if (data.monitorsData?.status === 'success') {
@@ -145,12 +144,12 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
   const handleCancel = () => {
     navigate('/plugins/upsnap/status-pages');
   };
-  console.log('monitors ', monitors);
+
   const monitorOptions = monitors?.map((m) => ({
     label: m.name || m.config?.meta?.url || 'Unknown',
     value: String(m.id),
   }));
-  console.log('monitor options ', monitorOptions);
+
   const filteredOptions = monitorOptions.filter((option) =>
     option.label.toLowerCase().includes(searchInput.toLowerCase())
   );
@@ -160,7 +159,6 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
       <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>
         {mode === 'create' ? 'Add Status Page' : 'Edit Status Page'}
       </Typography>
-      {/* <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}> */}
       <Card marginTop={3} width="100%">
         <CardBody width="100%">
           <Flex direction="column" width="100%">
@@ -181,7 +179,6 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
                 />
               </Box>
               <Box width="100%">
-                {/* <label style={{ fontWeight: 500, marginBottom: 8, display: "block" }}>Monitors</label> */}
                 <MultiSelect
                   withTags
                   label="Monitors"
