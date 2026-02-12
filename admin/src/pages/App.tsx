@@ -16,6 +16,7 @@ import UpdateStatusPage from './StatusPages/edit';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
+import CreateMonitor from './monitors/new';
 
 const StyledContainer = styled(ToastContainer)`
   // https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/status-pages" element={<ListStatusPages />} />
           <Route path="/status-pages/new" element={<CreateStatusPage />} />
           <Route path="/status-pages/:id" element={<UpdateStatusPage />} />
+          <Route path="/monitors/new" element={<CreateMonitor />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Page.Error />} />
         </Routes>

@@ -3,11 +3,14 @@
 import { PLAN_TYPES } from "./constants";
 import { getUserDetails } from "./helpers";
 
+const STORAGE_KEY = "selectedMonitor";
+
 type UserData = {
   email: string;
   username: string;
   monitor_url: string;
   plan_limits: string;
+  plan: string
 };
 
 type PlanLimits = {
@@ -186,3 +189,14 @@ export function setUserDetails(details: UserDetails): void {
     console.error("Error storing userDetails in localStorage:", error);
   }
 }
+
+/** Delete ALL selectedMonitor_* entries from localStorage */
+export const clearAllStoredMonitors = () => {
+	if (typeof window === "undefined") return;
+
+	Object.keys(localStorage).forEach((key) => {
+		if (key.startsWith(`${STORAGE_KEY}`)) {
+			localStorage.removeItem(key);
+		}
+	});
+};

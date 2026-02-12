@@ -285,6 +285,17 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
     );
     ctx.body = { incidentsData };
   },
+
+  async getMonitorSettings(ctx) {
+    const monitorId = ctx.params.id;
+    const monitorSettingsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/settings?id=${monitorId}`,
+      {
+        method: 'GET',
+      }
+    );
+    ctx.body = { monitorSettingsData };
+  }
 });
 
 export default monitor;

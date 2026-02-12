@@ -189,6 +189,33 @@ export default () => ({
         policies: [],
         auth: false,
       }
+    },
+    {
+      method: 'GET',
+      path: '/regions',
+      handler: 'regions.getRegions',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/monitor/settings/:id',
+      handler: 'monitor.getMonitorSettings',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/user/details',
+      handler: 'userDetails.getUserDetails',
+      config: {
+        policies: [],
+        auth: false,
+      }
     }
   ],
 });

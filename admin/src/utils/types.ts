@@ -13,14 +13,7 @@ export interface MonitorData {
 
 export interface Monitor {
   id: string;
-  service_last_checks: {
-    default: {
-      uptime: {
-        last_status: string;
-        last_checked_at: string;
-      };
-    };
-  };
+  service_last_checks: ServiceLastChecks;
   config: {
     meta: {
       url: string;
@@ -29,8 +22,23 @@ export interface Monitor {
   is_enabled: boolean;
   regions: Array<{ id: string; is_primary: boolean; name: string }>;
   name: string;
+  service_type: string;
+  last_check_at: string | null;
+	last_status: string | null;
+  channel_ids: string[];
+  tag_ids: string[];
 }
 
+type ServiceLastChecks = Record<
+	string, // region
+	Record<
+		string, // service name
+		{
+			last_checked_at: string;
+			last_status: string;
+		}
+	>
+>;
 
 
 export interface HistogramData {
@@ -269,3 +277,123 @@ export const statusPageSchema = z.object({
 });
 
 export type StatusPageFormData = z.infer<typeof statusPageSchema>;
+
+export interface Tag {
+	id: string;
+	user_id: number;
+	organisation_id: number | null;
+	name: string;
+	color: string;
+	created_at: string;
+	updated_at: string;
+}
+
+export const serviceConfigSchema = z.object({
+	enabled: z.boolean(),
+	monitor_interval: z.number().optional(),
+	notify_days_before_expiry: z.number().optional(),
+	retries: z.number().optional(),
+	timeout: z.number().optional(),
+	follow_redirects: z.boolean().optional(),
+	strategy: z.string().optional(),
+	max_pages: z.number().optional(),
+});
+
+export interface Keyword {
+	text: string;
+	type: "must_contain" | "must_not_contain";
+	case_sensitive: boolean;
+	is_regex: boolean;
+}
+
+
+export const VALID_URL_REGEX =
+	/^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/.*)?$/;
+
+// Regex for domain or IP address validation (no protocol or path)
+export const VALID_HOST_REGEX =
+	/^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
+
+export const monitorSchema = z.object({
+	name: z
+		.string()
+		.min(1, "Name is required")
+		.max(100, "Name must be less than 100 characters"),
+	service_type: z
+		.string()
+		.min(1, "Service type is required")
+		.max(100, "Service type must be less than 100 characters"),
+	channel_ids: z.array(z.string()).optional(),
+	config: z.object({
+		meta: z.object({
+			url: z
+				.string()
+				.trim()
+				.regex(
+					VALID_URL_REGEX,
+					"Please enter a valid URL starting with http:// or https://",
+				),
+			timeout: z.number().optional(),
+			follow_redirects: z.boolean().optional(),
+		}),
+		services: z.record(z.string(), serviceConfigSchema),
+	}),
+});
+
+export interface MonitorSettings {
+	monitor_id: string;
+	settings: {
+		meta: {
+			url?: string;
+			timeout?: number;
+			follow_redirects?: boolean;
+			// Port monitoring fields
+			host?: string;
+			port?: number;
+			monitor_interval?: number;
+		};
+		services: {
+			ssl?: {
+				enabled: boolean;
+				monitor_interval?: number;
+				notify_days_before_expiry?: number;
+			};
+			domain?: {
+				enabled: boolean;
+				monitor_interval?: number;
+				notify_days_before_expiry?: number;
+			};
+			uptime?: {
+				enabled: boolean;
+				retries?: number;
+				monitor_interval?: number;
+			};
+			lighthouse?: {
+				enabled: boolean;
+				timeout?: number;
+				strategy?: string;
+				monitor_interval?: number;
+			};
+			broken_links?: {
+				enabled: boolean;
+				timeout?: number;
+				max_pages?: number;
+				monitor_interval?: number;
+			};
+			mixed_content?: {
+				enabled: boolean;
+				monitor_interval?: number;
+			};
+			keyword?: {
+				enabled: boolean;
+				keywords: Array<{ keyword: string; _id?: string }>;
+				monitor_interval?: number;
+			};
+			port_check?: {
+				enabled: boolean;
+				timeout?: number;
+				monitor_interval: number;
+			};
+		};
+	};
+}

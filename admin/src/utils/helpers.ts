@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { UserDetails } from './types';
+import { MonitorSettings, UserDetails } from './types';
+import { Monitor } from "./types";
+import { REGIONS, MONITOR_TYPE } from "./constants";
+
+
+export function getMonitorPrimaryRegion(monitor: Monitor) {
+    return monitor.regions?.find((region) => region.is_primary);
+}
 
 export const request = async (url: string, options = {}) => {
   const response = await axios({
@@ -79,22 +86,122 @@ export function formatDateTime(isoTimestamp: string) {
 
 export const getUserDetails = async (): Promise<UserDetails | null> => {
     try {
-        const response = await request("/user-details", {
+        const result = await request("/user/details", {
             method: "GET"
         });
 
-        const result = await response.json();
-        if (!response.ok || result.status !== "success") {
+        if (!result || result?.userDetailsData?.status !== "success") {
             console.error('Failed to fetch user details');
         } else {
             // Store user details data as a JSON string in localStorage
             // localStorage.setItem("userDetails", JSON.stringify(result.data));
             // setUserDetails(result.data);
-            return result.data;
+            return result?.userDetailsData.data;
         }
         return null;
     } catch (error) {
         console.error('Error while fetching user details ', error);
         return null;
     }
+}
+
+export function enrichMonitorWithPrimaryRegionStatus(monitor: Monitor): Monitor {
+  const primaryRegion = getMonitorPrimaryRegion(monitor);
+  if (!primaryRegion) return monitor;
+
+  const primaryRegionId = primaryRegion.id;
+  const serviceChecks = monitor.service_last_checks?.[primaryRegionId];
+  
+  // Determine which service data to use based on monitor type
+  let serviceData: { last_status?: string; last_checked_at?: string } | null = null;
+  
+  switch (monitor.service_type) {
+    case MONITOR_TYPE.PORT:
+      serviceData = serviceChecks?.port_check ?? null;
+      break;
+    case MONITOR_TYPE.KEYWORD:
+      serviceData = serviceChecks?.keyword ?? null;
+      break;
+    case MONITOR_TYPE.WEBSITE:
+    default:
+      serviceData = serviceChecks?.uptime ?? null;
+      break;
+  }
+
+  return {
+    ...monitor,
+    last_status: serviceData?.last_status ?? monitor.last_status,
+    last_check_at: serviceData?.last_checked_at ?? monitor.last_check_at,
+  };
+}
+
+/**
+ * Fetch monitor settings from the new settings API endpoint
+ * @param monitorId - The monitor ID
+ * @returns MonitorSettings object
+ */
+export async function fetchMonitorSettings(
+	monitorId: string
+): Promise<MonitorSettings | null> {
+	try {
+		const res = await request(
+			`/monitor/settings/${monitorId}`
+		);
+
+		if (!res) {
+			console.error("Failed to fetch monitor settings");
+			return null;
+		}
+
+		const result = await res.json();
+
+		if (result.status === "success" && result.data) {
+			return {
+				monitor_id: result.data.monitor_id,
+				settings: result.data.settings,
+			};
+		}
+
+		console.error("Invalid response from monitor settings API:", result);
+		return null;
+	} catch (error) {
+		console.error("Error fetching monitor settings:", error);
+		return null;
+	}
+}
+
+/**
+ * Convert monitor settings to the config format used internally
+ * @param settings - Settings object from the API
+ * @returns Config object in the expected format
+ */
+export function settingsToConfig(
+	settings: MonitorSettings["settings"]
+): {
+	meta: {
+		url?: string;
+		timeout?: number;
+		follow_redirects?: boolean;
+		host?: string;
+		port?: number;
+		monitor_interval?: number;
+	};
+	services?: Record<
+		string,
+		{
+			enabled: boolean;
+			monitor_interval?: number;
+			notify_days_before_expiry?: number;
+			retries?: number;
+			timeout?: number;
+			follow_redirects?: boolean;
+			strategy?: string;
+			max_pages?: number;
+		}
+	>;
+} {
+	return {
+		meta: settings.meta,
+		services: settings.services,
+	};
 }
