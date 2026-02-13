@@ -16,11 +16,11 @@ import {
 import { Monitor, monitorSchema, VALID_HOST_REGEX, Keyword } from '../../utils/types';
 import { toast } from 'react-toastify';
 import { DEFAULT_REGION, MONITOR, MONITOR_TYPE, MONITOR_TYPE_OPTIONS } from '../../utils/constants';
-// import AdvancedSettings from './MonitorAdvancedSettings';
+import AdvancedSettings from './MonitorAdvancedSettings';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { clearAllStoredMonitors } from '../../utils/userStorage';
-// import NotificationChannelsIntegration from './NotificationChannelsIntegration';
+import NotificationChannelsIntegration from './NotificationChannelsIntegration';
 // import { TagMultiSelect } from './TagMultiSelect';
 import { RegionsMultiSelect } from './RegionMultiSelect';
 import { fetchMonitorSettings, request, settingsToConfig } from '../../utils/helpers';
@@ -38,6 +38,7 @@ interface Props {
 export default function MonitorForm({ monitor, mode }: Props) {
   // const router = useRouter();
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     service_type: MONITOR_TYPE.WEBSITE,
@@ -316,7 +317,7 @@ export default function MonitorForm({ monitor, mode }: Props) {
     setIsSubmitting(true);
 
     try {
-      let res;
+      let result;
 
       if (monitorType === MONITOR_TYPE.PORT) {
         // Validate port form data
@@ -368,7 +369,7 @@ export default function MonitorForm({ monitor, mode }: Props) {
           ...(mode === 'create' ? { is_enabled: true } : { id: monitor?.id }),
         };
 
-        res = await request('/monitors', {
+        result = await request('/monitors', {
           method: mode === 'create' ? 'POST' : 'PATCH',
           data: payload,
         });
@@ -423,8 +424,8 @@ export default function MonitorForm({ monitor, mode }: Props) {
           ...(mode === 'create' ? { is_enabled: true } : { id: monitor?.id }),
         };
 
-        res = await request('/monitors', {
-          method: mode === 'create' ? 'POST' : 'PATCH',
+        result = await request('/monitors', {
+          method: mode === 'create' ? 'POST' : 'PUT',
           data: payload,
         });
       } else {
@@ -448,7 +449,7 @@ export default function MonitorForm({ monitor, mode }: Props) {
             is_enabled: true,
           };
 
-          res = await request('/monitors', {
+          result = await request('/monitors', {
             method: 'POST',
             data: payload,
           });
@@ -470,28 +471,26 @@ export default function MonitorForm({ monitor, mode }: Props) {
             regions: buildRegionsPayload(),
           };
 
-          res = await request('/monitors', {
-            method: 'PATCH',
+          result = await request('/monitors', {
+            method: 'PUT',
             data: payload,
           });
         }
       }
-      if (!res) return;
+      if (!result) return;
 
-      const result = await res.json();
-
-      if (result.status === 'success') {
-        const monitorId = result.data.monitor.id;
+      if (result.monitorsData.status === 'success') {
+        const monitorId = result.monitorsData.data.monitor.id;
         clearAllStoredMonitors();
         //  START POLLING
         // startPolling(monitorId);
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
-
+        navigate('/plugins/upsnap/settings');
         // router.push(ROUTES.MONITORS);
       } else {
-        toast.error(result.data?.message || 'Something went wrong.');
+        toast.error(result.monitorsData.data?.message || 'Something went wrong.');
       }
     } catch (err: any) {
       if (err.errors) {
@@ -561,10 +560,11 @@ export default function MonitorForm({ monitor, mode }: Props) {
       <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>
         {mode === 'create' ? 'Create Monitor' : 'Edit Monitor'}
       </Typography>
-      <Card>
+      <Card marginTop={3}>
         <CardBody width="100%">
-          {/* Monitor Type Dropdown */}
-          {/* <div className="tw-mb-6">
+          <Flex direction="column" gap={6} width="100%">
+            {/* Monitor Type Dropdown */}
+            {/* <div className="tw-mb-6">
             <SingleSelect
               label="Monitor Type"
               value={monitorType}
@@ -585,100 +585,100 @@ export default function MonitorForm({ monitor, mode }: Props) {
             </SingleSelect>
           </div> */}
 
-          {/* Website Monitoring Form */}
-          {monitorType === MONITOR_TYPE.WEBSITE && (
-            <>
-              <Flex direction="column" gap={4} width="100%">
-                {/* Name and URL Row */}
-                <Flex
-                  direction={{ initial: 'column', medium: 'row' }}
-                  gap={6}
-                  marginBottom={6}
-                  width="100%"
-                >
-                  <Box width="100%">
-                    <Field.Root error={errors.name}>
-                      <Field.Label>Monitor name</Field.Label>
+            {/* Website Monitoring Form */}
+            {monitorType === MONITOR_TYPE.WEBSITE && (
+              <>
+                <Flex direction="column" gap={4} width="100%">
+                  {/* Name and URL Row */}
+                  <Flex
+                    direction={{ initial: 'column', medium: 'row' }}
+                    gap={5}
+                    marginBottom={3}
+                    width="100%"
+                  >
+                    <Box width="100%">
+                      <Field.Root error={errors.name}>
+                        <Field.Label>Monitor name</Field.Label>
 
-                      <Field.Input
-                        type="text"
-                        crossOrigin=""
-                        size="L"
-                        name="name"
-                        placeholder="Monitor name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        error={errors.name}
-                      />
-                      <Field.Error />
-                    </Field.Root>
-                    {/* {errors.name && (
+                        <Field.Input
+                          type="text"
+                          crossOrigin=""
+                          size="L"
+                          name="name"
+                          placeholder="Monitor name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          error={errors.name}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                      {/* {errors.name && (
                     <p className="tw-text-xs tw-text-red-500 tw-mt-1"></p>
                   )} */}
-                  </Box>
-                  <Box width="100%">
-                    <Field.Root error={errors.url}>
-                      <Field.Label>URL to monitor</Field.Label>
-                      <Field.Input
-                        type="text"
-                        crossOrigin=""
-                        size="L"
-                        name="url"
-                        placeholder="URL to monitor"
-                        value={formData.config.meta.url}
-                        onChange={(e: any) => {
-                          const value = e.target.value.trimStart();
-                          setFormData((prev) => {
-                            const newMeta = {
-                              ...prev.config.meta,
-                              url: value,
-                            };
-                            const isHttps = String(value).startsWith('https://');
-                            const services = {
-                              ...prev.config.services,
-                            };
+                    </Box>
+                    <Box width="100%">
+                      <Field.Root error={errors.url}>
+                        <Field.Label>URL to monitor</Field.Label>
+                        <Field.Input
+                          type="text"
+                          crossOrigin=""
+                          size="L"
+                          name="url"
+                          placeholder="URL to monitor"
+                          value={formData.config.meta.url}
+                          onChange={(e: any) => {
+                            const value = e.target.value.trimStart();
+                            setFormData((prev) => {
+                              const newMeta = {
+                                ...prev.config.meta,
+                                url: value,
+                              };
+                              const isHttps = String(value).startsWith('https://');
+                              const services = {
+                                ...prev.config.services,
+                              };
 
-                            if (!isHttps) {
-                              services.lighthouse = {
-                                ...services.lighthouse,
-                                enabled: false,
+                              if (!isHttps) {
+                                services.lighthouse = {
+                                  ...services.lighthouse,
+                                  enabled: false,
+                                };
+                                services.ssl = {
+                                  ...services.ssl,
+                                  enabled: false,
+                                };
+                                services.mixed_content = {
+                                  ...services.mixed_content,
+                                  enabled: false,
+                                };
+                              }
+
+                              return {
+                                ...prev,
+                                config: {
+                                  ...prev.config,
+                                  meta: newMeta,
+                                  services,
+                                },
                               };
-                              services.ssl = {
-                                ...services.ssl,
-                                enabled: false,
-                              };
-                              services.mixed_content = {
-                                ...services.mixed_content,
-                                enabled: false,
-                              };
+                            });
+
+                            if (errors.url) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                url: undefined,
+                              }));
                             }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                    </Box>
+                  </Flex>
 
-                            return {
-                              ...prev,
-                              config: {
-                                ...prev.config,
-                                meta: newMeta,
-                                services,
-                              },
-                            };
-                          });
-
-                          if (errors.url) {
-                            setErrors((prev) => ({
-                              ...prev,
-                              url: undefined,
-                            }));
-                          }
-                        }}
-                      />
-                      <Field.Error />
-                    </Field.Root>
-                  </Box>
-                </Flex>
-
-                {/* Tags and Regions Row */}
-                <Flex width="100%">
-                  {/* <div className="tw-my-4">
+                  {/* Tags and Regions Row */}
+                  <Flex width="100%">
+                    {/* <div className="tw-my-4">
                   <label className="tw-block tw-text-sm tw-font-semibold tw-mb-2 tw-text-gray-700">
                     Add tags
                   </label>
@@ -690,47 +690,52 @@ export default function MonitorForm({ monitor, mode }: Props) {
                     onTagsChange={setSelectedTagIds}
                   />
                 </div> */}
-                  <Box paddingTop={4} width="100%">
-                    <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
-                      <Typography variant="sigma">Monitoring regions</Typography>
-                      <Typography textColor="neutral600" variant="pi">
-                        Choose the regions where this monitor should be active
-                      </Typography>
-                    </Flex>
-                    <RegionsMultiSelect
-                      selectedRegionIds={selectedRegionIds}
-                      onRegionsChange={setSelectedRegionIds}
-                      primaryRegionId={primaryRegionId}
-                      onPrimaryRegionChange={handlePrimaryRegionChange}
+                    <Box paddingTop={4} width="100%">
+                      <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
+                        <Typography variant="epsilon">Monitoring regions</Typography>
+                        <Typography textColor="neutral600" variant="pi">
+                          Choose the regions where this monitor should be active
+                        </Typography>
+                      </Flex>
+                      <RegionsMultiSelect
+                        selectedRegionIds={selectedRegionIds}
+                        onRegionsChange={setSelectedRegionIds}
+                        primaryRegionId={primaryRegionId}
+                        onPrimaryRegionChange={handlePrimaryRegionChange}
+                      />
+
+                      {errors.primaryRegion && (
+                        <Typography textColor="danger600" variant="pi">
+                          {errors.primaryRegion}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Flex>
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Notifications</Typography>
+                    {/* Notifications */}
+                    <NotificationChannelsIntegration
+                      value={formData.channel_ids}
+                      onChange={(ids) => updateNotificationChannels(ids)}
                     />
-
-                    {errors.primaryRegion && (
-                      <Typography textColor="danger600" variant="pi">
-                        {errors.primaryRegion}
-                      </Typography>
-                    )}
-                  </Box>
+                  </Flex>
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Advanced settings</Typography>
+                    <AdvancedSettings
+                      services={formData.config.services}
+                      onServiceChange={updateService}
+                      meta={formData.config.meta}
+                      updateMeta={updateMeta}
+                    />
+                  </Flex>
                 </Flex>
-              </Flex>
-              {/* Notifications */}
-              {/* <NotificationChannelsIntegration
-                value={formData.channel_ids}
-                onChange={(ids) => updateNotificationChannels(ids)}
-              /> */}
 
-              {/* <div className="tw-mt-6">
-                <AdvancedSettings
-                  services={formData.config.services}
-                  onServiceChange={updateService}
-                  meta={formData.config.meta}
-                  updateMeta={updateMeta}
-                />
-              </div> */}
-            </>
-          )}
+                <div className="tw-mt-6"></div>
+              </>
+            )}
 
-          {/* Port Monitoring Form */}
-          {/* {monitorType === MONITOR_TYPE.PORT && (
+            {/* Port Monitoring Form */}
+            {/* {monitorType === MONITOR_TYPE.PORT && (
             <>
               <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
                 <div>
@@ -869,8 +874,8 @@ export default function MonitorForm({ monitor, mode }: Props) {
             </>
           )} */}
 
-          {/* Keyword Monitoring Form */}
-          {/* {monitorType === MONITOR_TYPE.KEYWORD && (
+            {/* Keyword Monitoring Form */}
+            {/* {monitorType === MONITOR_TYPE.KEYWORD && (
             <>
               <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
                 <div>
@@ -996,22 +1001,23 @@ export default function MonitorForm({ monitor, mode }: Props) {
               </div>
             </>
           )} */}
+            {/* Submit Button */}
+            <Flex justifyContent="flex-end" gap={3} marginTop={2} width="100%" marginBottom={4}>
+              <Button variant="danger-light" size="M" onClick={() => window.history.back()}>
+                Cancel
+              </Button>
+              <Button disabled={isSubmitting} size="M" onClick={handleSubmit}>
+                {isSubmitting
+                  ? 'Saving...'
+                  : mode === 'create'
+                    ? 'Create Monitor'
+                    : 'Update Monitor'}
+              </Button>
+            </Flex>
+          </Flex>
         </CardBody>
       </Card>
       {/* Submit Button */}
-      {/* <div className="tw-flex tw-gap-3 tw-pt-4 tw-justify-end">
-        <Button
-          disabled={isSubmitting}
-          className="tw-bg-blue-600 hover:tw-bg-blue-700"
-          size="M"
-          onClick={handleSubmit}
-        >
-          {isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Monitor' : 'Update Monitor'}
-        </Button>
-        <Button type="button" variant="outlined" size="md" onClick={() => window.history.back()}>
-          Cancel
-        </Button>
-      </div> */}
     </>
   );
 }

@@ -66,3 +66,30 @@ export const MONITOR_TYPE_OPTIONS = [
   { value: MONITOR_TYPE.PORT, label: "Port Monitoring" },
   { value: MONITOR_TYPE.KEYWORD, label: "Keyword Monitoring" },
 ];
+
+export const INTEGRATIONS_TYPES = {
+  webhook: {
+    name: "webhook",
+    label: "Webhook",
+  },
+  google_chat: {
+    name: "google_chat",
+    label: "Google Chat",
+  },
+  discord: {
+    name: "discord",
+    label: "Discord",
+  },
+  email : {
+    name: "email",
+    label: "Email",
+  },
+  slack : {
+    name: "slack",
+    label: "Slack",
+  },
+  telegram : {
+    name: "telegram",
+    label: "Telegram",
+  },
+};

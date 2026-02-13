@@ -2,6 +2,7 @@ import axios from 'axios';
 import { MonitorSettings, UserDetails } from './types';
 import { Monitor } from "./types";
 import { REGIONS, MONITOR_TYPE } from "./constants";
+import { setUserDetails } from './userStorage';
 
 
 export function getMonitorPrimaryRegion(monitor: Monitor) {
@@ -89,13 +90,13 @@ export const getUserDetails = async (): Promise<UserDetails | null> => {
         const result = await request("/user/details", {
             method: "GET"
         });
-
+        console.log('fetched user ', result);
         if (!result || result?.userDetailsData?.status !== "success") {
             console.error('Failed to fetch user details');
         } else {
             // Store user details data as a JSON string in localStorage
             // localStorage.setItem("userDetails", JSON.stringify(result.data));
-            // setUserDetails(result.data);
+            setUserDetails(result?.userDetailsData.data);
             return result?.userDetailsData.data;
         }
         return null;

@@ -216,6 +216,33 @@ export default () => ({
         policies: [],
         auth: false,
       }
+    },
+    {
+      method: 'GET',
+      path: '/notification-channels',
+      handler: 'notificationChannels.getNotificationChannels',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'POST',
+      path: '/notification-channels',
+      handler: 'notificationChannels.createNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'POST',
+      path: '/monitors',
+      handler: 'monitor.createMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      }
     }
   ],
 });

@@ -13,6 +13,8 @@ type UserData = {
   plan: string
 };
 
+
+
 type PlanLimits = {
     max_integrations: number;
     max_monitors: number;
@@ -47,7 +49,7 @@ export function getMonitorUrl(): string | null {
   if (typeof window === "undefined") return null; // Ensure we're on the client
 
   try {
-    const userDataString = localStorage.getItem("userData");
+    const userDataString = localStorage.getItem("userDetails");
     if (!userDataString) return null;
 
     const userData: UserData = JSON.parse(userDataString);
@@ -58,14 +60,14 @@ export function getMonitorUrl(): string | null {
   }
 }
 
-export function getUserData(): UserData | null {
+export function getUserData(): UserDetails | null {
   if (typeof window === "undefined") return null; // Ensure we're on the client
 
   try {
-    const userDataString = localStorage.getItem("userData");
+    const userDataString = localStorage.getItem("userDetails");
     if (!userDataString) return null;
 
-    const userData: UserData = JSON.parse(userDataString);
+    const userData: UserDetails = JSON.parse(userDataString);
     return userData;
   } catch (error) {
     console.error("Error parsing userData from localStorage:", error);
@@ -76,7 +78,7 @@ export function getUserData(): UserData | null {
 export function getUserPlan(): string | null {
   if (typeof window === "undefined") return null; // Ensure we're on the client
     const userData = getUserData();
-    return userData?.plan || PLAN_TYPES.FREE;
+    return userData?.user?.subscription_type || PLAN_TYPES.FREE;
 }
 
 /**
@@ -144,6 +146,7 @@ export async function getUserDetailsCached(forceFetchFromMicroservice = false): 
 
   try {
     const userDetailsString = localStorage.getItem("userDetails");
+    console.log('cached user ', userDetailsString);
     if (!userDetailsString) return null;
 
     if (!forceFetchFromMicroservice) {

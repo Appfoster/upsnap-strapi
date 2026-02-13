@@ -397,3 +397,13 @@ export interface MonitorSettings {
 		};
 	};
 }
+
+export type IntervalUnit = "minute" | "hour" | "day";
+
+export interface IntervalPartition {
+	label: string;
+	value: number;
+	unit: IntervalUnit;
+}
+
+export type PLAN_TYPES = string;

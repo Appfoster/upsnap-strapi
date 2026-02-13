@@ -295,6 +295,15 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
     );
     ctx.body = { monitorSettingsData };
+  },
+
+  async createMonitor(ctx) {
+    const { ...data } = ctx.request.body;
+    const monitorsData = await service({ strapi }).makeBackendRequest(`/user/monitors`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    ctx.body = { monitorsData };
   }
 });
 
