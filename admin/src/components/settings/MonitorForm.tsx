@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import {
   Button,
@@ -33,9 +31,10 @@ import { fetchMonitorSettings, request, settingsToConfig } from '../../utils/hel
 interface Props {
   monitor?: Monitor | null;
   mode: 'create' | 'edit';
+  handleCancelEdit?: () => void;
 }
 
-export default function MonitorForm({ monitor, mode }: Props) {
+export default function MonitorForm({ monitor, mode, handleCancelEdit }: Props) {
   // const router = useRouter();
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
   const navigate = useNavigate();
@@ -455,7 +454,6 @@ export default function MonitorForm({ monitor, mode }: Props) {
           });
         } else {
           const payload = {
-            id: monitor?.id,
             name: validated.name,
             service_type: MONITOR_TYPE.WEBSITE,
             config: {
@@ -471,7 +469,7 @@ export default function MonitorForm({ monitor, mode }: Props) {
             regions: buildRegionsPayload(),
           };
 
-          result = await request('/monitors', {
+          result = await request(`/monitors/${monitor?.id}`, {
             method: 'PUT',
             data: payload,
           });
@@ -555,6 +553,13 @@ export default function MonitorForm({ monitor, mode }: Props) {
     }
   };
 
+  const handleCancel = () => {
+    if (mode === 'edit' && handleCancelEdit) {
+      handleCancelEdit();
+      return;
+    }
+    navigate('/plugins/upsnap/settings');
+  }
   return (
     <>
       <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>
@@ -1003,7 +1008,7 @@ export default function MonitorForm({ monitor, mode }: Props) {
           )} */}
             {/* Submit Button */}
             <Flex justifyContent="flex-end" gap={3} marginTop={2} width="100%" marginBottom={4}>
-              <Button variant="danger-light" size="M" onClick={() => window.history.back()}>
+              <Button variant="danger-light" size="M" onClick={() => handleCancel()}>
                 Cancel
               </Button>
               <Button disabled={isSubmitting} size="M" onClick={handleSubmit}>

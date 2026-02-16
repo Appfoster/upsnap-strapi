@@ -6,7 +6,7 @@ export const PLAN_TYPES = {
 
 
 export const PLAN_LIMITS = {
-  FREE : {
+  TRIAL : {
     "max_integrations": 2,
     "max_monitors": 2,
     "max_notifications_per_day": 100,

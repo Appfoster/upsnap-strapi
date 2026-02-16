@@ -66,7 +66,7 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
   const fetchMonitors = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await request('/monitor', {
+      const data = await request('/monitors', {
         method: 'GET',
       });
       if (!data) return;

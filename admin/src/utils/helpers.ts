@@ -145,21 +145,19 @@ export async function fetchMonitorSettings(
 	monitorId: string
 ): Promise<MonitorSettings | null> {
 	try {
-		const res = await request(
+		const result = await request(
 			`/monitor/settings/${monitorId}`
 		);
 
-		if (!res) {
+		if (!result) {
 			console.error("Failed to fetch monitor settings");
 			return null;
 		}
 
-		const result = await res.json();
-
-		if (result.status === "success" && result.data) {
+		if (result?.monitorSettingsData?.status === "success" && result?.monitorSettingsData?.data) {
 			return {
-				monitor_id: result.data.monitor_id,
-				settings: result.data.settings,
+				monitor_id: result.monitorSettingsData.data.monitor_id,
+				settings: result.monitorSettingsData.data.settings,
 			};
 		}
 
@@ -205,4 +203,40 @@ export function settingsToConfig(
 		meta: settings.meta,
 		services: settings.services,
 	};
+}
+
+export async function setPrimaryMonitorId(monitorId: string): Promise<boolean> {
+  try {
+    console.log('Setting primary monitor ID to ', monitorId);
+    const result = await request(`/settings/set-primary-monitor-id`, {
+      method: 'POST',
+      data: { monitorId },
+    });
+    if (!result) return false;
+    if (result?.ok) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('Error setting primary monitor ID:', error);
+    return false;
+  }
+}
+
+export async function getPrimaryMonitorId(): Promise<string | null> {
+  try {
+    const result = await request(`/settings/get-primary-monitor-id`, {
+      method: 'GET'
+    });
+    if (!result) return null;
+    if (result?.primaryMonitorId) {
+      return result.primaryMonitorId;
+    }
+    console.error('Failed to get primary monitor ID:', result);
+    return null;
+  } catch (error) {
+    console.error('Error getting primary monitor ID:', error);
+    return null;
+  }
 }

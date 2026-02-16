@@ -155,7 +155,7 @@ export default function ListStatusPages() {
       const userDetails = await getUserDetailsCached();
       console.log('User details from cache:', userDetails);
       const maxStatusPagesLimit =
-        userDetails?.plan_limits?.max_status_pages || PLAN_LIMITS.FREE.max_status_pages;
+        userDetails?.plan_limits?.max_status_pages || PLAN_LIMITS.TRIAL.max_status_pages;
       console.log('Max status pages limit for user:', maxStatusPagesLimit);
       if (maxStatusPagesLimit !== undefined && statusPages.length >= maxStatusPagesLimit) {
         toast.error(`You have reached your plan limit of ${maxStatusPagesLimit} status pages. Please upgrade your plan to add more status pages.`);

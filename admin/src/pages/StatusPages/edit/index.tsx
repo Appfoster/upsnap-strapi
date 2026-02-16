@@ -1,5 +1,3 @@
-'use client';
-
 import { Link, Flex } from '@strapi/design-system';
 import { ArrowLeft } from '@strapi/icons';
 import { useEffect, useState } from 'react';

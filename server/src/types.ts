@@ -1,5 +1,6 @@
 export type UpsnapSettings = {
   token: string;
+  primaryMonitorId?: string;
 };
 
 export interface Uptime {

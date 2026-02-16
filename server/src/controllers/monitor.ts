@@ -304,6 +304,39 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       body: JSON.stringify(data),
     });
     ctx.body = { monitorsData };
+  },
+
+  async updateMonitor(ctx) {
+    const monitorId = ctx.params.id;
+    const { ...data } = ctx.request.body;
+    const monitorsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/${monitorId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }
+    );
+    ctx.body = { monitorsData };
+  },
+
+  async deleteMonitor(ctx) {
+    const monitorId = ctx.params.id;
+    const monitorsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/${monitorId}`,
+      {
+        method: 'DELETE',
+      }
+    );
+    ctx.body = { monitorsData };
+  },
+
+  async deleteMonitors(ctx) {
+    const { monitorIds } = ctx.request.body;
+    const monitorsData = await service({ strapi }).makeBackendRequest(`/user/monitors`, {
+      method: 'PATCH',
+      body: JSON.stringify({ ids: monitorIds, action: 'delete' }),
+    });
+    ctx.body = { monitorsData };
   }
 });
 

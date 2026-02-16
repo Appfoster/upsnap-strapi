@@ -30,7 +30,7 @@ export default () => ({
     },
     {
       method: 'GET',
-      path: '/monitor',
+      path: '/monitors',
       handler: 'monitor.get',
       config: {
         policies: [],
@@ -243,6 +243,51 @@ export default () => ({
         policies: [],
         auth: false,
       }
-    }
+    },
+    {
+      method: 'PUT',
+      path: '/monitors/:id',
+      handler: 'monitor.updateMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'DELETE',
+      path: '/monitors/:id',
+      handler: 'monitor.deleteMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'PUT',
+      path: '/monitors/bulk-delete',
+      handler: 'monitor.deleteMonitors',
+      config: {
+        policies: [],
+        auth: false,
+      }
+    },
+    {
+      method: 'GET',
+      path: '/settings/get-primary-monitor-id',
+      handler: 'settings.getPrimaryMonitorId',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/settings/set-primary-monitor-id',
+      handler: 'settings.setPrimaryMonitorId',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
 });
