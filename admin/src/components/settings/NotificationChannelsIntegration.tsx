@@ -224,7 +224,7 @@ export default function NotificationChannelsIntegration({
     <Box width="100%">
       <Accordion.Root>
         <Accordion.Item value="notification-channels">
-          <Accordion.Header width="100%"> 
+          <Accordion.Header width="100%">
             <Accordion.Trigger
               caretPosition="right"
               description="Choose how you want to receive alerts"
@@ -241,12 +241,12 @@ export default function NotificationChannelsIntegration({
                     e.stopPropagation();
                   }}
                 >
-                    <TextInput
-                        label="Search channels"
-                        value={search}
-                        onChange={(e: any) => setSearch(e.target.value)}
-                        startAction={<Search />}
-                    />
+                  <TextInput
+                    label="Search channels"
+                    value={search}
+                    onChange={(e: any) => setSearch(e.target.value)}
+                    startAction={<Search />}
+                  />
                 </Box>
               </Flex>
             </Accordion.Trigger>
@@ -300,7 +300,11 @@ export default function NotificationChannelsIntegration({
                           <Flex gap={3} alignItems="flex-start">
                             <Box paddingTop={1}>{getIntegrationIcon(row.channel_type)}</Box>
 
-                            <Flex direction={{ initial: "column", medium: "row" }} alignItems={{ initial: 'start', medium: 'self-start' }} gap={2}>
+                            <Flex
+                              direction={{ initial: 'column', medium: 'row' }}
+                              alignItems={{ initial: 'start', medium: 'self-start' }}
+                              gap={2}
+                            >
                               <Flex gap={2} alignItems="center">
                                 <Typography fontWeight="semiBold">
                                   {row.name}

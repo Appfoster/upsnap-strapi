@@ -289,5 +289,41 @@ export default () => ({
         auth: false,
       },
     },
+    {
+      method: 'GET',
+      path: '/integrations/supported',
+      handler: 'notificationChannels.getSupportedIntegrations',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/notification-channels/:id',
+      handler: 'notificationChannels.updateNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/notification-channels/:id/test',
+      handler: 'notificationChannels.testNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    }, 
+    {
+      method: 'DELETE',
+      path: '/notification-channels/:id',
+      handler: 'notificationChannels.deleteNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    }
   ],
 });

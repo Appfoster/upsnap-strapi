@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Monitor } from '../../utils/types';
 import { toast } from 'react-toastify';
 import MonitorForm from './MonitorForm';
+import { ConfirmationModal } from '../DeleteConfirmation';
 
 async function getMonitors() {
   const res = await request('/monitors', {
@@ -26,6 +27,7 @@ export default function Monitors() {
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>();
   const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const userDetails = getUserData();
   useEffect(() => {
@@ -69,10 +71,18 @@ export default function Monitors() {
   };
   const handleDelete = async (monitor: Monitor) => {
     if (!monitor.id) return;
-    if (!window.confirm(`Are you sure you want to delete monitor "${monitor.name}"?`)) return;
-
+    setSelectedMonitor(monitor);
+    setDeleteModalOpen(true);
+  };
+  const confirmDelete = async () => {
+    if (!selectedMonitor){
+      toast.error('Please select a monitor to delete.');
+      setDeleteModalOpen(false);
+      return;
+    };
+    setLoading(true);
     try {
-      const result = await request(`/monitors/${monitor.id}`, {
+      const result = await request(`/monitors/${selectedMonitor.id}`, {
         method: 'DELETE',
       });
       if (!result) return;
@@ -87,8 +97,11 @@ export default function Monitors() {
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong while deleting the monitor');
+    } finally {
+      setDeleteModalOpen(false);
+      setLoading(false);
     }
-  };
+  }
   return (
     <Box width="100%">
       {!showEdit && (
@@ -108,6 +121,19 @@ export default function Monitors() {
       {showEdit && selectedMonitor && (
         <MonitorForm monitor={selectedMonitor} mode="edit" handleCancelEdit={handleCancelEdit} />
       )}
+      {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          open={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={confirmDelete}
+          title="Delete Integration"
+          description={`Are you sure you want to delete "${selectedMonitor?.name}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmColor="red"
+          isLoading={loading}
+          loadingText="Deleting..."
+        />
     </Box>
   );
 }

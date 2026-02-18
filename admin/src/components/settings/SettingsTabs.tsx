@@ -1,6 +1,7 @@
 import { Tabs, Box, Typography } from '@strapi/design-system';
 import Monitors from '../settings/Monitors';
 import APIToken from './APIToken';
+import IntegrationsPage from './noitifcation-channels';
 
 interface Tabs {
   name: string;
@@ -37,7 +38,7 @@ export default function SettingsTabs({
           )}
           {activeTab === 'notification_channels' && (
             <Box padding={4}>
-              <Typography>Notification Channels coming soon...</Typography>
+              <IntegrationsPage />
             </Box>
           )}
           {activeTab === 'api_key' && (

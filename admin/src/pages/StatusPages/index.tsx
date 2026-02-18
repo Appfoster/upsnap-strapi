@@ -36,6 +36,7 @@ import { request } from '../../utils/helpers';
 import {
   toast
 } from "react-toastify";
+import { ConfirmationModal } from '../../components/DeleteConfirmation';
 
 export default function ListStatusPages() {
   const [statusPages, setStatusPages] = useState<any[]>([]);
@@ -305,8 +306,7 @@ export default function ListStatusPages() {
                             onClick={(e: any) => {
                               e.stopPropagation();
                               setSelectedPageId(page.id);
-                              // setIsDeleteModalOpen(true);
-                              handleDeleteConfirm()
+                              setIsDeleteModalOpen(true);
                             }}
                             textColor="danger700"
                             startIcon={<Trash />}
@@ -322,7 +322,7 @@ export default function ListStatusPages() {
             </Tbody>
           </Table>
         </Box>
-        {/* <ConfirmationModal
+        <ConfirmationModal
           open={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
           onConfirm={handleDeleteConfirm}
@@ -333,7 +333,7 @@ export default function ListStatusPages() {
           confirmColor="red"
           isLoading={isDeleting}
           loadingText="Deleting..."
-      /> */}
+      />
       </Card>
     </>
   );
