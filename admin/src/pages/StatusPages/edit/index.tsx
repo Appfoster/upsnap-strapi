@@ -18,7 +18,7 @@ export default function UpdateStatusPage() {
   const handleBack = () => {
     navigate('/plugins/upsnap/status-pages');
   };
-  console.log('Status Page ID:', id);
+
   // Fetch monitor on load
   useEffect(() => {
     if (!id) return;

@@ -53,7 +53,7 @@ export default function ListStatusPages() {
     try {
       setIsLoading(true);
       const response = await request('/status-pages');
-      console.log('API response for status pages:', response);
+
       if (!response) return;
     //   const result = await response.json();
       setStatusPages(response?.statusPagesData?.data?.status_pages || []);
@@ -168,7 +168,7 @@ export default function ListStatusPages() {
       toast.error("Something went wrong. Please try again.");
     }
   };
-  console.log('statusPages ', statusPages);
+
   return (
     <>
       {/* Title + Button */}

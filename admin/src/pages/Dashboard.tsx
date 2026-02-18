@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@strapi/design-system';
+import { Box, Grid, Typography, Flex } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { getRangeTimestamps, request } from '../utils/helpers';
@@ -108,20 +108,19 @@ export default function Dashboard() {
         <Typography variant="beta" marginBottom={6}>
           Dashboard ({monitorData?.monitor?.name || ''})
         </Typography>
-        <Grid.Root
+        <Flex
           gap={{
-            large: 10,
+            large: 4,
             medium: 2,
             initial: 1,
           }}
-          style={{
-            alignItems: 'start',
-            alignContent: 'space-around',
-            justifyItems: 'stretch',
-          }}
+          direction={{initial: "column", medium: "row"}}
+          alignItems='start'
+          alignContent= 'space-around'
+          justifyItems= 'stretch'
         >
-          <Grid.Item padding={1} col={8} xs={12}>
-            <Box display="flex" style={{ flexDirection: 'column', gap: '16px', height: '100%' }}>
+          <Box>
+            <Flex direction="column" gap={4} height='100%' alignItems='start' flexWrap="wrap">
               <StatisticsCards
                 monitorData={monitorData}
                 uptimeStats={uptimeStats}
@@ -134,13 +133,13 @@ export default function Dashboard() {
                 timeRange={responseTimeRange || 'last_24_hours'}
                 onTimeRangeChange={handleTimeRangeChange}
               />
-            </Box>
-          </Grid.Item>
+            </Flex>
+          </Box>
 
-          <Grid.Item padding={1} col={4} xs={12}>
+          <Box width="100%">
             <HealthCards monitorData={monitorData} isLoading={isLoading} />
-          </Grid.Item>
-        </Grid.Root>
+          </Box>
+        </Flex>
         <IncidentsTable
           incidentsData={monitorIncidents}
           monitorName={monitorData?.monitor?.name || ''}

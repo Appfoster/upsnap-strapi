@@ -240,7 +240,7 @@ export default function BrokenLinksTable({
                   <Tr>
                     <Td colSpan={6}>
                       <Flex padding={5} justifyContent="center" alignItems="center">
-                        <Typography>No broken links match the selected filters</Typography>
+                        <Typography>No broken links found</Typography>
                       </Flex>
                     </Td>
                   </Tr>
