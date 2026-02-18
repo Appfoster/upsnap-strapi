@@ -79,13 +79,17 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
           {data &&
             (data?.status === 'error' || data?.status === 'warning' ? (
               <CardTitle marginTop={3} fontSize={3}>
-                <CrossCircle color="danger700" style={{ color: 'rgb(238, 94, 82)' }} />{' '}
-                <Typography> {data?.error || data?.message}</Typography>
+                <Flex direction="row" alignItems="center" gap={1}>
+                  <CrossCircle color="danger700" style={{ color: 'rgb(238, 94, 82)' }} />{' '}
+                  <Typography> {data?.error || data?.message}</Typography>
+                </Flex>
               </CardTitle>
             ) : (
               <CardTitle marginTop={3} fontSize={3}>
-                <SealCheck color="success700" style={{ color: '#10b981' }} />{' '}
-                <Typography>{data?.message}</Typography>
+                <Flex direction="row" alignItems="center" gap={1}>
+                  <SealCheck color="success700" style={{ color: '#10b981' }} />{' '}
+                  <Typography>{data?.message}</Typography>
+                </Flex>
               </CardTitle>
             ))}
           <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>

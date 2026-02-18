@@ -11,8 +11,8 @@ import {
   Grid,
   Main,
 } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
-import { formatDate, request } from '../utils/helpers';
+import { useParams, useNavigate } from 'react-router-dom';
+import { formatDate, request, getPrimaryMonitorId } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
@@ -20,13 +20,21 @@ import PageHeader from '../components/PageHeader';
 import { MonitorData, DomainCheckData } from '../utils/types';
 
 export default function DomainCheck() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<DomainCheckData | null>(null);
   const [showMore, setShowMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
-
+  const [monitorId, setMonitorId] = useState<string | null>();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   const getDomainCheckData = async (url: string, forceFetch: boolean = false) => {
     try {
       setLoading(true);
@@ -114,10 +122,10 @@ export default function DomainCheck() {
                 DNS Records
               </Typography>
               <Divider marginTop={3} marginBottom={4} />
-              <DetailRow label="IPv4" value={meta.ipv4 ? meta.ipv4.join(', ') : '–'} />
+              <DetailRow label="IPv4" value={meta.ipv4 ? meta.ipv4 : '–'} />
               <DetailRow
                 label="IPv6"
-                value={meta.ipv6 && meta.ipv6.length > 0 ? meta.ipv6.join(', ') : '–'}
+                value={meta.ipv6 && meta.ipv6.length > 0 ? meta.ipv6 : '–'}
               />
               <DetailRow label="MX Records" value={meta.mxCount ?? '–'} />
               <DetailRow label="NS Records" value={meta.nsCount ?? '–'} />

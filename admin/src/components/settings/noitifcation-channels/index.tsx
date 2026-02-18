@@ -369,10 +369,10 @@ const IntegrationsPage: React.FC = () => {
   };
 
   return (
-    <Box padding={6}>
-      <Flex direction={['column', 'row']} alignItems="stretch" gap={4} height="100%">
+    <Box padding={2}>
+      <Flex direction={{ initial: 'column', medium: 'row' }} alignItems="stretch" gap={4} height="100%">
         {/* LEFT SIDEBAR */}
-        <Box background="neutral0" padding={4} borderRadius="8px" width={['100%', '260px']}>
+        <Box background="neutral0" padding={4} borderRadius="8px" width={{ initial: '100%', medium: '260px' }}>
           <Flex direction="column" gap={2} alignItems="stretch">
             {filterCategories.map((filter: any) => (
               <Button
@@ -389,13 +389,13 @@ const IntegrationsPage: React.FC = () => {
         </Box>
 
         {/* MAIN CONTENT */}
-        <Box background="neutral0" padding={6} borderRadius="8px" flex="1" overflow="auto">
-          <Box maxWidth="900px" margin="auto">
+        <Box background="neutral0" padding={4} borderRadius="8px" flex="1" overflow="auto">
+          <Box maxWidth={{inital: "100%", medium: "900px"}} margin="auto">
             {/* HEADER */}
             <Flex
-              direction={['column', 'row']}
+              direction={{ initial: 'column', medium: 'row' }}
               justifyContent="space-between"
-              alignItems={['stretch', 'center']}
+              alignItems={{ initial: 'stretch', medium: 'center' }}
               gap={4}
               marginBottom={6}
             >
@@ -418,7 +418,7 @@ const IntegrationsPage: React.FC = () => {
                 )}
               </Flex>
 
-              <Box width={['100%', '280px']}>
+              <Box width={{initial: '100%', medium: '280px' }}>
                 <TextInput
                   placeholder="Search by integration type…"
                   value={searchQuery}
@@ -430,12 +430,12 @@ const IntegrationsPage: React.FC = () => {
 
             {/* CONTENT */}
             {channelsLoading ? (
-              <Box padding={8} textAlign="center">
+              <Box padding={{initial: 2, medium: 8}} textAlign="center">
                 <Typography textColor="neutral500">Loading integrations…</Typography>
               </Box>
             ) : activeFilter === 'my' ? (
               integrations.length === 0 ? (
-                <Box padding={8} textAlign="center" width="100%">
+                <Box padding={{initial: 2, medium: 8}} textAlign="center" width="100%">
                   <Flex
                     direction="column"
                     alignItems="center"
@@ -464,7 +464,7 @@ const IntegrationsPage: React.FC = () => {
                 </Flex>
               )
             ) : filteredChannels.length === 0 ? (
-              <Box padding={8} textAlign="center">
+              <Box padding={{initial: 2, medium: 8}} textAlign="center">
                 <Flex direction="column" alignItems="center" gap={3} marginBottom={4} width="100%">
                   <Typography variant="delta">No integrations available</Typography>
                   <Typography variant="pi" textColor="neutral500">
@@ -522,7 +522,7 @@ const IntegrationsPage: React.FC = () => {
                       <Accordion.Content>
                         <Flex direction="column" gap={3} paddingTop={4}>
                           {channelIntegrations.length === 0 && (
-                            <Box padding={8} textAlign="center">
+                            <Box padding={{initial: 2, medium: 8}} textAlign="center">
                               <Flex
                                 direction="column"
                                 alignItems="center"

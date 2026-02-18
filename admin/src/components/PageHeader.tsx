@@ -40,9 +40,9 @@ export default function PageHeader({
 
   return (
     <Flex
-      direction={{ base: 'column', sm: 'row' }}
+      direction={{ initial: 'column', medium: 'row' }}
       justifyContent="space-between"
-      alignItems={{ base: 'flex-start', sm: 'center' }}
+      alignItems={{ initial: 'flex-start', medium: 'center' }}
       gap={3}
       marginBottom={4}
       marginTop={4}

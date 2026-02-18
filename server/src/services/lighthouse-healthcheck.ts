@@ -1,3 +1,4 @@
+import { formatMessage } from "../utils/helpers";
 import { LIGHTHOUSE_CHECKS } from "../utils/constants";
 
 /**
@@ -58,7 +59,7 @@ export function buildLighthouseErrorResponse(raw: any) {
   return {
     status: "error",
     message: "Failed to get Lighthouse report",
-    error: errorMsg,
+    error: formatMessage(errorMsg),
     data: raw,
   };
 }

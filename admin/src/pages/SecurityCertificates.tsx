@@ -10,8 +10,8 @@ import {
   Button,
 } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
-import { getRangeTimestamps, request } from '../utils/helpers';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getPrimaryMonitorId, request } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
@@ -20,13 +20,21 @@ import PageHeader from '../components/PageHeader'; // You may need to create or 
 import { MonitorData, Region, SSLCheckData } from '../utils/types';
 
 export default function SecurityCertificates() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<SSLCheckData | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
-
+  const navigate = useNavigate();
+  const [monitorId, setMonitorId] = useState<string | null>();
+  
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   // Fetch monitor details
   useEffect(() => {
     setLoading(true);
@@ -117,9 +125,9 @@ export default function SecurityCertificates() {
             }}
           >
             <Grid.Item col={12} xs={12}>
-              <Card style={{ width: '950px' }}>
+              <Card style={{ width: '100%' }}>
                 <CardBody display="flex" style={{ flexDirection: 'column' }}>
-                  <CardContent style={{ width: '850px' }}>
+                  <CardContent style={{ width: '100%' }}>
                     <Typography variant="delta" fontWeight="bold">
                       Certificate Details
                     </Typography>

@@ -14,23 +14,31 @@ import {
   Main,
   Flex,
 } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import StatusCard from '../components/reachability/StatusCard';
 import CircleProgress from '../components/lighthouse/CircleProgress';
 import MetricRow from '../components/lighthouse/MetricRow';
 import LoadingCard from '../components/reachability/LoadingCard';
-import { request } from '../utils/helpers';
+import { request, getPrimaryMonitorId } from '../utils/helpers';
 import { LighthouseCheckData, MonitorData } from '../utils/types';
 import PageHeader from '../components/PageHeader';
 
 export default function Lighthouse() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<LighthouseCheckData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
   const [strategy, setStrategy] = useState<'desktop' | 'mobile'>('desktop');
-
+  const navigate = useNavigate();
+  const [monitorId, setMonitorId] = useState<string | null>();
+  
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   // Fetch monitor details
   useEffect(() => {
     setLoading(true);

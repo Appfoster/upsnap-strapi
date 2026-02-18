@@ -12,6 +12,7 @@ import {
   Badge,
 } from '@strapi/design-system';
 import { formatCheckType } from '../../utils/helpers';
+import { Flex } from '@strapi/design-system';
 
 interface Incident {
   monitor_id: string;
@@ -95,11 +96,12 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
           ) : incidentsData?.incidents && incidentsData?.incidents?.length === 0 ? (
             <Tr>
               <Td colSpan={6}>
+                <Flex width="100%" justifyContent="center" direction="column" gap={1} padding={2} margin={2}>
                 <Typography fontWeight="bold">All good 🎉</Typography>
-                <br />
                 <Typography variant="omega" textColor="neutral500">
                   No recent incidents.
                 </Typography>
+                </Flex>
               </Td>
             </Tr>
           ) : (

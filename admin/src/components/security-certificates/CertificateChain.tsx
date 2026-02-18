@@ -112,7 +112,7 @@ export default function CertificateChain({ chain }: CertificateChainProps) {
                   {/* Certificate Details Grid */}
                   <Flex gap={8} wrap="wrap" alignItems="flex-start" justifyContent="space-between">
                     {/* Left Column */}
-                    <Box style={{ minWidth: 250 }}>
+                    <Box>
                       <Flex marginBottom={2} gap={2}>
                         <Typography variant="sigma" textColor="neutral500">
                           Signature Algorithm
@@ -153,7 +153,7 @@ export default function CertificateChain({ chain }: CertificateChainProps) {
                       </Flex>
                     </Box>
                     {/* Right Column */}
-                    <Box style={{ minWidth: 250 }}>
+                    <Box>
                       <Flex marginBottom={2} gap={2}>
                         <Typography variant="sigma" textColor="neutral500">
                           Key Algorithm

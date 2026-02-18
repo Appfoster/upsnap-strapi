@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge, Typography, Box, Link } from "@strapi/design-system";
+import { Flex } from "@strapi/design-system";
 
 interface DetailRowProps {
   label: string;
@@ -49,11 +50,13 @@ const DetailRow: React.FC<DetailRowProps> = ({
   };
 
   return (
-    <Box paddingBottom={2} display='flex' paddingTop={2}>
-      <Typography variant="omega" fontWeight="bold" style={{ width: "40%", display: "inline-block" }}>
-        {label}
-      </Typography>
-      <Typography variant="omega" style={{ width: "70%", display: "inline-block", ...(Array.isArray(value) && { overflow: 'auto', height: '48px'}) }}>{renderValue()}</Typography>
+    <Box paddingBottom={2} display='flex' paddingTop={2} width="100%">
+      <Flex direction={{initial: "column", medium: "row"}} gap={2} alignItems="start" width="100%">
+        <Typography variant="omega" fontWeight="bold" width={{initial: "100%", medium: "40%"}} style={{ display: "inline-block" }}>
+          {label}
+        </Typography>
+        <Typography variant="omega" width={{initial: "100%", medium: "70%"}} style={{ display: "inline-block", ...(Array.isArray(value) && { overflow: 'auto', height: '48px'}) }}>{renderValue()}</Typography>
+      </Flex>
     </Box>
   );
 };

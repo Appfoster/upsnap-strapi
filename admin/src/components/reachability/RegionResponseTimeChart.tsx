@@ -9,6 +9,7 @@ import {
   Typography,
   SingleSelect,
   SingleSelectOption,
+  Flex
 } from '@strapi/design-system';
 import { MonitorData, ResponseTimeData, RegionResponseTimeData } from '../../utils/types';
 
@@ -228,11 +229,8 @@ export const RegionResponseTimeChart = ({
           ) : (
             <Chart type="area" height={350} series={series} options={chartOptions as any} />
           )}
-          <Box
-            marginTop={6}
-            display="flex"
-            style={{ gap: 16, marginTop: 32, flexDirection: 'row' }}
-          >
+          
+          <Flex gap={3} marginTop={3} direction={{initial: "column", medium: "row"}} justifyContent={{initial: 'start', medium: "space-around"}}>
             <Box
               display="flex"
               style={{ flexDirection: 'column', alignItems: 'center' }}
@@ -269,7 +267,7 @@ export const RegionResponseTimeChart = ({
               <Typography fontWeight="bold">{formatTime(stats.min)}</Typography>
               <Typography textColor="neutral600">Min. response time</Typography>
             </Box>
-          </Box>
+          </Flex>
         </CardContent>
       </CardBody>
     </Card>

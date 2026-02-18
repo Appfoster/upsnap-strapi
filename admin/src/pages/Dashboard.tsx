@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, Flex } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
-import { getRangeTimestamps, request } from '../utils/helpers';
+import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
 import {
   HistogramData,
   MonitorData,
@@ -14,6 +14,8 @@ import { HealthCards } from '../components/dashboard/HealthCards';
 import { ResponseTimeChart } from '../components/dashboard/ResponseTimeChart';
 import { IncidentsTable } from '../components/dashboard/IncidentsTable';
 import { useNavigate } from 'react-router-dom';
+import { RegionsDropdown } from '../components/RegionsDropdown';
+import PageHeader from '../components/PageHeader';
 
 export default function Dashboard() {
   const [monitorData, setMonitorData] = useState<MonitorData | null>(null);
@@ -28,7 +30,21 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string>('default');
   const navigate = useNavigate();
-  const id = '51c21876-208d-4920-8407-310b25d1f8e6';
+  const [monitorId, setMonitorId] = useState<string | null>();
+  const [regionId, setRegionId] = useState<string | null>(() => {
+		if (monitorData?.monitor.regions && Array.isArray(monitorData?.monitor.regions)) {
+			const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
+			return primaryRegion?.id || null;
+		}
+		return null;
+	});
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
     if (!rt) return {};
@@ -55,7 +71,7 @@ export default function Dashboard() {
     console.log('time range change event ', range);
     setResponseTimeRange(range);
     const { start, end } = getRangeTimestamps(range || 'last_24_hours');
-    request(`/monitor/${id}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
+    request(`/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);
@@ -65,7 +81,7 @@ export default function Dashboard() {
   useEffect(() => {
     const { start, end } = getRangeTimestamps(responseTimeRange || 'last_24_hours');
     setIsLoading(true);
-    request(`/monitor/${id}`, {
+    request(`/monitor/${monitorId}`, {
       method: 'GET',
     }).then((res) => {
       if (res?.monitor?.message === 'Invalid authentication token') {
@@ -74,40 +90,49 @@ export default function Dashboard() {
       }
       setMonitorData(res.monitor?.data || null);
     });
-    request(`/monitor/${id}/uptime-stats`, {
+    request(`/monitor/${monitorId}/uptime-stats`, {
       method: 'GET',
     }).then((res) => {
       setUptimeStats(res.uptimeStatsData?.data || null);
     });
-    request(`/monitor/${id}/histogram`, {
+    request(`/monitor/${monitorId}/histogram`, {
       method: 'GET',
     }).then((res) => {
       setHistogramData(res.histogramData?.data || null);
       setIsLoading(false);
     });
 
-    request(`/monitor/${id}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
+    request(`/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);
     });
-    request(`/monitor/${id}/incidents`, {
+    request(`/monitor/${monitorId}/incidents`, {
       method: 'GET',
     }).then((res) => {
       setMonitorIncidents(res.incidentsData?.data || null);
     });
-  }, []);
+  }, [monitorId]);
 
   useEffect(() => {
     getRegionResponseTimeData();
   }, [responseTimeData]);
+  const handleRefresh = () => {
 
+  }
   return (
     <Main>
       <Box padding={1}>
-        <Typography variant="beta" marginBottom={6}>
+        <PageHeader title={'Dashboard'} monitorUrl={monitorData?.monitor?.name || ''} regionsDropdown={true}
+        selectedRegions={monitorData?.monitor?.regions}
+        regionId={regionId}
+        onRegionChange={setRegionId}
+        onRefresh={handleRefresh}
+        />
+        {/* <Typography variant="beta" marginBottom={6}>
           Dashboard ({monitorData?.monitor?.name || ''})
         </Typography>
+        <RegionsDropdown value={regionId || null} onChange={setRegionId}  /> */}
         <Flex
           gap={{
             large: 4,

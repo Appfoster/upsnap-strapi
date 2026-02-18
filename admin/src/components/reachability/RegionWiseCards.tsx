@@ -1,3 +1,4 @@
+import { Flex } from "@strapi/design-system";
 import { Region } from "../../utils/types";
 import {
   Card,
@@ -51,7 +52,7 @@ export default function RegionWiseCards({
         </Box>
       </CardHeader>
       <CardBody>
-        <CardContent width="330px">
+        <CardContent width="100%">
         {regions.map((region: Region, index: number) => {
           const isLoading = loadingRegions.has(region.id);
           const data = regionResponseTimeData[region.id];
@@ -79,7 +80,7 @@ export default function RegionWiseCards({
               {isLoading ? (
                 <Typography variant="epsilon" textColor="neutral500">Loading...</Typography>
               ) : data ? (
-                <Box display="flex" style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                <Flex direction={{initial: "row"}} justifyContent={{ initial: 'space-around' }}>
                   <Box display="flex" style={{ flexDirection: 'column', alignItems: 'center' }}>
                     <Typography variant="pi">Avg</Typography>
                     <Typography variant="epsilon">{formatTime(data.avg_response_time)}</Typography>
@@ -92,7 +93,7 @@ export default function RegionWiseCards({
                     <Typography variant="pi">Min</Typography>
                     <Typography variant="epsilon">{formatTime(data.min_response_time)}</Typography>
                   </Box>
-                </Box>
+                </Flex>
               ) : (
                 <Typography variant="pi" textColor="neutral500">No data available</Typography>
               )}

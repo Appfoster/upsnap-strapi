@@ -485,6 +485,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit }: Props) 
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
+        if (handleCancelEdit) handleCancelEdit();
         navigate('/plugins/upsnap/settings');
         // router.push(ROUTES.MONITORS);
       } else {

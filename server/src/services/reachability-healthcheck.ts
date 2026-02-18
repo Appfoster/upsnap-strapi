@@ -1,3 +1,5 @@
+import { formatMessage } from "../utils/helpers";
+
 /**
  * Returns a human-readable message based on the given HTTP status code.
  */
@@ -35,7 +37,7 @@ export function buildReachabilityErrorResponse(raw: any) {
   return {
     status: "error",
     message: "Failed to get the reachability reports",
-    error: errorMsg,
+    error: formatMessage(errorMsg),
     data: raw,
   };
 }

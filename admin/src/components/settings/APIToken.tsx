@@ -1,4 +1,4 @@
-import { Box, Button, TextInput, Typography } from '@strapi/design-system';
+import { Box, Button, TextInput, Typography, Flex, Link } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { request } from '../../utils/helpers';
 
@@ -24,9 +24,12 @@ export default function APIToken() {
   };
 
   return (
-    <Box padding={8}>
+    <Box padding={3}>
+      <Flex direction="column" gap={2} alignItems="start">
       <Typography variant="alpha">Token Settings</Typography>
-      <Box marginTop={6} width="50%">
+      <Typography variant="omega">Enter the Upsnap API Key and save to enable Healthcheck settings. To access the API key, please visit the <Link href="https://upsnap.ai" isExternal>Upsnap Dashboard</Link></Typography>
+      </Flex>
+      <Box marginTop={6} width="100%">
         <TextInput
           label="API Token"
           type="password"

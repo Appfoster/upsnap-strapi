@@ -16,6 +16,7 @@ import UpdateStatusPage from './StatusPages/edit';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import CreateMonitor from './monitors/new';
 
 const StyledContainer = styled(ToastContainer)`
@@ -28,11 +29,19 @@ const StyledContainer = styled(ToastContainer)`
   }
 `;
 
+const NoPaddingContent = createGlobalStyle`
+  [data-strapi-main-content="true"] > :nth-child(2) > :nth-child(2) {
+    padding: 0 !important;
+  }
+`;
+
 const App = () => {
   return (
+    <>
+    <NoPaddingContent />
     <Layouts.Root sideNav={<SideNav />}>
       <Layouts.Header title="Upsnap" subtitle="Website health monitoring" />
-      <Layouts.Content>
+     <Layouts.Content>
         <StyledContainer position="top-right" autoClose={3000} />
         <Routes>
           <Route index element={<Dashboard />} />
@@ -52,6 +61,7 @@ const App = () => {
         </Routes>
       </Layouts.Content>
     </Layouts.Root>
+    </>
   );
 };
 

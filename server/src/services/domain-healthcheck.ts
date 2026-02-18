@@ -1,3 +1,5 @@
+import { formatMessage } from "../utils/helpers";
+
 /**
  * Returns a human-readable message for domain checks.
  */
@@ -80,7 +82,7 @@ export function buildDomainErrorResponse(raw: any) {
   return {
     status: "error",
     message: "Failed to get domain report",
-    error: errorMsg,
+    error: formatMessage(errorMsg),
     data: raw,
   };
 }

@@ -11,8 +11,8 @@ import {
   Main,
   Badge,
 } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
-import { formatDate, request } from '../utils/helpers';
+import { useParams, useNavigate } from 'react-router-dom';
+import { formatDate, request, getPrimaryMonitorId } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
@@ -21,13 +21,21 @@ import { MonitorData, MixedContentData } from '../utils/types';
 import { Link } from '@strapi/design-system';
 
 export default function MixedContent() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<MixedContentData | null>(null);
   const [showMore, setShowMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
-
+  const navigate = useNavigate();
+  const [monitorId, setMonitorId] = useState<string | null>();
+  
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   const getMixedContentData = async (url: string, forceFetch: boolean = false) => {
     try {
       setLoading(true);

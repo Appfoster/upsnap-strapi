@@ -33,9 +33,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // import { ConfirmationModal } from "../ConfirmationModal";
 import { getUserDetailsCached } from '../../utils/userStorage';
 import { request } from '../../utils/helpers';
-import {
-  toast
-} from "react-toastify";
+import { toast } from 'react-toastify';
 import { ConfirmationModal } from '../../components/DeleteConfirmation';
 
 export default function ListStatusPages() {
@@ -55,7 +53,7 @@ export default function ListStatusPages() {
       const response = await request('/status-pages');
 
       if (!response) return;
-    //   const result = await response.json();
+      //   const result = await response.json();
       setStatusPages(response?.statusPagesData?.data?.status_pages || []);
     } catch (error) {
       console.error('Error fetching status pages:', error);
@@ -71,22 +69,20 @@ export default function ListStatusPages() {
 
     try {
       const result = await request(`/status-pages/${selectedPageId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
       if (!result) return;
 
       if (result?.statusPagesData?.status === 'success') {
-        toast.success("Status page deleted successfully");
+        toast.success('Status page deleted successfully');
         await fetchStatusPages();
         setIsDeleteModalOpen(false);
         setSelectedPageId(null);
       } else {
-        toast.error(
-            result.data?.message || "Failed to delete status page"
-        );
+        toast.error(result.data?.message || 'Failed to delete status page');
       }
     } catch (error) {
-      toast.error("Something went wrong while deleting monitor");
+      toast.error('Something went wrong while deleting monitor');
     } finally {
       setIsDeleting(false);
     }
@@ -108,11 +104,7 @@ export default function ListStatusPages() {
       if (!result) return;
 
       if (result?.statusPagesData?.status === 'success') {
-         toast.success(
-            isPublished
-                ? "Status page published"
-                : "Status page unpublished"
-        );
+        toast.success(isPublished ? 'Status page published' : 'Status page unpublished');
         const updatedPage = result?.statusPagesData?.data.status_page;
         setStatusPages((prev) =>
           prev.map((p) =>
@@ -120,10 +112,10 @@ export default function ListStatusPages() {
           )
         );
       } else {
-        toast.error(result.data?.message || "Failed to update page");
+        toast.error(result.data?.message || 'Failed to update page');
       }
     } catch (error) {
-       toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
@@ -137,17 +129,17 @@ export default function ListStatusPages() {
 
       if (result?.statusPagesData?.status === 'success') {
         const updatedPage = result?.statusPagesData?.data.status_page;
-         toast.success("Shareable link reset successfully");
+        toast.success('Shareable link reset successfully');
         setStatusPages((prev) =>
           prev.map((p) =>
             p.id === updatedPage.id ? { ...p, shareable_id: updatedPage.shareable_id } : p
           )
         );
       } else {
-         toast.error(result.data?.message || "Failed to reset link");
+        toast.error(result.data?.message || 'Failed to reset link');
       }
     } catch (error) {
-       toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
@@ -159,28 +151,30 @@ export default function ListStatusPages() {
         userDetails?.plan_limits?.max_status_pages || PLAN_LIMITS.TRIAL.max_status_pages;
       console.log('Max status pages limit for user:', maxStatusPagesLimit);
       if (maxStatusPagesLimit !== undefined && statusPages.length >= maxStatusPagesLimit) {
-        toast.error(`You have reached your plan limit of ${maxStatusPagesLimit} status pages. Please upgrade your plan to add more status pages.`);
+        toast.error(
+          `You have reached your plan limit of ${maxStatusPagesLimit} status pages. Please upgrade your plan to add more status pages.`
+        );
         return;
       }
       console.log('Navigating to create status page');
-      navigate("/plugins/upsnap/status-pages/new");
+      navigate('/plugins/upsnap/status-pages/new');
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
   return (
     <>
       {/* Title + Button */}
-      <Flex justifyContent="space-between" alignItems="center" marginBottom={6}>
+      <Flex justifyContent="space-between" gap={2} alignItems={{ initial: "start", medium: "center" }} direction={{ initial: "column", medium: "row" }} marginBottom={6}>
         <Box>
-            <Flex direction="column" gap={1} alignItems="flex-start">
-          <Typography variant="alpha" fontWeight="bold">
-            Status Pages
-          </Typography>
-          <Typography variant="pi" textColor="neutral600">
-            Manage your Status Pages
-          </Typography>
+          <Flex direction="column" gap={1} alignItems="flex-start">
+            <Typography variant="alpha" fontWeight="bold">
+              Status Pages
+            </Typography>
+            <Typography variant="pi" textColor="neutral600">
+              Manage your Status Pages
+            </Typography>
           </Flex>
         </Box>
         <Button startIcon={<Plus />} onClick={handleAddStatusPage} variant="primary" size="S">
@@ -222,12 +216,12 @@ export default function ListStatusPages() {
                     <Td>
                       <Box>
                         <Flex direction="column" gap={1} alignItems="flex-start">
-                        <Typography variant="omega" fontWeight="bold">
-                          {page.name}
-                        </Typography>
-                        <Typography variant="pi" textColor="neutral600">
-                          {page.monitor_ids.length} monitors
-                        </Typography>
+                          <Typography variant="omega" fontWeight="bold">
+                            {page.name}
+                          </Typography>
+                          <Typography variant="pi" textColor="neutral600">
+                            {page.monitor_ids.length} monitors
+                          </Typography>
                         </Flex>
                       </Box>
                     </Td>
@@ -273,15 +267,7 @@ export default function ListStatusPages() {
                             }}
                             startIcon={page.is_published === true ? <MinusCircle /> : <Rocket />}
                           >
-                            {page.is_published === true ? (
-                              <>
-                                Un-publish
-                              </>
-                            ) : (
-                              <>
-                                Publish
-                              </>
-                            )}
+                            {page.is_published === true ? <>Un-publish</> : <>Publish</>}
                           </MenuItem>
                           <MenuItem
                             onClick={(e: any) => {
@@ -290,7 +276,6 @@ export default function ListStatusPages() {
                             }}
                             startIcon={<ArrowsCounterClockwise />}
                           >
-                            
                             Reset Shareable Link
                           </MenuItem>
                           <MenuItem
@@ -333,7 +318,7 @@ export default function ListStatusPages() {
           confirmColor="red"
           isLoading={isDeleting}
           loadingText="Deleting..."
-      />
+        />
       </Card>
     </>
   );

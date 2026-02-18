@@ -11,8 +11,8 @@ import {
   Grid,
   Main,
 } from '@strapi/design-system';
-import { useParams } from 'react-router-dom';
-import { request } from '../utils/helpers';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getPrimaryMonitorId, request } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import BrokenLinksTable from '../components/broken-links/BrokenLinksTable';
@@ -21,12 +21,21 @@ import PageHeader from '../components/PageHeader';
 import { MonitorData, BrokenLinksCheckData } from '../utils/types';
 
 export default function BrokenLinks() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<BrokenLinksCheckData | null>(null);
   const [showMore, setShowMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
+  const [monitorId, setMonitorId] = useState<string | null>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
 
   // Fetch monitor details
   useEffect(() => {
@@ -111,9 +120,9 @@ export default function BrokenLinks() {
             }}
           >
             <Grid.Item col={12} xs={12}>
-              <Card style={{ width: '950px' }}>
+              <Card style={{ width: '100%' }}>
                 <CardBody display="flex" style={{ flexDirection: 'column' }}>
-                  <CardContent style={{ width: '850px' }}>
+                  <CardContent style={{ width: '100%' }}>
                     <Typography variant="delta" fontWeight="bold">
                       Check Details
                     </Typography>

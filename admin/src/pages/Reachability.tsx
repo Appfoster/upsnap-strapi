@@ -2,13 +2,14 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Box, Card, CardContent, CardBody, Typography, Grid, Divider } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRangeTimestamps, request } from '../utils/helpers';
+import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
 import RegionWiseCards from '../components/reachability/RegionWiseCards';
 import { MonitorData, Region, UptimeHealthCheckData, ResponseTimeData } from '../utils/types';
 import { RegionResponseTimeChart } from '../components/reachability/RegionResponseTimeChart';
+import { Flex } from '@strapi/design-system';
 
 interface RegionResponseTimeData {
   chart_data: Array<{ timestamp: number; response_time: number }>;
@@ -18,7 +19,6 @@ interface RegionResponseTimeData {
 }
 
 export default function Reachability() {
-  const monitorId = '51c21876-208d-4920-8407-310b25d1f8e6'; // useParams<{ monitorId: string }>();
   const [data, setData] = useState<UptimeHealthCheckData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
@@ -29,6 +29,15 @@ export default function Reachability() {
   const [loadingRegions, setLoadingRegions] = useState<Set<string>>(new Set());
   const [responseTimeRange, setResponseTimeRange] = useState<string | null>('last_24_hours');
   const navigate = useNavigate();
+  const [monitorId, setMonitorId] = useState<string | null>();
+  
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      setMonitorId(fetchedMonitorId);
+    })();
+  }, []);
   const fetchResponseTimeDataForRegions = async (
     regions: { id: string; is_primary: boolean; name: string }[],
     timeRange: string
@@ -183,28 +192,29 @@ export default function Reachability() {
   return (
     <Main>
       <Box padding={4}>
-        <Typography variant="beta" as="h2" marginBottom={4}>
+        <Typography variant="beta" as="h2" style={{marginBottom: '10px'}}>
           Reachability ({selectedMonitor.monitor?.name || ''})
         </Typography>
         <StatusCard status={data.status} message={data.message} error={data.error} cardData={data.data} />
         {isSuccess && meta && (
-          <Grid.Root
+          <Flex
             gap={{
               large: 6,
               medium: 2,
-              initial: 1,
+              initial: 2,
             }}
             style={{
-              alignItems: 'start',
               alignContent: 'space-around',
-              justifyItems: 'stretch',
-              marginTop: '10px',
             }}
+            alignItems="start"
+            direction={{ initial: "column", medium: "row"}}
+            marginTop={3}
+            justifyContent="stretch"
           >
-            <Grid.Item col={8}>
-              <Card style={{ width: '700px' }}>
+            <Box width="100%">
+              <Card>
                 <CardBody display="flex" style={{ flexDirection: 'column' }}>
-                  <CardContent style={{ width: '650px' }}>
+                  <CardContent style={{ width: '100%' }}>
                     <Typography variant="delta" fontWeight="bold" marginBottom={2}>
                       HTTP Details
                     </Typography>
@@ -233,16 +243,16 @@ export default function Reachability() {
                   </CardContent>
                 </CardBody>
               </Card>
-            </Grid.Item>
-            <Grid.Item col={4}>
+            </Box>
+            <Box width={{initial: "100%", medium: "45%"}}>
               <RegionWiseCards
                 regions={regions}
                 regionNames={regionNames}
                 regionResponseTimeData={regionResponseTimeData}
                 loadingRegions={loadingRegions}
               />
-            </Grid.Item>
-          </Grid.Root>
+            </Box>
+          </Flex>
         )}
         <Box marginTop={8}>
           <RegionResponseTimeChart
