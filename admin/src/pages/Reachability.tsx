@@ -34,7 +34,7 @@ export default function Reachability() {
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
       setMonitorId(fetchedMonitorId);
     })();
   }, []);

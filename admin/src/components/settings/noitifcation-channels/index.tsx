@@ -483,9 +483,10 @@ const IntegrationsPage: React.FC = () => {
                   return (
                     <Accordion.Item key={channel.type} value={channel.type}>
                       <Accordion.Header>
-                        <Accordion.Trigger caretPosition="right" description={channel.description}>
-                          <Flex alignItems="center" gap={3}>
+                        <Accordion.Trigger caretPosition="left" description={channel.description}>
+                          <Flex alignItems="center" gap={3} width={{initial: "100%", medium: "634px"}}>
                             <Box>{getIntegrationIcon(channel.icon)}</Box>
+                            <Flex width={{initial: "100%", medium: "634px"}} gap={3} justifyContent="space-between">
                             <Typography fontWeight="semiBold">{channel.label}</Typography>
                             <Flex justifyContent="flex-end">
                               {!planLimits?.can_add_more ? (
@@ -514,6 +515,7 @@ const IntegrationsPage: React.FC = () => {
                                   Add
                                 </Button>
                               )}
+                            </Flex>
                             </Flex>
                           </Flex>
                         </Accordion.Trigger>

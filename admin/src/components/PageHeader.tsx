@@ -37,9 +37,7 @@ export default function PageHeader({
       return monitorUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
     }
   })();
-  console.log('show refresh ', showRefresh)
-  console.log('regions dropdwon ', regionsDropdown)
-  console.log('selected regions ', selectedRegions);
+
   return (
     <Flex
       direction={{ initial: 'column', medium: 'row' }}
@@ -77,7 +75,7 @@ export default function PageHeader({
 
       {/* Right Side — Optional Refresh Button */}
       {showRefresh && onRefresh && (
-        <Flex alignItems={{ initial: "start", medium: "center" }} direction={{ initial: "column", medium: "start" }} gap={4}>
+        <Flex alignItems={{ initial: "start", medium: "center" }} direction={{ initial: "column", medium: "row" }} gap={4}>
           {regionsDropdown && onRegionChange && (
             <Box style={{ minWidth: 180 }}>
               <RegionsDropdown

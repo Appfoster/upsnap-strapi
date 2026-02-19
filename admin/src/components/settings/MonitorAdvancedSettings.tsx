@@ -41,7 +41,7 @@ export default function AdvancedSettings({
     fetchUser();
   }, []);
 
-  const getPercent = (value: number) => ((value - 5) / 55) * 100;
+  const getPercent = (value: number) => ((value - 6) / 55) * 100;
 
   return (
     <Box width="100%">
@@ -102,7 +102,7 @@ export default function AdvancedSettings({
                       style={{
                         left: `${getPercent(value)}%`,
                         transform: 'translateX(-50%)',
-                        fontSize: 11,
+                        fontSize: 10,
                         color: '#666687',
                       }}
                     >

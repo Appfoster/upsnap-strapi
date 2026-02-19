@@ -21,7 +21,9 @@ async function getMonitors() {
   return res.monitorsData.data;
 }
 
-export default function Monitors() {
+export default function Monitors({ onTabChange }: {
+  onTabChange: (tab: string) => void;
+}) {
   const navigate = useNavigate();
   const [monitors, setMonitors] = useState<Monitor[]>();
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>();
@@ -31,19 +33,23 @@ export default function Monitors() {
   const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
   const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
   const userDetails = getUserData();
-  useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true);
-        const res = await getMonitors();
-        console.log('got monitors ', res);
-        setMonitors(res.monitors);
-      } catch (e) {
-        console.error('Error loading monitors:', e);
-      } finally {
-        setLoading(false);
+  const load = async () => {
+    try {
+      setLoading(true);
+      const res = await getMonitors();
+      console.log('got monitors ', res);
+      if (res?.monitors?.message === 'Invalid authentication token') {
+        onTabChange('api_key')
       }
+      setMonitors(res.monitors);
+    } catch (e) {
+      console.error('Error loading monitors:', e);
+    } finally {
+      setLoading(false);
     }
+  }
+  useEffect(() => {
+ 
     load();
     getUserDetails();
   }, []);
@@ -137,7 +143,7 @@ export default function Monitors() {
       setLoading(false);
     }
   }
-  console.log('bulk delete id ', bulkDeleteIds)
+
   return (
     <Box width="100%">
       {!showEdit && (
@@ -162,7 +168,7 @@ export default function Monitors() {
         </Flex>
       )}
       {showEdit && selectedMonitor && (
-        <MonitorForm monitor={selectedMonitor} mode="edit" handleCancelEdit={handleCancelEdit} />
+        <MonitorForm monitor={selectedMonitor} mode="edit" handleCancelEdit={handleCancelEdit} load={load} />
       )}
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

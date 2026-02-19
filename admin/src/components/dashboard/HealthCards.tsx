@@ -187,7 +187,7 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
                   <Box width={"20px"}>
                   <CrossCircle color={"danger700"} style={{ color: 'rgb(238, 94, 82)' }} />{' '}
                   </Box>
-                  <Typography> {data?.error || data?.message}</Typography>
+                  <Typography style={{wordBreak: "break-word"}}> {data?.error || data?.message}</Typography>
                 </Flex>
               </CardTitle>
             ) : (

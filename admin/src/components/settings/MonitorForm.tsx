@@ -32,9 +32,10 @@ interface Props {
   monitor?: Monitor | null;
   mode: 'create' | 'edit';
   handleCancelEdit?: () => void;
+  load?: () => void;
 }
 
-export default function MonitorForm({ monitor, mode, handleCancelEdit }: Props) {
+export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: Props) {
   // const router = useRouter();
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
   const navigate = useNavigate();
@@ -485,6 +486,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit }: Props) 
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
+        if (load) load();
         if (handleCancelEdit) handleCancelEdit();
         navigate('/plugins/upsnap/settings');
         // router.push(ROUTES.MONITORS);

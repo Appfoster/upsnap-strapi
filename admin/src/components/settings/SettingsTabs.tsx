@@ -18,8 +18,7 @@ export default function SettingsTabs({
   activeTab: string;
   onTabChange: (tab: string) => void;
 }) {
-  console.log('active tab ', activeTab);
-  console.log('tabs ', tabs);
+
   return (
     <>
       <Tabs.Root defaultValue={activeTab} value={activeTab} onValueChange={onTabChange}>
@@ -38,7 +37,7 @@ export default function SettingsTabs({
         <Tabs.Content value={activeTab}>
           {activeTab === 'monitors' && (
             <Box padding={4}>
-              <Monitors />
+              <Monitors onTabChange={onTabChange} />
             </Box>
           )}
           {activeTab === 'notification_channels' && (

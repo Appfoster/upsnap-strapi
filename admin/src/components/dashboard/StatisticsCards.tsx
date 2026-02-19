@@ -26,14 +26,16 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
   };
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} width="100%">
-      <Flex direction="column" gap={3} alignItems="start">
-        <Flex direction={{ initial: 'column', medium: 'row' }} gap={3} alignItems="start" marginTop={2}>
+      <Flex direction="column" gap={3} alignItems="start" width="100%">
+        <Flex
+          direction={{ initial: 'column', medium: 'row' }}
+          gap={3}
+          alignItems={{ initial: 'stretch', medium: 'start' }}
+          marginTop={2}
+          width="100%"
+        >
           <Box>
-            <Card
-              style={{
-                width: '240px',
-              }}
-            >
+            <Card width={{ initial: '100%', medium: '240px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Current Status</CardTitle>
@@ -47,11 +49,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
 
           <Box>
-            <Card
-              style={{
-                width: '240px',
-              }}
-            >
+            <Card width={{ initial: '100%', medium: '240px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last check</CardTitle>
@@ -67,11 +65,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
 
           <Box>
-            <Card
-              style={{
-                width: '280px',
-              }}
-            >
+            <Card width={{ initial: '100%', medium: '280px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 24 hours</CardTitle>
@@ -87,12 +81,10 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
         </Flex>
 
-        <Flex direction={{ initial: 'column', medium: 'row' }} gap={3}>
+        <Flex width="100%" direction={{ initial: 'column', medium: 'row' }} alignItems={{ initial: 'stretch', medium: 'start' }} gap={3}>
           <Box>
             <Card
-              style={{
-                width: '240px',
-              }}
+              width={{ initial: '100%', medium: '240px' }}
             >
               <CardBody>
                 <CardContent paddingLeft={1}>
@@ -112,9 +104,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
 
           <Box>
             <Card
-              style={{
-                width: '240px',
-              }}
+              width={{ initial: '100%', medium: '240px' }}
             >
               <CardBody>
                 <CardContent paddingLeft={1}>
@@ -134,9 +124,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
 
           <Box>
             <Card
-              style={{
-                width: '240px',
-              }}
+              width={{ initial: '100%', medium: '240px' }}
             >
               <CardBody>
                 <CardContent paddingLeft={1}>

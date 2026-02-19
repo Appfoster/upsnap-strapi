@@ -187,7 +187,7 @@ export const ResponseTimeChart = ({
   };
 
   return (
-    <Box width={{initial: "50%", medium: "100%"}}>
+    <Box width="100%">
     <Card>
       <CardHeader display="flex" style={{ justifyContent: 'space-between' }}>
         <Typography variant="delta" marginLeft={2} padding={3}>
@@ -209,7 +209,7 @@ export const ResponseTimeChart = ({
         </Box>
       </CardHeader>
       <CardBody>
-        <CardContent style={{ width: '650px' }}>
+        <CardContent width="100%">
           {monitor?.is_enabled === false ? (
             <Box padding={4} background="neutral100">
               <Typography variant="omega" textColor="neutral600">

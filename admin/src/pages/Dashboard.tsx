@@ -47,7 +47,7 @@ export default function Dashboard() {
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/upsnap/plugins/settings');
+      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
@@ -74,7 +74,6 @@ export default function Dashboard() {
   }
 
   const handleTimeRangeChange = (range: string) => {
-    console.log('time range change event ', range);
     setResponseTimeRange(range);
     const { start, end } = getRangeTimestamps(range || 'last_24_hours');
     request(
@@ -156,7 +155,7 @@ export default function Dashboard() {
           alignContent="space-around"
           justifyItems="stretch"
         >
-          <Box>
+          <Box width="100%">
             <Flex direction="column" gap={4} height="100%" alignItems="start" flexWrap="wrap">
               <StatisticsCards
                 monitorData={monitorData}

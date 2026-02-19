@@ -18,10 +18,10 @@ import {
   VisuallyHidden,
 } from '@strapi/design-system';
 import { toast } from 'react-toastify';
-import { ChevronDown, Search, Pencil, Trash } from '@strapi/icons';
+import { Pencil, Trash } from '@strapi/icons';
 
 import { getUserData } from '../../utils/userStorage';
-import { getPrimaryMonitorId, getUserDetails, request, setPrimaryMonitorId } from '../../utils/helpers';
+import { getPrimaryMonitorId, setPrimaryMonitorId } from '../../utils/helpers';
 import { Monitor } from '../../utils/types';
 
 console.log('get user data ', getUserData());
@@ -51,28 +51,7 @@ export interface MonitorsTableProps {
   setBulkDeleteIds: any;
 }
 
-async function getMonitors() {
-  const res = await request('/monitors', {
-    method: 'GET',
-  });
-  if (!res) return;
 
-  if (!res.monitorsData.data) throw new Error('Failed to fetch monitors');
-
-  return res.monitorsData.data;
-}
-
-async function deleteMonitor(id: string) {
-  const res = await request(`/monitors/${id}`, {
-    method: 'DELETE',
-  });
-
-  if (!res) return;
-
-  if (!res?.monitorsData?.data) throw new Error('Failed to delete monitor');
-
-  return res.monitorsData;
-}
 
 /* ------------------------------------------------------------------ */
 export default function MonitorsTable({
@@ -102,12 +81,7 @@ export default function MonitorsTable({
     }
     fetchPrimaryMonitorId();
   }, []);
-  // useEffect(() => {
-  //   if (!isInternalUpdate.current) {
-  //     setSelected(value);
-  //   }
-  //   isInternalUpdate.current = false;
-  // }, [value]);
+
   /* --------------------------------------
         Fetch channels on mount
     --------------------------------------*/
@@ -116,38 +90,6 @@ export default function MonitorsTable({
         Create or toggle a channel
     --------------------------------------*/
   const toggle = async (row: Monitor) => {
-    // If default email placeholder → create real channel
-    console.log('Toggling channel ', DEFAULT_EMAIL, row);
-    if (row && row.id === null) {
-      // try {
-      //   const payload = {
-      //     channel_type: 'email',
-      //     name: 'Default Email',
-      //     config: { recipients: { to: DEFAULT_EMAIL } },
-      //   };
-
-      //   const res = await apiCreateChannel(payload);
-      //   console.log('create res ', res);
-      //   const newId = res.data.id.toString();
-
-      //   setChannels((prev) =>
-      //     Array.isArray(prev)
-      //       ? prev.map((ch) => (ch.isDefaultEmail ? { ...ch, id: res.data.id } : ch))
-      //       : []
-      //   );
-
-      //   setSelected((prev: string[]) => {
-      //     const updated = [...prev, newId];
-      //     isInternalUpdate.current = true;
-      //     return updated;
-      //   });
-      // } catch (err) {
-      //   console.error('Failed to create default channel', err);
-      // }
-      return;
-    }
-
-    // Normal toggle
     const stringId = row.id!.toString();
 
     setSelected((prev: string[]) => {

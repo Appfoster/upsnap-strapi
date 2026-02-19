@@ -1,5 +1,3 @@
-'use client';
-
 interface SkeletonRowProps {
   rows?: number;
 }
