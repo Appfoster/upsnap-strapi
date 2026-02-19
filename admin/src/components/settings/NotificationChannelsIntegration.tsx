@@ -270,7 +270,7 @@ export default function NotificationChannelsIntegration({
                               (c) => c.id !== null && selected.includes(c.id.toString())
                             )
                           }
-                          onChange={toggleAll}
+                          onCheckedChange={toggleAll}
                         />
                       </Th>
 

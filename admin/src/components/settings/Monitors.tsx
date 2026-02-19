@@ -1,5 +1,5 @@
 import { CardContent, Flex, CardBody, Card, Button, Box } from '@strapi/design-system';
-import { Plus } from '@strapi/icons';
+import { Plus, Trash } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
 import MonitorsTable from './MonitorsTable';
 import { getUserData } from '../../utils/userStorage';
@@ -28,7 +28,8 @@ export default function Monitors() {
   const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
+  const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
+  const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
   const userDetails = getUserData();
   useEffect(() => {
     async function load() {
@@ -102,19 +103,61 @@ export default function Monitors() {
       setLoading(false);
     }
   }
+  const handleBulkDelete = async () => {
+    if (!bulkDeleteIds) return;
+    setBulkDeleteModalOpen(true);
+  }
+  const confirmBulkDelete = async () => {
+    if (!bulkDeleteIds){
+      toast.error('Please select monitors to delete.');
+      setBulkDeleteModalOpen(false);
+      return;
+    };
+    setLoading(true);
+    try {
+      const result = await request('/monitors/bulk-delete', {
+        method: 'POST',
+        data: { monitorIds: bulkDeleteIds}
+      });
+      if (!result) return;
+      if (result?.monitorsData?.status === 'success') {
+        toast.success('Monitor deleted successfully');
+        setBulkDeleteIds([])
+        const res = await getMonitors();
+        setMonitors(res.monitors);
+      } else {
+        console.error(result?.monitorsData?.message);
+        toast.error('Failed to delete monitor');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong while deleting the monitor');
+    } finally {
+      setBulkDeleteModalOpen(false);
+      setLoading(false);
+    }
+  }
+  console.log('bulk delete id ', bulkDeleteIds)
   return (
     <Box width="100%">
       {!showEdit && (
         <Flex direction="column" alignItems="flex-start" gap={4}>
-          <Flex alignItems="end" width="100%" justifyContent="end">
+          <Flex alignItems="end" width="100%" justifyContent="end" gap={2} direction={{initial: "column", medium: "row"}}>
             <Button startIcon={<Plus />} variant={'secondary'} size="M" onClick={handleAddMonitor}>
               Add Monitor
             </Button>
+            {bulkDeleteIds.length > 0 && (
+              <Button startIcon={<Trash />} variant='danger-light' size="M" onClick={handleBulkDelete}>
+                Bulk Delete
+              </Button>
+            )}
+            
           </Flex>
           <MonitorsTable
             monitors={monitors}
             onEdit={handleEditMonitor}
             handleDelete={handleDelete}
+            setBulkDeleteIds={setBulkDeleteIds}
           />
         </Flex>
       )}
@@ -122,18 +165,30 @@ export default function Monitors() {
         <MonitorForm monitor={selectedMonitor} mode="edit" handleCancelEdit={handleCancelEdit} />
       )}
       {/* Delete Confirmation Modal */}
-        <ConfirmationModal
-          open={deleteModalOpen}
-          onClose={() => setDeleteModalOpen(false)}
-          onConfirm={confirmDelete}
-          title="Delete Integration"
-          description={`Are you sure you want to delete "${selectedMonitor?.name}"? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          confirmColor="red"
-          isLoading={loading}
-          loadingText="Deleting..."
-        />
+      <ConfirmationModal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Delete Monitor"
+        description={`Are you sure you want to delete "${selectedMonitor?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmColor="red"
+        isLoading={loading}
+        loadingText="Deleting..."
+      />
+      <ConfirmationModal
+        open={bulkDeleteModalOpen}
+        onClose={() => setBulkDeleteModalOpen(false)}
+        onConfirm={confirmBulkDelete}
+        title="Delete Monitors"
+        description={`Are you sure you want to delete selected monitors? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmColor="red"
+        isLoading={loading}
+        loadingText="Deleting..."
+      />
     </Box>
   );
 }

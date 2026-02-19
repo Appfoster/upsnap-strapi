@@ -263,7 +263,7 @@ export default () => ({
       }
     },
     {
-      method: 'PUT',
+      method: 'POST',
       path: '/monitors/bulk-delete',
       handler: 'monitor.deleteMonitors',
       config: {

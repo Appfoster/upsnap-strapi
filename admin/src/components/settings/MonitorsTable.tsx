@@ -48,6 +48,7 @@ export interface MonitorsTableProps {
   onChange?: (ids: string[]) => void;
   onEdit?: (monitor: Monitor) => void;
   handleDelete: (monitor: Monitor) => void;
+  setBulkDeleteIds: any;
 }
 
 async function getMonitors() {
@@ -79,6 +80,7 @@ export default function MonitorsTable({
   onChange,
   onEdit,
   handleDelete,
+  setBulkDeleteIds,
 }: MonitorsTableProps) {
   const [open, setOpen] = useState(false);
   const [channels, setChannels] = useState<NotificationChannel[]>([]);
@@ -164,22 +166,16 @@ export default function MonitorsTable({
         Toggle all
     --------------------------------------*/
   const toggleAll = async () => {
-    const createDefault = Array.isArray(channels) ? channels.find((c) => c.id === null) : null;
-
-    if (createDefault) {
-      // await toggle(createDefault);
-    }
-
-    // After potential channel creation, get all valid channel IDs
-    const allChannelIds = Array.isArray(channels)
-      ? channels.filter((c) => c.id !== null).map((c) => c.id!.toString())
+    // Get all valid monitor IDs
+    const allMonitorIds = Array.isArray(monitors)
+      ? monitors.filter((m) => m.id !== null).map((m) => m.id!.toString())
       : [];
 
-    // Check if all channels are selected (including the newly created one if any)
-    const isAllSelected = allChannelIds.every((id) => selected.includes(id));
+    // Check if all monitors are selected
+    const isAllSelected = allMonitorIds.every((id) => selected.includes(id));
 
     setSelected((prev: string[]) => {
-      const updated = isAllSelected ? [] : allChannelIds;
+      const updated = isAllSelected ? [] : allMonitorIds;
       isInternalUpdate.current = true;
       return updated;
     });
@@ -202,6 +198,7 @@ export default function MonitorsTable({
     if (isInternalUpdate.current) {
       // onChange(selected);
     }
+    setBulkDeleteIds(selected);
   }, [selected, onChange]);
 
   const handleSetPrimary = async (monitor: Monitor) => {
@@ -218,6 +215,7 @@ export default function MonitorsTable({
       toast.error('An error occurred while setting primary monitor');
     }
   }
+
   console.log('primary monitor id ', primaryMonitorId);
   return (
     <Box width="100%">
@@ -231,7 +229,7 @@ export default function MonitorsTable({
                     monitors.length > 0 &&
                     monitors.every((c) => c.id !== null && selected.includes(c.id.toString()))
                   }
-                  onChange={toggleAll}
+                  onCheckedChange={toggleAll}
                 />
               </Th>
 

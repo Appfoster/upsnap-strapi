@@ -49,7 +49,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     {/* Body */}
     <Dialog.Body>
       {typeof description === 'string' ? (
-        <Typography variant="pi" textColor="neutral600">
+        <Typography variant="omega" textColor="neutral600">
           {description}
         </Typography>
       ) : (

@@ -28,16 +28,22 @@ export default function Dashboard() {
   >({});
   const [monitorIncidents, setMonitorIncidents] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState<string>('default');
+  const [selectedRegion, setSelectedRegion] = useState<string>(() => {
+    if (monitorData?.monitor.regions && Array.isArray(monitorData?.monitor.regions)) {
+      const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
+      return primaryRegion?.id || 'default';
+    }
+    return 'default'; 
+  });
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();
   const [regionId, setRegionId] = useState<string | null>(() => {
-		if (monitorData?.monitor.regions && Array.isArray(monitorData?.monitor.regions)) {
-			const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
-			return primaryRegion?.id || null;
-		}
-		return null;
-	});
+    if (monitorData?.monitor.regions && Array.isArray(monitorData?.monitor.regions)) {
+      const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
+      return primaryRegion?.id || 'default';
+    }
+    return 'default';
+  });
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
@@ -71,40 +77,52 @@ export default function Dashboard() {
     console.log('time range change event ', range);
     setResponseTimeRange(range);
     const { start, end } = getRangeTimestamps(range || 'last_24_hours');
-    request(`/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
-      method: 'GET',
-    }).then((res) => {
+    request(
+      `/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`,
+      {
+        method: 'GET',
+      }
+    ).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);
     });
   };
 
   useEffect(() => {
+    handleRefresh();
+  }, [monitorId]);
+
+  useEffect(() => {
+    getRegionResponseTimeData();
+  }, [responseTimeData]);
+  const handleRefresh = () => {
     const { start, end } = getRangeTimestamps(responseTimeRange || 'last_24_hours');
     setIsLoading(true);
     request(`/monitor/${monitorId}`, {
       method: 'GET',
     }).then((res) => {
       if (res?.monitor?.message === 'Invalid authentication token') {
-        console.log('Invalid token, redirecting to settings');
-        navigate('/plugins/upsnap/settings')
+        navigate('/plugins/upsnap/settings');
       }
       setMonitorData(res.monitor?.data || null);
     });
-    request(`/monitor/${monitorId}/uptime-stats`, {
+    request(`/monitor/${monitorId}/uptime-stats?region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setUptimeStats(res.uptimeStatsData?.data || null);
     });
-    request(`/monitor/${monitorId}/histogram`, {
+    request(`/monitor/${monitorId}/histogram?region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
       setHistogramData(res.histogramData?.data || null);
       setIsLoading(false);
     });
 
-    request(`/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`, {
-      method: 'GET',
-    }).then((res) => {
+    request(
+      `/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`,
+      {
+        method: 'GET',
+      }
+    ).then((res) => {
       setResponseTimeData(res.responseTimeData?.data || null);
     });
     request(`/monitor/${monitorId}/incidents`, {
@@ -112,40 +130,34 @@ export default function Dashboard() {
     }).then((res) => {
       setMonitorIncidents(res.incidentsData?.data || null);
     });
-  }, [monitorId]);
+  };
 
-  useEffect(() => {
-    getRegionResponseTimeData();
-  }, [responseTimeData]);
-  const handleRefresh = () => {
-
-  }
   return (
     <Main>
       <Box padding={1}>
-        <PageHeader title={'Dashboard'} monitorUrl={monitorData?.monitor?.name || ''} regionsDropdown={true}
-        selectedRegions={monitorData?.monitor?.regions}
-        regionId={regionId}
-        onRegionChange={setRegionId}
-        onRefresh={handleRefresh}
+        <PageHeader
+          title={'Dashboard'}
+          monitorUrl={monitorData?.monitor?.config?.meta?.url || ''}
+          regionsDropdown={true}
+          selectedRegions={monitorData?.monitor?.regions}
+          regionId={selectedRegion}
+          onRegionChange={setSelectedRegion}
+          onRefresh={handleRefresh}
+          refreshing={isLoading}
         />
-        {/* <Typography variant="beta" marginBottom={6}>
-          Dashboard ({monitorData?.monitor?.name || ''})
-        </Typography>
-        <RegionsDropdown value={regionId || null} onChange={setRegionId}  /> */}
         <Flex
           gap={{
             large: 4,
             medium: 2,
             initial: 1,
           }}
-          direction={{initial: "column", medium: "row"}}
-          alignItems='start'
-          alignContent= 'space-around'
-          justifyItems= 'stretch'
+          direction={{ initial: 'column', medium: 'row' }}
+          alignItems="start"
+          alignContent="space-around"
+          justifyItems="stretch"
         >
           <Box>
-            <Flex direction="column" gap={4} height='100%' alignItems='start' flexWrap="wrap">
+            <Flex direction="column" gap={4} height="100%" alignItems="start" flexWrap="wrap">
               <StatisticsCards
                 monitorData={monitorData}
                 uptimeStats={uptimeStats}

@@ -49,8 +49,9 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getMonitorUptimeStats(ctx) {
     const monitorId = ctx.params.id;
+    const { region } = ctx.query;
     const uptimeStatsData = await service({ strapi }).makeBackendRequest(
-      `/user/monitors/${monitorId}/uptime-stats?uptime_stats_time_frames=day,week,month`,
+      `/user/monitors/${monitorId}/uptime-stats?uptime_stats_time_frames=day,week,month&region=${region}`,
       {
         method: 'GET',
       }
@@ -61,8 +62,9 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getMonitorHistogram(ctx) {
     const monitorId = ctx.params.id;
+    const { region } = ctx.query;
     const histogramData = await service({ strapi }).makeBackendRequest(
-      `/user/monitors/${monitorId}/histogram`,
+      `/user/monitors/${monitorId}/histogram?region=${region}`,
       {
         method: 'GET',
       }
@@ -332,6 +334,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async deleteMonitors(ctx) {
     const { monitorIds } = ctx.request.body;
+    console.log('moitor ids ', monitorIds)
     const monitorsData = await service({ strapi }).makeBackendRequest(`/user/monitors`, {
       method: 'PATCH',
       body: JSON.stringify({ ids: monitorIds, action: 'delete' }),

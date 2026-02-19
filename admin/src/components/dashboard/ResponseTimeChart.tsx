@@ -228,7 +228,7 @@ export const ResponseTimeChart = ({
           )}
           <Flex
             marginTop={6}
-            alignItems='start'
+            alignItems={{initial: 'stretch', medium: 'start'}}
             gap={3}
             direction={{initial: "column", medium: "row"}}
             marginBottom={4}
