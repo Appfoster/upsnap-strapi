@@ -19,14 +19,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { clearAllStoredMonitors } from '../../utils/userStorage';
 import NotificationChannelsIntegration from './NotificationChannelsIntegration';
-// import { TagMultiSelect } from './TagMultiSelect';
+
 import { RegionsMultiSelect } from './RegionMultiSelect';
 import { fetchMonitorSettings, request, settingsToConfig } from '../../utils/helpers';
-
-// import { useMonitorPolling } from '../../hooks/monitor/useMonitorPolling';
-// import PortAdvancedSettings from './PortAdvancedSettings';
-// import KeywordInput from './KeyWordInput';
-// import KeywordAdvancedSettings from './KeywordAdvancedSettings';
 
 interface Props {
   monitor?: Monitor | null;
@@ -116,7 +111,6 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
   const [selectedRegionIds, setSelectedRegionIds] = useState<string[]>([DEFAULT_REGION.id]);
   const [primaryRegionId, setPrimaryRegionId] = useState<string | null>(DEFAULT_REGION.id);
   const [availableRegions, setAvailableRegions] = useState<any[]>([]);
-  //   const { startPolling } = useMonitorPolling();
 
   // Fetch available regions
   useEffect(() => {
@@ -481,15 +475,14 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
       if (result.monitorsData.status === 'success') {
         const monitorId = result.monitorsData.data.monitor.id;
         clearAllStoredMonitors();
-        //  START POLLING
-        // startPolling(monitorId);
+        
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
         if (load) load();
         if (handleCancelEdit) handleCancelEdit();
         navigate('/plugins/upsnap/settings');
-        // router.push(ROUTES.MONITORS);
+
       } else {
         toast.error(result.monitorsData.data?.message || 'Something went wrong.');
       }
@@ -571,27 +564,6 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
       <Card marginTop={3}>
         <CardBody width="100%">
           <Flex direction="column" gap={6} width="100%">
-            {/* Monitor Type Dropdown */}
-            {/* <div className="tw-mb-6">
-            <SingleSelect
-              label="Monitor Type"
-              value={monitorType}
-              onChange={(val: string) => {
-                if (val) {
-                  setMonitorType(val);
-                  setErrors({});
-                }
-              }}
-              disabled={mode === 'edit'}
-              className="tw-w-full"
-            >
-              {MONITOR_TYPE_OPTIONS.map((option) => (
-                <SingleSelectOption key={option.value} value={option.value}>
-                  {option.label}
-                </SingleSelectOption>
-              ))}
-            </SingleSelect>
-          </div> */}
 
             {/* Website Monitoring Form */}
             {monitorType === MONITOR_TYPE.WEBSITE && (
@@ -684,20 +656,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
                     </Box>
                   </Flex>
 
-                  {/* Tags and Regions Row */}
+                  {/* Regions Row */}
                   <Flex width="100%">
-                    {/* <div className="tw-my-4">
-                  <label className="tw-block tw-text-sm tw-font-semibold tw-mb-2 tw-text-gray-700">
-                    Add tags
-                  </label>
-                  <p className="tw-text-xs tw-text-gray-500 tw-mb-2">
-                    Tags will enable you to organise your monitors in a better way
-                  </p>
-                  <TagMultiSelect
-                    selectedTagIds={selectedTagIds}
-                    onTagsChange={setSelectedTagIds}
-                  />
-                </div> */}
                     <Box paddingTop={4} width="100%">
                       <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
                         <Typography variant="epsilon">Monitoring regions</Typography>
@@ -742,273 +702,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
               </>
             )}
 
-            {/* Port Monitoring Form */}
-            {/* {monitorType === MONITOR_TYPE.PORT && (
-            <>
-              <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
-                <div>
-                  <Input
-                    crossOrigin=""
-                    size="lg"
-                    name="portName"
-                    label="Monitor name"
-                    value={portFormData.name}
-                    onChange={(e: any) => {
-                      setPortFormData((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }));
-                      if (errors.name) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          name: undefined,
-                        }));
-                      }
-                    }}
-                    error={!!errors.name}
-                  />
-                  {errors.name && (
-                    <p className="tw-text-xs tw-text-red-500 tw-mt-1">{errors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <Input
-                    crossOrigin=""
-                    size="lg"
-                    name="host"
-                    label="Host / Address"
-                    placeholder="example.com or 192.168.1.1"
-                    value={portFormData.host}
-                    onChange={(e: any) => {
-                      setPortFormData((prev) => ({
-                        ...prev,
-                        host: e.target.value.trim(),
-                      }));
-                      if (errors.host) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          host: undefined,
-                        }));
-                      }
-                    }}
-                    error={!!errors.host}
-                  />
-                  {errors.host && (
-                    <p className="tw-text-xs tw-text-red-500 tw-mt-1">{errors.host}</p>
-                  )}
-                  <p className="tw-text-xs tw-text-gray-500 tw-mt-1">
-                    Enter domain or IP only (no protocol or paths)
-                  </p>
-                </div>
-              </div>
 
-              
-              {/* <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6 tw-my-4">
-                <div>
-                  <label className="tw-block tw-text-sm tw-font-semibold tw-mb-2 tw-text-gray-700">
-                    Port
-                  </label>
-                  <p className="tw-text-xs tw-text-gray-500 tw-mb-2">
-                    The network port to monitor (e.g. 80, 443, 3306). Port range: 1-65535
-                  </p>
-                  <Input
-                    crossOrigin=""
-                    size="lg"
-                    name="port"
-                    label="Port"
-                    type="number"
-                    min={1}
-                    max={65535}
-                    value={portFormData.port}
-                    onChange={(e: any) => {
-                      setPortFormData((prev) => ({
-                        ...prev,
-                        port: e.target.value,
-                      }));
-                      if (errors.port) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          port: undefined,
-                        }));
-                      }
-                    }}
-                    error={!!errors.port}
-                  />
-                  {errors.port && (
-                    <p className="tw-text-xs tw-text-red-500 tw-mt-1">{errors.port}</p>
-                  )}
-                </div>
-
-               
-                <div className="">
-                  <label className="tw-block tw-text-sm tw-font-semibold tw-mb-2 tw-text-gray-700">
-                    Add tags
-                  </label>
-                  <p className="tw-text-xs tw-text-gray-500 tw-mb-2">
-                    Tags will enable you to organise your monitors in a better way
-                  </p>
-                  <TagMultiSelect
-                    selectedTagIds={selectedTagIds}
-                    onTagsChange={setSelectedTagIds}
-                  />
-                </div> 
-              </div> 
-
-              
-               <NotificationChannelsIntegration
-                value={formData.channel_ids}
-                onChange={(ids) => updateNotificationChannels(ids)}
-              /> 
-
-              
-               <div className="tw-mt-6">
-                <PortAdvancedSettings
-                  timeout={portFormData.timeout}
-                  onTimeoutChange={(value: number) => {
-                    setPortFormData((prev) => ({
-                      ...prev,
-                      timeout: value,
-                    }));
-                  }}
-                  monitorInterval={portFormData.monitor_interval}
-                  onMonitorIntervalChange={(value: number) => {
-                    setPortFormData((prev) => ({
-                      ...prev,
-                      monitor_interval: value,
-                    }));
-                  }}
-                />
-              </div> 
-            </>
-          )} */}
-
-            {/* Keyword Monitoring Form */}
-            {/* {monitorType === MONITOR_TYPE.KEYWORD && (
-            <>
-              <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
-                <div>
-                  <Input
-                    crossOrigin=""
-                    size="lg"
-                    name="keywordName"
-                    label="Monitor name"
-                    value={keywordFormData.name}
-                    onChange={(e: any) => {
-                      setKeywordFormData((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }));
-                      if (errors.name) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          name: undefined,
-                        }));
-                      }
-                    }}
-                    error={!!errors.name}
-                  />
-                  {errors.name && (
-                    <p className="tw-text-xs tw-text-red-500 tw-mt-1">{errors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <Input
-                    crossOrigin=""
-                    size="lg"
-                    name="keywordUrl"
-                    label="URL"
-                    placeholder="https://example.com"
-                    value={keywordFormData.url}
-                    onChange={(e: any) => {
-                      setKeywordFormData((prev) => ({
-                        ...prev,
-                        url: e.target.value,
-                      }));
-                      if (errors.url) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          url: undefined,
-                        }));
-                      }
-                    }}
-                    error={!!errors.url}
-                    className="tw-font-mono"
-                  />
-                  {errors.url && <p className="tw-text-xs tw-text-red-500 tw-mt-1">{errors.url}</p>}
-                </div>
-              </div>
-
-              
-              <div className="tw-my-4">
-                <label className="tw-block tw-text-sm tw-font-semibold tw-mb-2 tw-text-gray-700">
-                  Add tags
-                </label>
-                <p className="tw-text-xs tw-text-gray-500 tw-mb-2">
-                  Tags will enable you to organise your monitors in a better way
-                </p>
-                <TagMultiSelect selectedTagIds={selectedTagIds} onTagsChange={setSelectedTagIds} />
-              </div>
-              
-              <div className="tw-my-6">
-                <KeywordInput
-                  keywords={keywordFormData.keywords}
-                  onKeywordsChange={(keywords: Keyword[]) => {
-                    setKeywordFormData((prev) => ({
-                      ...prev,
-                      keywords,
-                    }));
-                    if (errors.keywords) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        keywords: undefined,
-                      }));
-                    }
-                  }}
-                  error={errors.keywords}
-                />
-              </div>
-
-              
-              <NotificationChannelsIntegration
-                value={formData.channel_ids}
-                onChange={(ids) => updateNotificationChannels(ids)}
-              />
-
-              
-              <div className="tw-mt-6">
-                <KeywordAdvancedSettings
-                  timeout={keywordFormData.timeout}
-                  onTimeoutChange={(value: number) => {
-                    setKeywordFormData((prev) => ({
-                      ...prev,
-                      timeout: value,
-                    }));
-                  }}
-                  followRedirects={keywordFormData.followRedirects}
-                  onFollowRedirectsChange={(value: boolean) => {
-                    setKeywordFormData((prev) => ({
-                      ...prev,
-                      followRedirects: value,
-                    }));
-                  }}
-                  matchAll={keywordFormData.matchAll}
-                  onMatchAllChange={(value: boolean) => {
-                    setKeywordFormData((prev) => ({
-                      ...prev,
-                      matchAll: value,
-                    }));
-                  }}
-                  monitorInterval={keywordFormData.monitor_interval}
-                  onMonitorIntervalChange={(value: number) => {
-                    setKeywordFormData((prev) => ({
-                      ...prev,
-                      monitor_interval: value,
-                    }));
-                  }}
-                />
-              </div>
-            </>
-          )} */}
             {/* Submit Button */}
             <Flex justifyContent="flex-end" gap={3} marginTop={2} width="100%" marginBottom={4}>
               <Button variant="danger-light" size="M" onClick={() => handleCancel()}>
