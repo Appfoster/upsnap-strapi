@@ -109,7 +109,11 @@ export default function BrokenLinksTable({
         {/* Filters */}
         <CardContent>
           <Box padding={4} display="flex" gap={4}>
-            <Flex gap={4} alignItems={{initial: "start", medium: "center"}} direction={{initial: "column", medium: "row"}}>
+            <Flex
+              gap={4}
+              alignItems={{ initial: 'start', medium: 'center' }}
+              direction={{ initial: 'column', medium: 'row' }}
+            >
               <SingleSelect
                 label="Select Status"
                 value={statusFilter}

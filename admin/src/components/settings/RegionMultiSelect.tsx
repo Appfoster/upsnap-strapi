@@ -286,7 +286,9 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
 
                           <Typography flex="1">{region.name || region.id}</Typography>
 
-                          <Checkbox checked={isPrimary} disabled label="Primary">Primary</Checkbox>
+                          <Checkbox checked={isPrimary} disabled label="Primary">
+                            Primary
+                          </Checkbox>
                         </Flex>
                       </Box>
                     </Tooltip>
@@ -310,7 +312,9 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
                         checked={isPrimary}
                         onChange={() => handleSetPrimary(region.id)}
                         label="Primary"
-                      >Primary</Checkbox>
+                      >
+                        Primary
+                      </Checkbox>
                     </Flex>
                   );
                 })

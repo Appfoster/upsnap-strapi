@@ -1,96 +1,94 @@
 // utils/userStorage.ts
 
-import { PLAN_TYPES } from "./constants";
-import { getUserDetails } from "./helpers";
+import { PLAN_TYPES } from './constants';
+import { getUserDetails } from './helpers';
 
-const STORAGE_KEY = "selectedMonitor";
+const STORAGE_KEY = 'selectedMonitor';
 
 type UserData = {
   email: string;
   username: string;
   monitor_url: string;
   plan_limits: string;
-  plan: string
+  plan: string;
 };
 
-
-
 type PlanLimits = {
-    max_integrations: number;
-    max_monitors: number;
-    max_notifications_per_day: number;
-    min_monitoring_interval: number;
-    max_status_pages: number;
+  max_integrations: number;
+  max_monitors: number;
+  max_notifications_per_day: number;
+  min_monitoring_interval: number;
+  max_status_pages: number;
 };
 
 type UserInfo = {
-    id: string;
-    email: string;
-    fullname?: string;
-    created_at?: string;
-    updated_at?: string;
-    notifications_enabled?: boolean;
-    organisation_id?: string;
-    role?: string;
-    status?: string;
-    subscription_type?: string;
+  id: string;
+  email: string;
+  fullname?: string;
+  created_at?: string;
+  updated_at?: string;
+  notifications_enabled?: boolean;
+  organisation_id?: string;
+  role?: string;
+  status?: string;
+  subscription_type?: string;
 };
 
 export type UserDetails = {
-    plan_limits: PlanLimits;
-    user: UserInfo;
-    updated_at?: string; // local cache timestamp (ISO string)
+  plan_limits: PlanLimits;
+  user: UserInfo;
+  updated_at?: string; // local cache timestamp (ISO string)
 };
 
 /**
  * Retrieves the monitor URL from localStorage.
  */
 export function getMonitorUrl(): string | null {
-  if (typeof window === "undefined") return null; // Ensure we're on the client
+  if (typeof window === 'undefined') return null; // Ensure we're on the client
 
   try {
-    const userDataString = localStorage.getItem("userDetails");
+    const userDataString = localStorage.getItem('userDetails');
     if (!userDataString) return null;
 
     const userData: UserData = JSON.parse(userDataString);
     return userData.monitor_url || null;
   } catch (error) {
-    console.error("Error parsing userData from localStorage:", error);
+    console.error('Error parsing userData from localStorage:', error);
     return null;
   }
 }
 
 export function getUserData(): UserDetails | null {
-  if (typeof window === "undefined") return null; // Ensure we're on the client
+  if (typeof window === 'undefined') return null; // Ensure we're on the client
 
   try {
-    const userDataString = localStorage.getItem("userDetails");
+    const userDataString = localStorage.getItem('userDetails');
     if (!userDataString) return null;
 
     const userData: UserDetails = JSON.parse(userDataString);
     return userData;
   } catch (error) {
-    console.error("Error parsing userData from localStorage:", error);
+    console.error('Error parsing userData from localStorage:', error);
     return null;
   }
 }
 
 export function getUserPlan(): string | null {
-  if (typeof window === "undefined") return null; // Ensure we're on the client
-    const userData = getUserData();
-    return userData?.user?.subscription_type || PLAN_TYPES.FREE;
+  if (typeof window === 'undefined') return null; // Ensure we're on the client
+  const userData = getUserData();
+  return userData?.user?.subscription_type || PLAN_TYPES.FREE;
 }
 
 /**
  * Removes user-related data from localStorage.
  */
 export function deleteUserData(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   try {
-    localStorage.removeItem("userData");
+    localStorage.removeItem('userData');
   } catch (error) {
-    console.error("Error clearing user data from localStorage:", error);
+    console.error('Error clearing user data from localStorage:', error);
   }
 }
 
@@ -99,18 +97,18 @@ export function deleteUserData(): void {
  * If no userData exists, does nothing.
  */
 export function updateMonitorUrl(newUrl: string): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   try {
-    const userDataString = localStorage.getItem("userData");
+    const userDataString = localStorage.getItem('userData');
 
     if (userDataString) {
       const existingData = JSON.parse(userDataString);
       const updatedData = { ...existingData, monitor_url: newUrl };
-      localStorage.setItem("userData", JSON.stringify(updatedData));
+      localStorage.setItem('userData', JSON.stringify(updatedData));
     }
   } catch (error) {
-    console.error("Error updating monitor_url in localStorage:", error);
+    console.error('Error updating monitor_url in localStorage:', error);
   }
 }
 
@@ -118,17 +116,17 @@ export function updateMonitorUrl(newUrl: string): void {
  * Checks if user data is present in localStorage, indicating authentication.
  */
 export function isAuthenticated(): boolean {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return false;
   }
 
   try {
-    const userDataString = localStorage.getItem("userData");
+    const userDataString = localStorage.getItem('userData');
 
     // Returns true if the item exists and is not an empty string
     return !!userDataString;
   } catch (error) {
-    console.error("Error checking authentication status:", error);
+    console.error('Error checking authentication status:', error);
     // Return false in case of any localStorage access error
     return false;
   }
@@ -141,11 +139,13 @@ export function isAuthenticated(): boolean {
  * @param {boolean} forceFetchFromMicroservice - Force fetching from the microservice regardless of cache freshness.
  * @returns {Promise<UserDetails | null>} - A promise that resolves to the user details if successful, or null if not.
  */
-export async function getUserDetailsCached(forceFetchFromMicroservice = false): Promise<UserDetails | null> {
-  if (typeof window === "undefined") return null; // Ensure we're on the client
+export async function getUserDetailsCached(
+  forceFetchFromMicroservice = false
+): Promise<UserDetails | null> {
+  if (typeof window === 'undefined') return null; // Ensure we're on the client
 
   try {
-    const userDetailsString = localStorage.getItem("userDetails");
+    const userDetailsString = localStorage.getItem('userDetails');
     if (!userDetailsString) return null;
 
     if (!forceFetchFromMicroservice) {
@@ -162,7 +162,7 @@ export async function getUserDetailsCached(forceFetchFromMicroservice = false): 
           }
         }
       } catch (e) {
-        console.error("Error parsing cached user details:", e);
+        console.error('Error parsing cached user details:', e);
       }
     }
 
@@ -170,11 +170,11 @@ export async function getUserDetailsCached(forceFetchFromMicroservice = false): 
     // store with local timestamp
     if (!data) {
       return null;
-    } 
+    }
     setUserDetails(data);
     return data;
   } catch (error) {
-    console.error("Error parsing userDetails from localStorage:", error);
+    console.error('Error parsing userDetails from localStorage:', error);
     return null;
   }
 }
@@ -183,22 +183,22 @@ export async function getUserDetailsCached(forceFetchFromMicroservice = false): 
  * Store user details in localStorage with local updated_at timestamp.
  */
 export function setUserDetails(details: UserDetails): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
   try {
     const toStore = { ...details, updated_at: new Date().toISOString() };
-    localStorage.setItem("userDetails", JSON.stringify(toStore));
+    localStorage.setItem('userDetails', JSON.stringify(toStore));
   } catch (error) {
-    console.error("Error storing userDetails in localStorage:", error);
+    console.error('Error storing userDetails in localStorage:', error);
   }
 }
 
 /** Delete ALL selectedMonitor_* entries from localStorage */
 export const clearAllStoredMonitors = () => {
-	if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
-	Object.keys(localStorage).forEach((key) => {
-		if (key.startsWith(`${STORAGE_KEY}`)) {
-			localStorage.removeItem(key);
-		}
-	});
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith(`${STORAGE_KEY}`)) {
+      localStorage.removeItem(key);
+    }
+  });
 };

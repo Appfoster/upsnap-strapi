@@ -81,11 +81,14 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
         </Flex>
 
-        <Flex width="100%" direction={{ initial: 'column', medium: 'row' }} alignItems={{ initial: 'stretch', medium: 'start' }} gap={3}>
+        <Flex
+          width="100%"
+          direction={{ initial: 'column', medium: 'row' }}
+          alignItems={{ initial: 'stretch', medium: 'start' }}
+          gap={3}
+        >
           <Box>
-            <Card
-              width={{ initial: '100%', medium: '240px' }}
-            >
+            <Card width={{ initial: '100%', medium: '240px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 24h</CardTitle>
@@ -103,9 +106,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
 
           <Box>
-            <Card
-              width={{ initial: '100%', medium: '240px' }}
-            >
+            <Card width={{ initial: '100%', medium: '240px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last week</CardTitle>
@@ -123,9 +124,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
           </Box>
 
           <Box>
-            <Card
-              width={{ initial: '100%', medium: '240px' }}
-            >
+            <Card width={{ initial: '100%', medium: '240px' }}>
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 30 days</CardTitle>

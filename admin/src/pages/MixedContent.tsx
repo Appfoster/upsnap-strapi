@@ -28,7 +28,7 @@ export default function MixedContent() {
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();
-  
+
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();

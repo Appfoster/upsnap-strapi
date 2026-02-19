@@ -33,7 +33,7 @@ export default function Dashboard() {
       const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
       return primaryRegion?.id || 'default';
     }
-    return 'default'; 
+    return 'default';
   });
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();

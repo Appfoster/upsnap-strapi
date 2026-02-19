@@ -163,7 +163,13 @@ export default function ListStatusPages() {
   return (
     <>
       {/* Title + Button */}
-      <Flex justifyContent="space-between" gap={2} alignItems={{ initial: "start", medium: "center" }} direction={{ initial: "column", medium: "row" }} marginBottom={6}>
+      <Flex
+        justifyContent="space-between"
+        gap={2}
+        alignItems={{ initial: 'start', medium: 'center' }}
+        direction={{ initial: 'column', medium: 'row' }}
+        marginBottom={6}
+      >
         <Box>
           <Flex direction="column" gap={1} alignItems="flex-start">
             <Typography variant="alpha" fontWeight="bold">

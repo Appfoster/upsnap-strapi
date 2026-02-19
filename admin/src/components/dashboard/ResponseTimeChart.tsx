@@ -9,7 +9,7 @@ import {
   Typography,
   SingleSelect,
   SingleSelectOption,
-  Flex
+  Flex,
 } from '@strapi/design-system';
 import { MonitorData, ResponseTimeData, RegionResponseTimeData } from '../../utils/types';
 
@@ -188,91 +188,91 @@ export const ResponseTimeChart = ({
 
   return (
     <Box width="100%">
-    <Card>
-      <CardHeader display="flex" style={{ justifyContent: 'space-between' }}>
-        <Typography variant="delta" marginLeft={2} padding={3}>
-          Response Time
-        </Typography>
-        <Box padding={3} style={{ minWidth: 200 }}>
-          <SingleSelect
-            value={timeRange}
-            onChange={onTimeRangeChange}
-            label="Time Range"
-            disabled={monitor?.is_enabled === false}
-          >
-            {timeRanges.map((tr) => (
-              <SingleSelectOption key={tr.value} value={tr.value}>
-                {tr.label}
-              </SingleSelectOption>
-            ))}
-          </SingleSelect>
-        </Box>
-      </CardHeader>
-      <CardBody>
-        <CardContent width="100%">
-          {monitor?.is_enabled === false ? (
-            <Box padding={4} background="neutral100">
-              <Typography variant="omega" textColor="neutral600">
-                Monitoring is Paused. Enable monitoring to see response time results.
-              </Typography>
-            </Box>
-          ) : visibleSeries.size === 0 ? (
-            <Box padding={4} background="neutral100">
-              <Typography variant="omega" textColor="neutral600">
-                No regions selected. Please select at least one region to view response time
-                results.
-              </Typography>
-            </Box>
-          ) : (
-            <Chart type="area" height={350} series={series} options={chartOptions as any} />
-          )}
-          <Flex
-            marginTop={6}
-            alignItems={{initial: 'stretch', medium: 'start'}}
-            gap={3}
-            direction={{initial: "column", medium: "row"}}
-            marginBottom={4}
-          >
-            <Box
-              display="flex"
-              style={{ flexDirection: 'column', alignItems: 'center' }}
-              background="neutral0"
-              padding={4}
-              borderColor={'alternative200'}
-              borderRadius={2}
-              hasRadius
+      <Card>
+        <CardHeader display="flex" style={{ justifyContent: 'space-between' }}>
+          <Typography variant="delta" marginLeft={2} padding={3}>
+            Response Time
+          </Typography>
+          <Box padding={3} style={{ minWidth: 200 }}>
+            <SingleSelect
+              value={timeRange}
+              onChange={onTimeRangeChange}
+              label="Time Range"
+              disabled={monitor?.is_enabled === false}
             >
-              <Typography fontWeight="bold">{formatTime(stats.avg)}</Typography>
-              <Typography textColor="neutral600">Avg. response time</Typography>
-            </Box>
-            <Box
-              display="flex"
-              style={{ flexDirection: 'column', alignItems: 'center' }}
-              background="neutral0"
-              padding={4}
-              borderColor={'alternative200'}
-              borderRadius={2}
-              hasRadius
+              {timeRanges.map((tr) => (
+                <SingleSelectOption key={tr.value} value={tr.value}>
+                  {tr.label}
+                </SingleSelectOption>
+              ))}
+            </SingleSelect>
+          </Box>
+        </CardHeader>
+        <CardBody>
+          <CardContent width="100%">
+            {monitor?.is_enabled === false ? (
+              <Box padding={4} background="neutral100">
+                <Typography variant="omega" textColor="neutral600">
+                  Monitoring is Paused. Enable monitoring to see response time results.
+                </Typography>
+              </Box>
+            ) : visibleSeries.size === 0 ? (
+              <Box padding={4} background="neutral100">
+                <Typography variant="omega" textColor="neutral600">
+                  No regions selected. Please select at least one region to view response time
+                  results.
+                </Typography>
+              </Box>
+            ) : (
+              <Chart type="area" height={350} series={series} options={chartOptions as any} />
+            )}
+            <Flex
+              marginTop={6}
+              alignItems={{ initial: 'stretch', medium: 'start' }}
+              gap={3}
+              direction={{ initial: 'column', medium: 'row' }}
+              marginBottom={4}
             >
-              <Typography fontWeight="bold">{formatTime(stats.max)}</Typography>
-              <Typography textColor="neutral600">Max. response time</Typography>
-            </Box>
-            <Box
-              display="flex"
-              style={{ flexDirection: 'column', alignItems: 'center' }}
-              background="neutral0"
-              padding={4}
-              borderColor={'alternative200'}
-              borderRadius={2}
-              hasRadius
-            >
-              <Typography fontWeight="bold">{formatTime(stats.min)}</Typography>
-              <Typography textColor="neutral600">Min. response time</Typography>
-            </Box>
-          </Flex>
-        </CardContent>
-      </CardBody>
-    </Card>
+              <Box
+                display="flex"
+                style={{ flexDirection: 'column', alignItems: 'center' }}
+                background="neutral0"
+                padding={4}
+                borderColor={'alternative200'}
+                borderRadius={2}
+                hasRadius
+              >
+                <Typography fontWeight="bold">{formatTime(stats.avg)}</Typography>
+                <Typography textColor="neutral600">Avg. response time</Typography>
+              </Box>
+              <Box
+                display="flex"
+                style={{ flexDirection: 'column', alignItems: 'center' }}
+                background="neutral0"
+                padding={4}
+                borderColor={'alternative200'}
+                borderRadius={2}
+                hasRadius
+              >
+                <Typography fontWeight="bold">{formatTime(stats.max)}</Typography>
+                <Typography textColor="neutral600">Max. response time</Typography>
+              </Box>
+              <Box
+                display="flex"
+                style={{ flexDirection: 'column', alignItems: 'center' }}
+                background="neutral0"
+                padding={4}
+                borderColor={'alternative200'}
+                borderRadius={2}
+                hasRadius
+              >
+                <Typography fontWeight="bold">{formatTime(stats.min)}</Typography>
+                <Typography textColor="neutral600">Min. response time</Typography>
+              </Box>
+            </Flex>
+          </CardContent>
+        </CardBody>
+      </Card>
     </Box>
   );
 };

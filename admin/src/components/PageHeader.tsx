@@ -75,7 +75,11 @@ export default function PageHeader({
 
       {/* Right Side — Optional Refresh Button */}
       {showRefresh && onRefresh && (
-        <Flex alignItems={{ initial: "start", medium: "center" }} direction={{ initial: "column", medium: "row" }} gap={4}>
+        <Flex
+          alignItems={{ initial: 'start', medium: 'center' }}
+          direction={{ initial: 'column', medium: 'row' }}
+          gap={4}
+        >
           {regionsDropdown && onRegionChange && (
             <Box style={{ minWidth: 180 }}>
               <RegionsDropdown

@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { MonitorSettings, UserDetails } from './types';
-import { Monitor } from "./types";
-import { REGIONS, MONITOR_TYPE } from "./constants";
+import { Monitor } from './types';
+import { REGIONS, MONITOR_TYPE } from './constants';
 import { setUserDetails } from './userStorage';
 
-
 export function getMonitorPrimaryRegion(monitor: Monitor) {
-    return monitor.regions?.find((region) => region.is_primary);
+  return monitor.regions?.find((region) => region.is_primary);
 }
 
 export const request = async (url: string, options = {}) => {
@@ -36,13 +35,11 @@ export const formatDate = (dateString: string): string => {
 
 export const formatTitleToUppercase = (title: string): string => {
   const words = title.split('_');
-  const capitalizedWords = words.map(
-    (word) => word.charAt(0).toUpperCase() + word.slice(1)
-  );
+  const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
   return capitalizedWords.join(' ');
-} 
+};
 
-export	const getRangeTimestamps = (range: string) => {
+export const getRangeTimestamps = (range: string) => {
   const now = Math.floor(Date.now() / 1000);
   const ranges: Record<string, number> = {
     last_hour: 60 * 60,
@@ -65,45 +62,45 @@ export	const getRangeTimestamps = (range: string) => {
  * - exceptions (e.g. 'ssl') -> uppercase all letters
  */
 export const formatCheckType = (key?: string | null) => {
-    if (!key) return "";
-    const k = String(key).toLowerCase().trim();
-    const exceptions = ["ssl"];
-    if (exceptions.includes(k)) return k.toUpperCase();
+  if (!key) return '';
+  const k = String(key).toLowerCase().trim();
+  const exceptions = ['ssl'];
+  if (exceptions.includes(k)) return k.toUpperCase();
 
-    const parts = k.split("_").filter(Boolean);
-    return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+  const parts = k.split('_').filter(Boolean);
+  return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 };
 
 export function formatDateTime(isoTimestamp: string) {
-  if (!isoTimestamp) return "-";
+  if (!isoTimestamp) return '-';
 
   const date = new Date(isoTimestamp);
 
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
   }).format(date);
 }
 
 export const getUserDetails = async (): Promise<UserDetails | null> => {
-    try {
-        const result = await request("/user/details", {
-            method: "GET"
-        });
-        if (!result || result?.userDetailsData?.status !== "success") {
-            console.error('Failed to fetch user details');
-        } else {
-            // Store user details data as a JSON string in localStorage
-            // localStorage.setItem("userDetails", JSON.stringify(result.data));
-            setUserDetails(result?.userDetailsData.data);
-            return result?.userDetailsData.data;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error while fetching user details ', error);
-        return null;
+  try {
+    const result = await request('/user/details', {
+      method: 'GET',
+    });
+    if (!result || result?.userDetailsData?.status !== 'success') {
+      console.error('Failed to fetch user details');
+    } else {
+      // Store user details data as a JSON string in localStorage
+      // localStorage.setItem("userDetails", JSON.stringify(result.data));
+      setUserDetails(result?.userDetailsData.data);
+      return result?.userDetailsData.data;
     }
-}
+    return null;
+  } catch (error) {
+    console.error('Error while fetching user details ', error);
+    return null;
+  }
+};
 
 export function enrichMonitorWithPrimaryRegionStatus(monitor: Monitor): Monitor {
   const primaryRegion = getMonitorPrimaryRegion(monitor);
@@ -111,10 +108,10 @@ export function enrichMonitorWithPrimaryRegionStatus(monitor: Monitor): Monitor 
 
   const primaryRegionId = primaryRegion.id;
   const serviceChecks = monitor.service_last_checks?.[primaryRegionId];
-  
+
   // Determine which service data to use based on monitor type
   let serviceData: { last_status?: string; last_checked_at?: string } | null = null;
-  
+
   switch (monitor.service_type) {
     case MONITOR_TYPE.PORT:
       serviceData = serviceChecks?.port_check ?? null;
@@ -140,32 +137,28 @@ export function enrichMonitorWithPrimaryRegionStatus(monitor: Monitor): Monitor 
  * @param monitorId - The monitor ID
  * @returns MonitorSettings object
  */
-export async function fetchMonitorSettings(
-	monitorId: string
-): Promise<MonitorSettings | null> {
-	try {
-		const result = await request(
-			`/monitor/settings/${monitorId}`
-		);
+export async function fetchMonitorSettings(monitorId: string): Promise<MonitorSettings | null> {
+  try {
+    const result = await request(`/monitor/settings/${monitorId}`);
 
-		if (!result) {
-			console.error("Failed to fetch monitor settings");
-			return null;
-		}
+    if (!result) {
+      console.error('Failed to fetch monitor settings');
+      return null;
+    }
 
-		if (result?.monitorSettingsData?.status === "success" && result?.monitorSettingsData?.data) {
-			return {
-				monitor_id: result.monitorSettingsData.data.monitor_id,
-				settings: result.monitorSettingsData.data.settings,
-			};
-		}
+    if (result?.monitorSettingsData?.status === 'success' && result?.monitorSettingsData?.data) {
+      return {
+        monitor_id: result.monitorSettingsData.data.monitor_id,
+        settings: result.monitorSettingsData.data.settings,
+      };
+    }
 
-		console.error("Invalid response from monitor settings API:", result);
-		return null;
-	} catch (error) {
-		console.error("Error fetching monitor settings:", error);
-		return null;
-	}
+    console.error('Invalid response from monitor settings API:', result);
+    return null;
+  } catch (error) {
+    console.error('Error fetching monitor settings:', error);
+    return null;
+  }
 }
 
 /**
@@ -173,35 +166,33 @@ export async function fetchMonitorSettings(
  * @param settings - Settings object from the API
  * @returns Config object in the expected format
  */
-export function settingsToConfig(
-	settings: MonitorSettings["settings"]
-): {
-	meta: {
-		url?: string;
-		timeout?: number;
-		follow_redirects?: boolean;
-		host?: string;
-		port?: number;
-		monitor_interval?: number;
-	};
-	services?: Record<
-		string,
-		{
-			enabled: boolean;
-			monitor_interval?: number;
-			notify_days_before_expiry?: number;
-			retries?: number;
-			timeout?: number;
-			follow_redirects?: boolean;
-			strategy?: string;
-			max_pages?: number;
-		}
-	>;
+export function settingsToConfig(settings: MonitorSettings['settings']): {
+  meta: {
+    url?: string;
+    timeout?: number;
+    follow_redirects?: boolean;
+    host?: string;
+    port?: number;
+    monitor_interval?: number;
+  };
+  services?: Record<
+    string,
+    {
+      enabled: boolean;
+      monitor_interval?: number;
+      notify_days_before_expiry?: number;
+      retries?: number;
+      timeout?: number;
+      follow_redirects?: boolean;
+      strategy?: string;
+      max_pages?: number;
+    }
+  >;
 } {
-	return {
-		meta: settings.meta,
-		services: settings.services,
-	};
+  return {
+    meta: settings.meta,
+    services: settings.services,
+  };
 }
 
 export async function setPrimaryMonitorId(monitorId: string): Promise<boolean> {
@@ -225,7 +216,7 @@ export async function setPrimaryMonitorId(monitorId: string): Promise<boolean> {
 export async function getPrimaryMonitorId(): Promise<string | null> {
   try {
     const result = await request(`/settings/get-primary-monitor-id`, {
-      method: 'GET'
+      method: 'GET',
     });
     if (!result) return null;
     if (result?.primaryMonitorId) {

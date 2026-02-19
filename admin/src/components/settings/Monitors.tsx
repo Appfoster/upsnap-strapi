@@ -21,9 +21,7 @@ async function getMonitors() {
   return res.monitorsData.data;
 }
 
-export default function Monitors({ onTabChange }: {
-  onTabChange: (tab: string) => void;
-}) {
+export default function Monitors({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const navigate = useNavigate();
   const [monitors, setMonitors] = useState<Monitor[]>();
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>();
@@ -38,7 +36,7 @@ export default function Monitors({ onTabChange }: {
       setLoading(true);
       const res = await getMonitors();
       if (res?.monitors?.message === 'Invalid authentication token') {
-        onTabChange('api_key')
+        onTabChange('api_key');
       }
       setMonitors(res.monitors);
     } catch (e) {
@@ -46,9 +44,8 @@ export default function Monitors({ onTabChange }: {
     } finally {
       setLoading(false);
     }
-  }
+  };
   useEffect(() => {
- 
     load();
     getUserDetails();
   }, []);
@@ -81,11 +78,11 @@ export default function Monitors({ onTabChange }: {
     setDeleteModalOpen(true);
   };
   const confirmDelete = async () => {
-    if (!selectedMonitor){
+    if (!selectedMonitor) {
       toast.error('Please select a monitor to delete.');
       setDeleteModalOpen(false);
       return;
-    };
+    }
     setLoading(true);
     try {
       const result = await request(`/monitors/${selectedMonitor.id}`, {
@@ -107,27 +104,27 @@ export default function Monitors({ onTabChange }: {
       setDeleteModalOpen(false);
       setLoading(false);
     }
-  }
+  };
   const handleBulkDelete = async () => {
     if (!bulkDeleteIds) return;
     setBulkDeleteModalOpen(true);
-  }
+  };
   const confirmBulkDelete = async () => {
-    if (!bulkDeleteIds){
+    if (!bulkDeleteIds) {
       toast.error('Please select monitors to delete.');
       setBulkDeleteModalOpen(false);
       return;
-    };
+    }
     setLoading(true);
     try {
       const result = await request('/monitors/bulk-delete', {
         method: 'POST',
-        data: { monitorIds: bulkDeleteIds}
+        data: { monitorIds: bulkDeleteIds },
       });
       if (!result) return;
       if (result?.monitorsData?.status === 'success') {
         toast.success('Monitor deleted successfully');
-        setBulkDeleteIds([])
+        setBulkDeleteIds([]);
         const res = await getMonitors();
         setMonitors(res.monitors);
       } else {
@@ -141,22 +138,32 @@ export default function Monitors({ onTabChange }: {
       setBulkDeleteModalOpen(false);
       setLoading(false);
     }
-  }
+  };
 
   return (
     <Box width="100%">
       {!showEdit && (
         <Flex direction="column" alignItems="flex-start" gap={4}>
-          <Flex alignItems="end" width="100%" justifyContent="end" gap={2} direction={{initial: "column", medium: "row"}}>
+          <Flex
+            alignItems="end"
+            width="100%"
+            justifyContent="end"
+            gap={2}
+            direction={{ initial: 'column', medium: 'row' }}
+          >
             <Button startIcon={<Plus />} variant={'secondary'} size="M" onClick={handleAddMonitor}>
               Add Monitor
             </Button>
             {bulkDeleteIds.length > 0 && (
-              <Button startIcon={<Trash />} variant='danger-light' size="M" onClick={handleBulkDelete}>
+              <Button
+                startIcon={<Trash />}
+                variant="danger-light"
+                size="M"
+                onClick={handleBulkDelete}
+              >
                 Bulk Delete
               </Button>
             )}
-            
           </Flex>
           <MonitorsTable
             monitors={monitors}
@@ -167,7 +174,12 @@ export default function Monitors({ onTabChange }: {
         </Flex>
       )}
       {showEdit && selectedMonitor && (
-        <MonitorForm monitor={selectedMonitor} mode="edit" handleCancelEdit={handleCancelEdit} load={load} />
+        <MonitorForm
+          monitor={selectedMonitor}
+          mode="edit"
+          handleCancelEdit={handleCancelEdit}
+          load={load}
+        />
       )}
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

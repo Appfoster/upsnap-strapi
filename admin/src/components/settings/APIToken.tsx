@@ -26,8 +26,14 @@ export default function APIToken() {
   return (
     <Box padding={3}>
       <Flex direction="column" gap={2} alignItems="start">
-      <Typography variant="alpha">Token Settings</Typography>
-      <Typography variant="omega">Enter the Upsnap API Key and save to enable Healthcheck settings. To access the API key, please visit the <Link href="https://upsnap.ai" isExternal>Upsnap Dashboard</Link></Typography>
+        <Typography variant="alpha">Token Settings</Typography>
+        <Typography variant="omega">
+          Enter the Upsnap API Key and save to enable Healthcheck settings. To access the API key,
+          please visit the{' '}
+          <Link href="https://upsnap.ai" isExternal>
+            Upsnap Dashboard
+          </Link>
+        </Typography>
       </Flex>
       <Box marginTop={6} width="100%">
         <TextInput

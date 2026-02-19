@@ -2,12 +2,12 @@
  * Returns a human-readable message based on mixed content meta.
  */
 export function getMixedContentMessage(meta?: any): string {
-  if (!meta) return "Mixed content check completed";
+  if (!meta) return 'Mixed content check completed';
 
   const mixedCount = meta.mixedCount ?? 0;
 
-  if (mixedCount === 0) return "No mixed content found.";
-  if (mixedCount === 1) return "1 mixed content item detected.";
+  if (mixedCount === 0) return 'No mixed content found.';
+  if (mixedCount === 1) return '1 mixed content item detected.';
   return `${mixedCount} mixed content items detected!`;
 }
 
@@ -20,8 +20,8 @@ export function buildSuccessResponse(raw: any) {
 
   const mixedCount = meta?.mixedCount ?? 0;
 
-  let status: "success" | "warning" | "error" = "success";
-  if (mixedCount > 0) status = "warning";
+  let status: 'success' | 'warning' | 'error' = 'success';
+  if (mixedCount > 0) status = 'warning';
 
   return {
     status,

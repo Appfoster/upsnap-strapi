@@ -125,7 +125,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -134,7 +134,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -143,7 +143,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -152,7 +152,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'POST',
@@ -161,7 +161,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'PUT',
@@ -170,7 +170,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'POST',
@@ -179,7 +179,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'DELETE',
@@ -188,7 +188,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -197,7 +197,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -206,7 +206,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -215,7 +215,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -224,7 +224,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'POST',
@@ -233,7 +233,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'POST',
@@ -242,7 +242,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'PUT',
@@ -251,7 +251,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'DELETE',
@@ -260,7 +260,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'POST',
@@ -269,7 +269,7 @@ export default () => ({
       config: {
         policies: [],
         auth: false,
-      }
+      },
     },
     {
       method: 'GET',
@@ -315,7 +315,7 @@ export default () => ({
         policies: [],
         auth: false,
       },
-    }, 
+    },
     {
       method: 'DELETE',
       path: '/notification-channels/:id',
@@ -324,6 +324,6 @@ export default () => ({
         policies: [],
         auth: false,
       },
-    }
+    },
   ],
 });

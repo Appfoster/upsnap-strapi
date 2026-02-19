@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { request } from "../utils/helpers";
+import { useState, useEffect, useCallback } from 'react';
+import { request } from '../utils/helpers';
 
 // Types for supported integrations API response
 export interface ConfigField {
   name: string;
   label: string;
-  type: "email" | "url" | "password" | "text" | "phone_array";
+  type: 'email' | 'url' | 'password' | 'text' | 'phone_array';
   required: boolean;
   placeholder: string;
   description: string;
@@ -24,13 +24,13 @@ export interface SupportedChannel {
 }
 
 export interface SupportedIntegrationsResponse {
-    supportedIntegrationsData: {
-        status: string;
-        message: string;
-        data: {
-            channels: SupportedChannel[];
-        };
-    }
+  supportedIntegrationsData: {
+    status: string;
+    message: string;
+    data: {
+      channels: SupportedChannel[];
+    };
+  };
 }
 
 // Sidebar filter categories mapping
@@ -44,33 +44,33 @@ export const SIDEBAR_FILTER_CATEGORIES: Record<
   }
 > = {
   my: {
-    id: "my",
-    name: "My Integrations",
+    id: 'my',
+    name: 'My Integrations',
     channelTypes: [], // Shows user's integrations, not filtered by type
     enabled: true,
   },
   all: {
-    id: "all",
-    name: "All",
+    id: 'all',
+    name: 'All',
     channelTypes: [], // Shows all available channels
     enabled: true,
   },
   chat: {
-    id: "chat",
-    name: "Chat",
-    channelTypes: ["google_chat", "telegram", "slack", "discord"],
+    id: 'chat',
+    name: 'Chat',
+    channelTypes: ['google_chat', 'telegram', 'slack', 'discord'],
     enabled: true,
   },
   email_sms: {
-    id: "email_sms",
-    name: "Email & SMS",
-    channelTypes: ["email", "sms"],
+    id: 'email_sms',
+    name: 'Email & SMS',
+    channelTypes: ['email', 'sms'],
     enabled: true,
   },
   custom: {
-    id: "custom",
-    name: "Custom",
-    channelTypes: ["webhook"],
+    id: 'custom',
+    name: 'Custom',
+    channelTypes: ['webhook'],
     enabled: true,
   },
 };
@@ -87,23 +87,25 @@ export function useSupportedIntegrations() {
       setLoading(true);
       setError(null);
 
-      const data = await request("/integrations/supported", {
-        method: "GET"
+      const data = await request('/integrations/supported', {
+        method: 'GET',
       });
       if (!data) return;
 
       if (!data) {
-        throw new Error("Failed to fetch supported integrations");
+        throw new Error('Failed to fetch supported integrations');
       }
 
-      if (data.supportedIntegrationsData.status === "success") {
+      if (data.supportedIntegrationsData.status === 'success') {
         setChannels(data.supportedIntegrationsData.data.channels);
       } else {
-        throw new Error(data.supportedIntegrationsData.message || "Failed to fetch supported integrations");
+        throw new Error(
+          data.supportedIntegrationsData.message || 'Failed to fetch supported integrations'
+        );
       }
     } catch (err) {
-      console.error("Error fetching supported integrations:", err);
-      setError(err instanceof Error ? err.message : "Unknown error");
+      console.error('Error fetching supported integrations:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -119,20 +121,18 @@ export function useSupportedIntegrations() {
       const filter = SIDEBAR_FILTER_CATEGORIES[filterId];
 
       // My integrations handled separately in the page component
-      if (!filter || filterId === "my") {
+      if (!filter || filterId === 'my') {
         return [];
       }
 
       // "all" filter returns all channels
-      if (filterId === "all") {
+      if (filterId === 'all') {
         return channels;
       }
 
       // Filter by channel types specified in the filter category
       if (filter.channelTypes && filter.channelTypes.length > 0) {
-        return channels.filter((channel) =>
-          filter.channelTypes.includes(channel.type)
-        );
+        return channels.filter((channel) => filter.channelTypes.includes(channel.type));
       }
 
       // Default: return all channels if no specific types defined

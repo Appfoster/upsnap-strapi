@@ -30,7 +30,7 @@ export default function Reachability() {
   const [responseTimeRange, setResponseTimeRange] = useState<string | null>('last_24_hours');
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();
-  
+
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
@@ -73,7 +73,7 @@ export default function Reachability() {
       request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
         if (res?.monitor?.message === 'Invalid authentication token') {
           setSelectedMonitor(null);
-          navigate('/plugins/upsnap/settings')
+          navigate('/plugins/upsnap/settings');
         }
         setSelectedMonitor(res.monitor?.data || null);
         // Fetch region data after monitorData is set
@@ -167,7 +167,6 @@ export default function Reachability() {
     }
   };
 
-
   const regionNames = useMemo(() => {
     const names: Record<string, string> = {};
     if (selectedMonitor?.monitor?.regions && Array.isArray(selectedMonitor?.monitor?.regions)) {
@@ -189,10 +188,15 @@ export default function Reachability() {
   return (
     <Main>
       <Box padding={4}>
-        <Typography variant="beta" as="h2" style={{marginBottom: '10px'}}>
+        <Typography variant="beta" as="h2" style={{ marginBottom: '10px' }}>
           Reachability ({selectedMonitor.monitor?.name || ''})
         </Typography>
-        <StatusCard status={data.status} message={data.message} error={data.error} cardData={data.data} />
+        <StatusCard
+          status={data.status}
+          message={data.message}
+          error={data.error}
+          cardData={data.data}
+        />
         {isSuccess && meta && (
           <Flex
             gap={{
@@ -204,7 +208,7 @@ export default function Reachability() {
               alignContent: 'space-around',
             }}
             alignItems="start"
-            direction={{ initial: "column", medium: "row"}}
+            direction={{ initial: 'column', medium: 'row' }}
             marginTop={3}
             justifyContent="stretch"
           >
@@ -241,7 +245,7 @@ export default function Reachability() {
                 </CardBody>
               </Card>
             </Box>
-            <Box width={{initial: "100%", medium: "45%"}}>
+            <Box width={{ initial: '100%', medium: '45%' }}>
               <RegionWiseCards
                 regions={regions}
                 regionNames={regionNames}

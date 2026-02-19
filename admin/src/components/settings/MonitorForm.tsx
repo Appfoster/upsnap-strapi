@@ -562,7 +562,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
       return;
     }
     navigate('/plugins/upsnap/settings');
-  }
+  };
   return (
     <>
       <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>

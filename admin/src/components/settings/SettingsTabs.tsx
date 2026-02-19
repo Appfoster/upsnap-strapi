@@ -18,20 +18,22 @@ export default function SettingsTabs({
   activeTab: string;
   onTabChange: (tab: string) => void;
 }) {
-
   return (
     <>
       <Tabs.Root defaultValue={activeTab} value={activeTab} onValueChange={onTabChange}>
         <Tabs.List aria-label="Manage your attribute">
-          <Flex  direction={{initial: "column", medium: "row"}} gap={{initial: "2px", medium: "0px"}} alignItems={{ initial: "start", medium: "center" }} width="100%">
+          <Flex
+            direction={{ initial: 'column', medium: 'row' }}
+            gap={{ initial: '2px', medium: '0px' }}
+            alignItems={{ initial: 'start', medium: 'center' }}
+            width="100%"
+          >
             {tabs &&
               tabs.map((tab, index) => (
-                
                 <Tabs.Trigger key={index} value={tab.value.toLocaleLowerCase()}>
                   {tab.name}
                 </Tabs.Trigger>
-              )
-            )}
+              ))}
           </Flex>
         </Tabs.List>
         <Tabs.Content value={activeTab}>

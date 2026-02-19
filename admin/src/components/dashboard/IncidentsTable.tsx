@@ -96,11 +96,18 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
           ) : incidentsData?.incidents && incidentsData?.incidents?.length === 0 ? (
             <Tr>
               <Td colSpan={6}>
-                <Flex width="100%" justifyContent="center" direction="column" gap={1} padding={2} margin={2}>
-                <Typography fontWeight="bold">All good 🎉</Typography>
-                <Typography variant="omega" textColor="neutral500">
-                  No recent incidents.
-                </Typography>
+                <Flex
+                  width="100%"
+                  justifyContent="center"
+                  direction="column"
+                  gap={1}
+                  padding={2}
+                  margin={2}
+                >
+                  <Typography fontWeight="bold">All good 🎉</Typography>
+                  <Typography variant="omega" textColor="neutral500">
+                    No recent incidents.
+                  </Typography>
                 </Flex>
               </Td>
             </Tr>

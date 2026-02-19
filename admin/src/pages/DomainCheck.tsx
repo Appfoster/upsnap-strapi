@@ -27,7 +27,7 @@ export default function DomainCheck() {
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
   const [monitorId, setMonitorId] = useState<string | null>();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
@@ -83,7 +83,7 @@ export default function DomainCheck() {
   if (loading) return <LoadingCard />;
   if (!data) return null;
 
-  const isSuccess = data?.status === "success";
+  const isSuccess = data?.status === 'success';
   const meta = data?.data?.result?.details?.domain?.meta;
   const durationSec = data ? (data?.data?.result?.durationMs / 1000).toFixed(2) : 'N/A';
 
@@ -123,10 +123,7 @@ export default function DomainCheck() {
               </Typography>
               <Divider marginTop={3} marginBottom={4} />
               <DetailRow label="IPv4" value={meta.ipv4 ? meta.ipv4 : '–'} />
-              <DetailRow
-                label="IPv6"
-                value={meta.ipv6 && meta.ipv6.length > 0 ? meta.ipv6 : '–'}
-              />
+              <DetailRow label="IPv6" value={meta.ipv6 && meta.ipv6.length > 0 ? meta.ipv6 : '–'} />
               <DetailRow label="MX Records" value={meta.mxCount ?? '–'} />
               <DetailRow label="NS Records" value={meta.nsCount ?? '–'} />
               <DetailRow label="TXT Records" value={meta.txtCount ?? '–'} />

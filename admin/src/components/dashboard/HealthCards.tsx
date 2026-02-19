@@ -8,7 +8,7 @@ import {
   CardSubtitle,
   CardHeader,
   Flex,
-  Loader
+  Loader,
 } from '@strapi/design-system';
 import { formatDate, formatTitleToUppercase, request } from '../../utils/helpers';
 import {
@@ -43,7 +43,7 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
   const [mixedContentHealthCheck, setMixedContentHealthCheck] = useState<MixedContentData | null>(
     null
   );
-  const [loading, setLoading] = useState<string>('')
+  const [loading, setLoading] = useState<string>('');
   const navigate = useNavigate();
   useEffect(() => {
     const monitorUrl = monitorData?.monitor?.config?.meta?.url;
@@ -87,7 +87,7 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
   }, [monitorData]);
 
   const handleCheckNow = async (type: string) => {
-    setLoading(type)
+    setLoading(type);
     const monitorUrl = monitorData?.monitor?.config?.meta?.url;
     switch (type) {
       case 'reachability':
@@ -176,50 +176,60 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
             <Loader small></Loader>
           ) : (
             <>
-          <CardHeader fontSize={3}>{formatTitleToUppercase(name)}</CardHeader>
-          {data &&
-            (data?.status === 'error' || data?.status === 'warning' ? (
-              <CardTitle marginTop={3} fontSize={3}>
-                <Flex direction="row" alignItems="center" gap={1}>
-                  <Box width={"20px"}>
-                  <CrossCircle color={"danger700"} style={{ color: 'rgb(238, 94, 82)' }} />{' '}
-                  </Box>
-                  <Typography style={{wordBreak: "break-word"}}> {data?.error || data?.message}</Typography>
+              <CardHeader fontSize={3}>{formatTitleToUppercase(name)}</CardHeader>
+              {data &&
+                (data?.status === 'error' || data?.status === 'warning' ? (
+                  <CardTitle marginTop={3} fontSize={3}>
+                    <Flex direction="row" alignItems="center" gap={1}>
+                      <Box width={'20px'}>
+                        <CrossCircle
+                          color={'danger700'}
+                          style={{ color: 'rgb(238, 94, 82)' }}
+                        />{' '}
+                      </Box>
+                      <Typography style={{ wordBreak: 'break-word' }}>
+                        {' '}
+                        {data?.error || data?.message}
+                      </Typography>
+                    </Flex>
+                  </CardTitle>
+                ) : (
+                  <CardTitle marginTop={3} fontSize={3}>
+                    <Flex direction="row" alignItems="center" gap={1}>
+                      <Box width={'20px'}>
+                        <SealCheck color="success700" style={{ color: '#10b981' }} />{' '}
+                      </Box>
+                      <Typography>{data?.message}</Typography>
+                    </Flex>
+                  </CardTitle>
+                ))}
+              <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                <Typography>Last checked at: </Typography> {formatDate(data?.data?.checkedAt)}
+                <Flex marginTop={2} justifyContent="space-between">
+                  <Link
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      handleCheckNow(name);
+                    }}
+                  >
+                    <Flex alignItems="center" gap="3px" cursor="pointer">
+                      <ArrowsCounterClockwise /> <Typography> Check Now </Typography>
+                    </Flex>
+                  </Link>
+                  <Link
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      handleView(name);
+                    }}
+                  >
+                    <Flex alignItems={'flex-end'} gap={'3px'} cursor="pointer">
+                      <Typography>View Details</Typography>
+                      <ArrowRight />
+                    </Flex>
+                  </Link>
                 </Flex>
-              </CardTitle>
-            ) : (
-              <CardTitle marginTop={3} fontSize={3}>
-                <Flex direction="row" alignItems="center" gap={1}>
-                  <Box width={"20px"}>
-                  <SealCheck color="success700" style={{ color: '#10b981' }} />{' '}
-                  </Box>
-                  <Typography>{data?.message}</Typography>
-                </Flex>
-              </CardTitle>
-            ))}
-          <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
-            <Typography>Last checked at: </Typography> {formatDate(data?.data?.checkedAt)}
-            <Flex marginTop={2} justifyContent="space-between">
-              <Link onClick={(e: any) => {
-                e.preventDefault(); 
-                handleCheckNow(name)
-              }}>
-                <Flex alignItems="center" gap="3px" cursor="pointer">
-                  <ArrowsCounterClockwise /> <Typography> Check Now </Typography>
-                </Flex>
-              </Link>
-              <Link onClick={(e: any) => {
-                e.preventDefault();
-                handleView(name);
-              }}>
-                <Flex alignItems={'flex-end'} gap={'3px'} cursor="pointer">
-                  <Typography>View Details</Typography>
-                  <ArrowRight />
-                </Flex>
-              </Link>
-            </Flex>
-          </CardSubtitle>
-          </>
+              </CardSubtitle>
+            </>
           )}
         </CardContent>
       </CardBody>

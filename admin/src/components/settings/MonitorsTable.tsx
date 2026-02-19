@@ -50,8 +50,6 @@ export interface MonitorsTableProps {
   setBulkDeleteIds: any;
 }
 
-
-
 /* ------------------------------------------------------------------ */
 export default function MonitorsTable({
   monitors = [],
@@ -73,7 +71,7 @@ export default function MonitorsTable({
     async function fetchPrimaryMonitorId() {
       try {
         const id = await getPrimaryMonitorId();
-        if(id) setPrimaryMonitorIdState(id);
+        if (id) setPrimaryMonitorIdState(id);
       } catch (err) {
         console.error('Error fetching primary monitor ID:', err);
       }
@@ -155,7 +153,7 @@ export default function MonitorsTable({
       console.error('Error setting primary monitor:', err);
       toast.error('An error occurred while setting primary monitor');
     }
-  }
+  };
 
   return (
     <Box width="100%">
@@ -238,8 +236,9 @@ export default function MonitorsTable({
                         <Trash />
                       </IconButton>
                     </Box>
-                    <Badge style={{ cursor: 'pointer' }} onClick={() => handleSetPrimary(monitor)}>{
-                    monitor?.id === primaryMonitorId ? 'Selected' : 'Set primary'}</Badge>
+                    <Badge style={{ cursor: 'pointer' }} onClick={() => handleSetPrimary(monitor)}>
+                      {monitor?.id === primaryMonitorId ? 'Selected' : 'Set primary'}
+                    </Badge>
                   </Flex>
                 </Td>
               </Tr>

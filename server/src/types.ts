@@ -12,10 +12,10 @@ export interface Uptime {
       uptime: {
         ok: boolean;
         meta: any;
-      }
+      };
     };
     durationMs: number;
-  }
+  };
 }
 
 export interface Summary {

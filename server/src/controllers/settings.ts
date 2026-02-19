@@ -4,7 +4,6 @@ import type { Core } from '@strapi/strapi';
 
 // server/controllers/settings.ts
 const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
-
   async get(ctx) {
     const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings;
     ctx.body = {
@@ -17,7 +16,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
     const { token } = ctx.request.body;
 
     const store = service({ strapi }).settingsStore;
-    const current = (await store.get()) as UpsnapSettings || {};
+    const current = ((await store.get()) as UpsnapSettings) || {};
 
     await store.set({
       value: {
@@ -33,7 +32,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
     const { monitorId } = ctx.request.body;
 
     const store = service({ strapi }).settingsStore;
-    const current = (await store.get())  as UpsnapSettings || {};
+    const current = ((await store.get()) as UpsnapSettings) || {};
     await store.set({
       value: {
         ...current,
@@ -47,7 +46,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
   async getPrimaryMonitorId(ctx) {
     const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings;
     ctx.body = { primaryMonitorId: settings.primaryMonitorId };
-  }
+  },
 });
 
 export default settings;

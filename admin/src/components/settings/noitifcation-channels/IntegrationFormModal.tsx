@@ -406,22 +406,22 @@ export default function IntegrationFormModal({
           <Flex direction="column" gap={4} width="100%">
             {/* Integration name */}
             <Box width="100%">
-            <Field.Root name="name" required error={errors.name}>
-              <Field.Label>My {channel.label} Integration</Field.Label>
+              <Field.Root name="name" required error={errors.name}>
+                <Field.Label>My {channel.label} Integration</Field.Label>
 
-              <Field.Input
-                placeholder={`Enter a name for this ${channel.label} integration`}
-                value={formData.name || ''}
-                onChange={(e: any) => {
-                  const value = e.target.value;
-                  setFormData((prev) => ({ ...prev, name: value }));
-                  validateField('name', value);
-                }}
-              />
+                <Field.Input
+                  placeholder={`Enter a name for this ${channel.label} integration`}
+                  value={formData.name || ''}
+                  onChange={(e: any) => {
+                    const value = e.target.value;
+                    setFormData((prev) => ({ ...prev, name: value }));
+                    validateField('name', value);
+                  }}
+                />
 
-              {errors.name && <Field.Error>{errors.name}</Field.Error>}
-            </Field.Root>
-                </Box>
+                {errors.name && <Field.Error>{errors.name}</Field.Error>}
+              </Field.Root>
+            </Box>
             {/* Dynamic fields */}
             {channel.config_schema.fields.map((field) => {
               const isDisabled = isFieldDisabled(field);
@@ -429,46 +429,46 @@ export default function IntegrationFormModal({
 
               return (
                 <Box width="100%">
-                <Field.Root key={field.name} name={field.name} error={errors[field.name]}>
-                  <Field.Label>{field.label}</Field.Label>
+                  <Field.Root key={field.name} name={field.name} error={errors[field.name]}>
+                    <Field.Label>{field.label}</Field.Label>
 
-                  <Box position="relative">
-                    <Field.Input
-                      type={getInputType(field.type, field.name)}
-                      placeholder={field.placeholder}
-                      value={getDisplayValue(field)}
-                      disabled={isDisabled}
-                      onChange={(e: any) => {
-                        if (!isDisabled) {
-                          updateFieldValue(field.name, e.target.value);
-                        }
-                      }}
-                    />
-
-                    {isPassword && (
-                      <Button
-                        variant="ghost"
-                        size="S"
-                        onClick={() => togglePasswordVisibility(field.name)}
-                        style={{
-                          position: 'absolute',
-                          right: 8,
-                          top: '50%',
-                          transform: 'translateY(-50%)',
+                    <Box position="relative">
+                      <Field.Input
+                        type={getInputType(field.type, field.name)}
+                        placeholder={field.placeholder}
+                        value={getDisplayValue(field)}
+                        disabled={isDisabled}
+                        onChange={(e: any) => {
+                          if (!isDisabled) {
+                            updateFieldValue(field.name, e.target.value);
+                          }
                         }}
-                        aria-label={showPassword[field.name] ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword[field.name] ? <EyeStriked /> : <Eye />}
-                      </Button>
+                      />
+
+                      {isPassword && (
+                        <Button
+                          variant="ghost"
+                          size="S"
+                          onClick={() => togglePasswordVisibility(field.name)}
+                          style={{
+                            position: 'absolute',
+                            right: 8,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                          }}
+                          aria-label={showPassword[field.name] ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword[field.name] ? <EyeStriked /> : <Eye />}
+                        </Button>
+                      )}
+                    </Box>
+
+                    {field.description && !errors[field.name] && (
+                      <Field.Hint>{field.description}</Field.Hint>
                     )}
-                  </Box>
 
-                  {field.description && !errors[field.name] && (
-                    <Field.Hint>{field.description}</Field.Hint>
-                  )}
-
-                  {errors[field.name] && <Field.Error>{errors[field.name]}</Field.Error>}
-                </Field.Root>
+                    {errors[field.name] && <Field.Error>{errors[field.name]}</Field.Error>}
+                  </Field.Root>
                 </Box>
               );
             })}

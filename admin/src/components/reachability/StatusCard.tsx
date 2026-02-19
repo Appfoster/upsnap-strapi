@@ -29,10 +29,15 @@ const StatusCard: React.FC<StatusCardProps> = ({ status, message, error, cardDat
 
   return (
     <Card style={{ background: `var(--${color})`, marginBottom: 24 }}>
-      <CardBody >
-        <CardContent width='100%'>
+      <CardBody>
+        <CardContent width="100%">
           <Box>
-            <Flex justifyContent="space-between" alignItems={{initial: "start", medium: "center"}} direction={{initial: "column", medium: "row"}} gap={2}>
+            <Flex
+              justifyContent="space-between"
+              alignItems={{ initial: 'start', medium: 'center' }}
+              direction={{ initial: 'column', medium: 'row' }}
+              gap={2}
+            >
               <Flex direction="column" alignItems="flex-start" gap={1}>
                 <Typography variant="delta" fontWeight="bold">
                   <Typography>{icon}</Typography> {title}

@@ -1,6 +1,6 @@
-import React from "react";
-import { Badge, Typography, Box, Link } from "@strapi/design-system";
-import { Flex } from "@strapi/design-system";
+import React from 'react';
+import { Badge, Typography, Box, Link } from '@strapi/design-system';
+import { Flex } from '@strapi/design-system';
 
 interface DetailRowProps {
   label: string;
@@ -10,52 +10,62 @@ interface DetailRowProps {
 }
 
 const getStatusColor = (code?: number) => {
-  if (!code) return "secondary";
-  if (code >= 200 && code < 300) return "success";
-  if (code >= 300 && code < 400) return "primary";
-  if (code >= 400 && code < 500) return "warning";
-  return "danger";
+  if (!code) return 'secondary';
+  if (code >= 200 && code < 300) return 'success';
+  if (code >= 300 && code < 400) return 'primary';
+  if (code >= 400 && code < 500) return 'warning';
+  return 'danger';
 };
 
-const DetailRow: React.FC<DetailRowProps> = ({
-  label,
-  value,
-  isUrl = false,
-  isChip = false,
-}) => {
+const DetailRow: React.FC<DetailRowProps> = ({ label, value, isUrl = false, isChip = false }) => {
   const renderValue = () => {
-    if (value === undefined || value === null) return "N/A";
+    if (value === undefined || value === null) return 'N/A';
     if (Array.isArray(value)) {
       return value.map((item, index) => (
-        <Typography key={index} variant="pi" textColor="neutral800" style={{ display: "block" }}>
+        <Typography key={index} variant="pi" textColor="neutral800" style={{ display: 'block' }}>
           {item}
         </Typography>
       ));
     }
     if (isUrl) {
       return (
-        <Link isExternal href={value} rel="noopener noreferrer" style={{ color: "#4945ff" }}>
+        <Link isExternal href={value} rel="noopener noreferrer" style={{ color: '#4945ff' }}>
           {value}
         </Link>
       );
     }
     if (isChip) {
-      return (
-        <Badge >
-          {value}
-        </Badge>
-      );
+      return <Badge>{value}</Badge>;
     }
     return value;
   };
 
   return (
-    <Box paddingBottom={2} display='flex' paddingTop={2} width="100%">
-      <Flex direction={{initial: "column", medium: "row"}} gap={2} alignItems="start" width="100%">
-        <Typography variant="omega" fontWeight="bold" width={{initial: "100%", medium: "40%"}} style={{ display: "inline-block" }}>
+    <Box paddingBottom={2} display="flex" paddingTop={2} width="100%">
+      <Flex
+        direction={{ initial: 'column', medium: 'row' }}
+        gap={2}
+        alignItems="start"
+        width="100%"
+      >
+        <Typography
+          variant="omega"
+          fontWeight="bold"
+          width={{ initial: '100%', medium: '40%' }}
+          style={{ display: 'inline-block' }}
+        >
           {label}
         </Typography>
-        <Typography variant="omega" width={{initial: "100%", medium: "70%"}} style={{ display: "inline-block", ...(Array.isArray(value) && { overflow: 'auto', height: '48px'}) }}>{renderValue()}</Typography>
+        <Typography
+          variant="omega"
+          width={{ initial: '100%', medium: '70%' }}
+          style={{
+            display: 'inline-block',
+            ...(Array.isArray(value) && { overflow: 'auto', height: '48px' }),
+          }}
+        >
+          {renderValue()}
+        </Typography>
       </Flex>
     </Box>
   );

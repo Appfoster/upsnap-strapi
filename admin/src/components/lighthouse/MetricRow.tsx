@@ -1,7 +1,7 @@
-import React from "react";
-import { Box, Typography, Flex } from "@strapi/design-system";
+import React from 'react';
+import { Box, Typography, Flex } from '@strapi/design-system';
 
-type StatusType = "good" | "warning" | "bad";
+type StatusType = 'good' | 'warning' | 'bad';
 
 interface MetricRowProps {
   label: string;
@@ -9,15 +9,11 @@ interface MetricRowProps {
   status: StatusType;
 }
 
-const MetricRow: React.FC<MetricRowProps> = ({
-  label,
-  displayValue,
-  status,
-}) => {
+const MetricRow: React.FC<MetricRowProps> = ({ label, displayValue, status }) => {
   const getStatusColor = (status: StatusType) => {
-    if (status === "good") return "#10b981";
-    if (status === "warning") return "#d97706";
-    return "#ef4444";
+    if (status === 'good') return '#10b981';
+    if (status === 'warning') return '#d97706';
+    return '#ef4444';
   };
 
   return (
@@ -41,11 +37,7 @@ const MetricRow: React.FC<MetricRowProps> = ({
         <Typography variant="pi">{label}</Typography>
       </Flex>
       <Box>
-        <Typography
-          variant="pi"
-          fontWeight="bold"
-          style={{ color: getStatusColor(status) }}
-        >
+        <Typography variant="pi" fontWeight="bold" style={{ color: getStatusColor(status) }}>
           {displayValue}
         </Typography>
       </Box>

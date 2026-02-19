@@ -3,9 +3,7 @@ import { ArrowLeft } from '@strapi/icons';
 import { useEffect, useState } from 'react';
 // import LoadingCard from "@/components/LoadingCard";
 import CreateUpdateForm from '../../../components/status-pages/StatusPageForm';
-import {
-  toast
-} from "react-toastify";
+import { toast } from 'react-toastify';
 import { StatusPage } from '../../../utils/types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { request } from '../../../utils/helpers';
@@ -37,7 +35,7 @@ export default function UpdateStatusPage() {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Something went wrong");
+        toast.error('Something went wrong');
       } finally {
         setLoading(false);
       }

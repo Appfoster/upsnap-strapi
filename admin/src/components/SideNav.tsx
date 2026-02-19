@@ -1,6 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import { SubNav, SubNavHeader, SubNavLink, SubNavSection } from '@strapi/design-system';
-import { Cog, Earth, ExternalLink, Globe, House, Link, Lock, Monitor, Palette } from '@strapi/icons';
+import {
+  Cog,
+  Earth,
+  ExternalLink,
+  Globe,
+  House,
+  Link,
+  Lock,
+  Monitor,
+  Palette,
+} from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 import '../styles/custom-styles.css';
 

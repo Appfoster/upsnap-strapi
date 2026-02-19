@@ -31,7 +31,7 @@ export default function Lighthouse() {
   const [strategy, setStrategy] = useState<'desktop' | 'mobile'>('desktop');
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();
-  
+
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();

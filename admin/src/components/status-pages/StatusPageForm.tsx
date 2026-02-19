@@ -14,9 +14,7 @@ import { request } from '../../utils/helpers';
 import { Flex } from '@strapi/design-system';
 import { Box } from '@strapi/design-system';
 import { useNavigate } from 'react-router-dom';
-import {
-  toast
-} from "react-toastify";
+import { toast } from 'react-toastify';
 
 interface Props {
   statusPage?: StatusPage | null;
@@ -118,7 +116,10 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
         toast.success(`Status page ${mode === 'create' ? 'created' : 'updated'} successfully`);
         navigate('/plugins/upsnap/status-pages');
       } else {
-        toast.error(result?.statusPagesData?.message || `Failed to ${mode === 'create' ? 'create' : 'update'} status page`);
+        toast.error(
+          result?.statusPagesData?.message ||
+            `Failed to ${mode === 'create' ? 'create' : 'update'} status page`
+        );
       }
     } catch (err: any) {
       if (err.errors) {

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Dialog,
-  Button,
-  Typography,
-} from '@strapi/design-system';
+import { Dialog, Button, Typography } from '@strapi/design-system';
 
 interface ConfirmationModalProps {
   open: boolean;
@@ -41,46 +37,42 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   };
 
   return (
-<Dialog.Root open={open} onOpenChange={handleCancel}>
-  <Dialog.Content>
-    {/* Header */}
-    <Dialog.Header>{title}</Dialog.Header>
+    <Dialog.Root open={open} onOpenChange={handleCancel}>
+      <Dialog.Content>
+        {/* Header */}
+        <Dialog.Header>{title}</Dialog.Header>
 
-    {/* Body */}
-    <Dialog.Body>
-      {typeof description === 'string' ? (
-        <Typography variant="omega" textColor="neutral600">
-          {description}
-        </Typography>
-      ) : (
-        description
-      )}
-    </Dialog.Body>
+        {/* Body */}
+        <Dialog.Body>
+          {typeof description === 'string' ? (
+            <Typography variant="omega" textColor="neutral600">
+              {description}
+            </Typography>
+          ) : (
+            description
+          )}
+        </Dialog.Body>
 
-    {/* Footer */}
-    <Dialog.Footer>
-      <Dialog.Cancel>
-        <Button
-          fullWidth
-          variant="tertiary"
-          disabled={isLoading}
-        >
-          {cancelText}
-        </Button>
-      </Dialog.Cancel>
+        {/* Footer */}
+        <Dialog.Footer>
+          <Dialog.Cancel>
+            <Button fullWidth variant="tertiary" disabled={isLoading}>
+              {cancelText}
+            </Button>
+          </Dialog.Cancel>
 
-      <Dialog.Action>
-        <Button
-          fullWidth
-          variant={confirmColor === 'red' ? 'danger' : 'success-light'}
-          onClick={handleConfirm}
-          loading={isLoading}
-        >
-          {isLoading ? loadingText : confirmText}
-        </Button>
-      </Dialog.Action>
-    </Dialog.Footer>
-  </Dialog.Content>
-</Dialog.Root>
+          <Dialog.Action>
+            <Button
+              fullWidth
+              variant={confirmColor === 'red' ? 'danger' : 'success-light'}
+              onClick={handleConfirm}
+              loading={isLoading}
+            >
+              {isLoading ? loadingText : confirmText}
+            </Button>
+          </Dialog.Action>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

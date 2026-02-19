@@ -13,9 +13,12 @@ const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getStatusPagesByID(ctx) {
     const id = ctx.params.id;
-    const statusPagesData = await service({ strapi }).makeBackendRequest(`/user/status-pages/${id}`, {
-      method: 'GET',
-    });
+    const statusPagesData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}`,
+      {
+        method: 'GET',
+      }
+    );
 
     ctx.body = { statusPagesData };
   },
@@ -47,7 +50,7 @@ const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
     const statusPagesData = await service({ strapi }).makeBackendRequest(
       `/user/status-pages/${id}/reset`,
       {
-        method: 'POST'
+        method: 'POST',
       }
     );
     ctx.body = { statusPagesData };
@@ -58,11 +61,11 @@ const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
     const statusPagesData = await service({ strapi }).makeBackendRequest(
       `/user/status-pages/${id}`,
       {
-        method: 'DELETE'
+        method: 'DELETE',
       }
     );
     ctx.body = { statusPagesData };
-  }
+  },
 });
 
 export default statusPage;

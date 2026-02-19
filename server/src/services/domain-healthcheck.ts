@@ -1,30 +1,24 @@
-import { formatMessage } from "../utils/helpers";
+import { formatMessage } from '../utils/helpers';
 
 /**
  * Returns a human-readable message for domain checks.
  */
 function getDomainCheckMessage(meta?: any): string {
-  if (!meta) return "Domain check completed";
-  if(meta?.message) return meta.message 
+  if (!meta) return 'Domain check completed';
+  if (meta?.message) return meta.message;
 
-  const {
-    domainExpired,
-    domainExpiring,
-    domainDays,
-  } = meta;
+  const { domainExpired, domainExpiring, domainDays } = meta;
 
   if (domainExpired) {
-    return "Domain has expired! Immediate renewal is required.";
+    return 'Domain has expired! Immediate renewal is required.';
   }
 
   if (domainExpiring) {
-    return "Domain is expiring soon! Please renew your registration.";
+    return 'Domain is expiring soon! Please renew your registration.';
   }
 
   if (domainDays <= 7) {
-    return `Expiring in ${domainDays} day${
-      domainDays > 1 ? "s" : ""
-    }! Renew immediately.`;
+    return `Expiring in ${domainDays} day${domainDays > 1 ? 's' : ''}! Renew immediately.`;
   }
 
   if (domainDays <= 15) {
@@ -36,10 +30,10 @@ function getDomainCheckMessage(meta?: any): string {
   }
 
   if (domainDays > 365) {
-    return "Renewed for more than a year.";
+    return 'Renewed for more than a year.';
   }
 
-  return "Domain is active and healthy.";
+  return 'Domain is active and healthy.';
 }
 
 /**
@@ -53,12 +47,12 @@ export function buildDomainSuccessResponse(raw: any) {
   const domainExpiring = meta?.domainExpiring ?? false;
   const domainDays = meta?.domainDays ?? null;
 
-  let status: "success" | "warning" | "error" = "success";
+  let status: 'success' | 'warning' | 'error' = 'success';
 
   if (domainExpired) {
-    status = "error";
+    status = 'error';
   } else if (domainExpiring || meta?.message || (domainDays !== null && domainDays <= 30)) {
-    status = "warning";
+    status = 'warning';
   }
 
   return {
@@ -75,13 +69,11 @@ export function buildDomainErrorResponse(raw: any) {
   const domainDetails = raw?.result?.details?.domain || {};
   const summary = raw?.result?.summary || {};
   const errorMsg =
-    domainDetails?.error ??
-    summary?.message ??
-    "Unknown error from domain check service";
+    domainDetails?.error ?? summary?.message ?? 'Unknown error from domain check service';
 
   return {
-    status: "error",
-    message: "Failed to get domain report",
+    status: 'error',
+    message: 'Failed to get domain report',
     error: formatMessage(errorMsg),
     data: raw,
   };
