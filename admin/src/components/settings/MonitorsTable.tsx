@@ -24,7 +24,6 @@ import { getUserData } from '../../utils/userStorage';
 import { getPrimaryMonitorId, setPrimaryMonitorId } from '../../utils/helpers';
 import { Monitor } from '../../utils/types';
 
-console.log('get user data ', getUserData());
 const DEFAULT_EMAIL = getUserData()?.user?.email ?? '';
 
 // ========== Types ==========
@@ -158,7 +157,6 @@ export default function MonitorsTable({
     }
   }
 
-  console.log('primary monitor id ', primaryMonitorId);
   return (
     <Box width="100%">
       <Box borderColor="neutral200" hasRadius overflow="auto">

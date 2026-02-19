@@ -52,7 +52,6 @@ export default function SecurityCertificates() {
         method: 'POST',
         data: { monitorUrl: url, force_fetch: forceFetch },
       });
-      console.log('Security Certificates Data: ', res?.sslHealthCheckData);
       setData(res?.sslHealthCheckData || null);
     } catch (err) {
       setData(null);

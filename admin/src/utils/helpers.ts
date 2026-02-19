@@ -90,7 +90,6 @@ export const getUserDetails = async (): Promise<UserDetails | null> => {
         const result = await request("/user/details", {
             method: "GET"
         });
-        console.log('fetched user ', result);
         if (!result || result?.userDetailsData?.status !== "success") {
             console.error('Failed to fetch user details');
         } else {
@@ -207,7 +206,6 @@ export function settingsToConfig(
 
 export async function setPrimaryMonitorId(monitorId: string): Promise<boolean> {
   try {
-    console.log('Setting primary monitor ID to ', monitorId);
     const result = await request(`/settings/set-primary-monitor-id`, {
       method: 'POST',
       data: { monitorId },

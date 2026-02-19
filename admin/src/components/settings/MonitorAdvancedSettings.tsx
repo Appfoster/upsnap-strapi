@@ -118,7 +118,6 @@ export default function AdvancedSettings({
                   <Switch
                     checked={meta.follow_redirects}
                     onCheckedChange={(checked: any) => {
-                      console.log('follow redirects change', checked);
                       updateMeta('follow_redirects', checked);
                     }}
                   />

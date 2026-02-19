@@ -34,7 +34,6 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
 
     const store = service({ strapi }).settingsStore;
     const current = (await store.get())  as UpsnapSettings || {};
-    console.log('Current settings before update: ', current);
     await store.set({
       value: {
         ...current,

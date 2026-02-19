@@ -267,7 +267,6 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   async getMonitorResponseTime(ctx) {
     const monitorId = ctx.params.id;
     const { start, end, region } = ctx.query;
-    console.log('start ', start, end);
     const responseTimeData = await service({ strapi }).makeBackendRequest(
       `/user/monitors/${monitorId}/response-time?start=${start}&end=${end}&region=${region || 'default'}`,
       {
@@ -334,7 +333,6 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async deleteMonitors(ctx) {
     const { monitorIds } = ctx.request.body;
-    console.log('moitor ids ', monitorIds)
     const monitorsData = await service({ strapi }).makeBackendRequest(`/user/monitors`, {
       method: 'PATCH',
       body: JSON.stringify({ ids: monitorIds, action: 'delete' }),

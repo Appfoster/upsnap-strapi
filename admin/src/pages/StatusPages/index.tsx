@@ -146,17 +146,14 @@ export default function ListStatusPages() {
   const handleAddStatusPage = async () => {
     try {
       const userDetails = await getUserDetailsCached();
-      console.log('User details from cache:', userDetails);
       const maxStatusPagesLimit =
         userDetails?.plan_limits?.max_status_pages || PLAN_LIMITS.TRIAL.max_status_pages;
-      console.log('Max status pages limit for user:', maxStatusPagesLimit);
       if (maxStatusPagesLimit !== undefined && statusPages.length >= maxStatusPagesLimit) {
         toast.error(
           `You have reached your plan limit of ${maxStatusPagesLimit} status pages. Please upgrade your plan to add more status pages.`
         );
         return;
       }
-      console.log('Navigating to create status page');
       navigate('/plugins/upsnap/status-pages/new');
     } catch (error) {
       toast.error('Something went wrong. Please try again.');

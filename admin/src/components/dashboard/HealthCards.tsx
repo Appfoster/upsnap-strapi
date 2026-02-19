@@ -48,7 +48,6 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
   useEffect(() => {
     const monitorUrl = monitorData?.monitor?.config?.meta?.url;
     if (!monitorUrl) return;
-    console.log('monitor url ', monitorUrl);
     request('/monitor/health-check/uptime', {
       method: 'POST',
       data: { monitorUrl },
@@ -77,7 +76,6 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
       method: 'POST',
       data: { monitorUrl },
     }).then((res) => {
-      console.log('broken links ', res);
       setBrokenLinksHealthCheck(res.brokenLinksHealthCheckData || null);
     });
     request('/monitor/health-check/mixed-content', {
@@ -89,7 +87,6 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
   }, [monitorData]);
 
   const handleCheckNow = async (type: string) => {
-    console.log('check now invoked ', type);
     setLoading(type)
     const monitorUrl = monitorData?.monitor?.config?.meta?.url;
     switch (type) {

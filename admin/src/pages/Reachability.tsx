@@ -71,10 +71,8 @@ export default function Reachability() {
     if (monitorId) {
       setLoading(true);
       request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
-        console.log('Monitor details:', res);
         if (res?.monitor?.message === 'Invalid authentication token') {
           setSelectedMonitor(null);
-          console.log('Invalid token, redirecting to settings');
           navigate('/plugins/upsnap/settings')
         }
         setSelectedMonitor(res.monitor?.data || null);
@@ -94,7 +92,6 @@ export default function Reachability() {
   const getReachabilityData = async (url: string, region?: string | null) => {
     setLoading(true);
     try {
-      console.log('fetch reachability data for ', url, region);
       const res = await request('/monitor/health-check/uptime', {
         method: 'POST',
         data: { monitorUrl: url },

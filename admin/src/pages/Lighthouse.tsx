@@ -88,7 +88,6 @@ export default function Lighthouse() {
   // Show loading while checking for monitor URL
   if (loading) return <LoadingCard />;
   if (!data) return null;
-  console.log('light house ', data);
   const meta = data?.data.result?.details?.lighthouse?.meta;
   const performance = meta?.performance;
 

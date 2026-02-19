@@ -265,8 +265,7 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
                   const isSelected = selectedRegionIds.includes(String(region.id));
                   const isPrimary = primaryRegionId === region.id;
                   const isDisabled = isTrialUser && region.id !== DEFAULT_REGION.id;
-                  console.log('is disabled ', isDisabled);
-                  console.log('is trial user ', isTrialUser);
+
                   return isDisabled ? (
                     <Tooltip
                       key={region.id}

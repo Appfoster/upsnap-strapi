@@ -54,7 +54,6 @@ export default function BrokenLinks() {
         method: 'POST',
         data: { monitorUrl: url, force_fetch: forceFetch },
       });
-      console.log('res broken links ', res);
       setData(res?.brokenLinksHealthCheckData || null);
     } catch (err) {
       setData(null);

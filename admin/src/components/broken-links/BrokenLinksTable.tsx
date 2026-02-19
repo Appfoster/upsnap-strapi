@@ -78,7 +78,6 @@ export default function BrokenLinksTable({
 
   const formatIssueMessage = (row: BrokenLink) => {
     let message = row?.culprit || row.title || 'No issue details';
-    console.log('Formatting issue message: ', message);
     if (message.length > MAX_MESSAGE_LENGTH) {
       return message.slice(0, MAX_MESSAGE_LENGTH) + '...';
     }

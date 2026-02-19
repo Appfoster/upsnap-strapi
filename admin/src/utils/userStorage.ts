@@ -146,7 +146,6 @@ export async function getUserDetailsCached(forceFetchFromMicroservice = false): 
 
   try {
     const userDetailsString = localStorage.getItem("userDetails");
-    console.log('cached user ', userDetailsString);
     if (!userDetailsString) return null;
 
     if (!forceFetchFromMicroservice) {

@@ -24,7 +24,6 @@ import { INTEGRATIONS_TYPES } from '../../utils/constants';
 import { getUserDetails, request } from '../../utils/helpers';
 import { getIntegrationIcon } from '../../components/icons/BrandIcons';
 
-console.log('get user data ', getUserData());
 const DEFAULT_EMAIL = getUserData()?.user?.email ?? '';
 
 // ========== Types ==========
@@ -131,7 +130,6 @@ export default function NotificationChannelsIntegration({
     --------------------------------------*/
   const toggle = async (row: NotificationChannel) => {
     // If default email placeholder → create real channel
-    console.log('Toggling channel ', DEFAULT_EMAIL, row);
     if (row.isDefaultEmail && row.id === null) {
       try {
         const payload = {
@@ -141,7 +139,6 @@ export default function NotificationChannelsIntegration({
         };
 
         const res = await apiCreateChannel(payload);
-        console.log('create res ', res);
         const newId = res.data.id.toString();
 
         setChannels((prev) =>

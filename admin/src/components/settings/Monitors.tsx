@@ -37,7 +37,6 @@ export default function Monitors({ onTabChange }: {
     try {
       setLoading(true);
       const res = await getMonitors();
-      console.log('got monitors ', res);
       if (res?.monitors?.message === 'Invalid authentication token') {
         onTabChange('api_key')
       }
