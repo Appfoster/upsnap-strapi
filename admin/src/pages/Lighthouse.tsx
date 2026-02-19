@@ -108,7 +108,7 @@ export default function Lighthouse() {
           cardData={data.data}
         />
 
-        {meta && data.status === 'success' && (
+        {meta && meta.performance && (
           <Card style={{ marginTop: 24, marginBottom: 24 }}>
             <CardBody>
               <Flex direction="column" alignItems="flex-start" padding={3} width="100%">
