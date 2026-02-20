@@ -1,11 +1,13 @@
 import { Box, Button, TextInput, Typography, Flex, Link } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { request } from '../../utils/helpers';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function APIToken() {
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     request('/settings', {
       method: 'GET',
@@ -19,7 +21,11 @@ export default function APIToken() {
     await request('/settings', {
       method: 'POST',
       data: { token },
+    }).then((res) => {
+      toast.success('Token saved successfully');
+      navigate('/plugins/upsnap/dashboard')
     });
+    
     setLoading(false);
   };
 

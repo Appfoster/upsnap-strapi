@@ -18,7 +18,7 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
   async makeBackendRequest(endpoint: string, options: RequestInit) {
     const token = await this.getToken();
     if (!token) {
-      throw new Error('No token found in settings');
+      return {error: 'No token found in settings'};
     }
 
     const response = await fetch(`${BACKEND_URL}${endpoint}`, {

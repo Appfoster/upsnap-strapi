@@ -41,6 +41,7 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
       setMonitors(res.monitors);
     } catch (e) {
       console.error('Error loading monitors:', e);
+      onTabChange('api_key');
     } finally {
       setLoading(false);
     }
