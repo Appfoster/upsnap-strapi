@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Box, Card, CardContent, CardBody, Typography, Grid, Divider } from '@strapi/design-system';
+import { Box, Card, CardContent, CardBody, Typography, Grid, Divider, Link } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
@@ -189,7 +189,7 @@ export default function Reachability() {
     <Main>
       <Box padding={4}>
         <Typography variant="beta" as="h2" style={{ marginBottom: '10px' }}>
-          Reachability ({selectedMonitor.monitor?.name || ''})
+          Reachability (<Link href={selectedMonitor?.monitor?.config?.meta?.url} isExternal>{selectedMonitor.monitor?.name || ''}</Link>)
         </Typography>
         <StatusCard
           status={data.status}
