@@ -12,6 +12,7 @@ import {
   Flex,
 } from '@strapi/design-system';
 import { MonitorData, ResponseTimeData, RegionResponseTimeData } from '../../utils/types';
+import { colors, timeRanges } from '../../utils/constants';
 
 interface ResponseTimeChartProps {
   monitor: MonitorData['monitor'] | undefined;
@@ -20,24 +21,7 @@ interface ResponseTimeChartProps {
   onTimeRangeChange: (range: string) => void;
 }
 
-const colors = [
-  '#4CAF50',
-  '#2196F3',
-  '#FF9800',
-  '#9C27B0',
-  '#00BCD4',
-  '#F44336',
-  '#8BC34A',
-  '#FFEB3B',
-];
 
-const timeRanges = [
-  { value: 'last_hour', label: 'Last hour' },
-  { value: 'last_24_hours', label: 'Last 24 hours' },
-  { value: 'last_7_days', label: 'Last 7 days' },
-  { value: 'last_30_days', label: 'Last 30 days' },
-  { value: 'last_year', label: 'Last year' },
-];
 
 const formatTime = (ms: number) => {
   if (!ms) return 'N/A';

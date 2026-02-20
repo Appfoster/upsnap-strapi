@@ -4,13 +4,6 @@
     "type": "git",
     "url": "https://github.com/Appfoster/upsnap-strapi"
   },
-  "bugs": {
-    "url": "https://github.com/Appfoster/upsnap-strapi/issues"
-  },
-  "homepage": "https://github.com/Appfoster/upsnap-strapi#readme",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [],
   "type": "commonjs",
   "exports": {

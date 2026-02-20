@@ -1,17 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@strapi/design-system';
-import { PLAN_TYPES as PLAN_TYPES_CONSTANT } from '../../utils/constants';
+import { PLAN_TYPES as PLAN_TYPES_CONSTANT, PARTITIONS } from '../../utils/constants';
 import { PLAN_TYPES } from '../../utils/types';
-
-const PARTITIONS = [
-  { label: '1m', seconds: 60 },
-  { label: '2m', seconds: 120 },
-  { label: '5m', seconds: 300 },
-  { label: '30m', seconds: 1800 },
-  { label: '1h', seconds: 3600 },
-  { label: '12h', seconds: 43200 },
-  { label: '24h', seconds: 86400 },
-];
 
 const format = (s: number) => {
   if (s < 60) return `${s}s`;

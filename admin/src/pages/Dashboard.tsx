@@ -44,6 +44,7 @@ export default function Dashboard() {
     }
     return 'default';
   });
+
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
@@ -51,6 +52,7 @@ export default function Dashboard() {
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
+  
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
     if (!rt) return {};
@@ -93,6 +95,7 @@ export default function Dashboard() {
   useEffect(() => {
     getRegionResponseTimeData();
   }, [responseTimeData]);
+
   const handleRefresh = () => {
     const { start, end } = getRangeTimestamps(responseTimeRange || 'last_24_hours');
     setIsLoading(true);

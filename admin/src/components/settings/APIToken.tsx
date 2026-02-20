@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { request } from '../../utils/helpers';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { DASHBOARD_URL } from '../../utils/constants';
 
 export default function APIToken() {
   const [token, setToken] = useState('');
@@ -25,7 +26,7 @@ export default function APIToken() {
       toast.success('Token saved successfully');
       navigate('/plugins/upsnap/dashboard')
     });
-    
+
     setLoading(false);
   };
 
@@ -36,7 +37,7 @@ export default function APIToken() {
         <Typography variant="omega">
           Enter the Upsnap API Key and save to enable Healthcheck settings. To access the API key,
           please visit the{' '}
-          <Link href="https://upsnap.ai" isExternal>
+          <Link href={DASHBOARD_URL} isExternal>
             Upsnap Dashboard
           </Link>
         </Typography>

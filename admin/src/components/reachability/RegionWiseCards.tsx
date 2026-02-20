@@ -9,6 +9,7 @@ import {
   Typography,
   Box,
 } from '@strapi/design-system';
+import { colors } from '../../utils/constants';
 interface RegionResponseTimeData {
   chart_data: Array<{ timestamp: number; response_time: number }>;
   avg_response_time: number;
@@ -27,16 +28,7 @@ export default function RegionWiseCards({
   regionResponseTimeData,
   loadingRegions,
 }: RegionWiseResponseTimeCardsProps) {
-  const colors = [
-    '#4CAF50',
-    '#2196F3',
-    '#FF9800',
-    '#9C27B0',
-    '#00BCD4',
-    '#F44336',
-    '#8BC34A',
-    '#FFEB3B',
-  ];
+
   const formatTime = (ms: any) => {
     if (!ms) return 'N/A';
     return ms >= 1000 ? `${(ms / 1000).toFixed(2)} s` : `${ms} ms`;

@@ -1,3 +1,5 @@
+import { IntervalPartition } from "./types";
+
 export const PLAN_TYPES = {
   FREE: 'free',
   PRO: 'pro',
@@ -14,7 +16,7 @@ export const PLAN_LIMITS = {
   },
 };
 
-export const DASHBOARD_URL = 'https://upsnap-app.appfoster.site';
+export const DASHBOARD_URL = 'https://upsnap.ai';
 
 export const REGIONS = {
   default: {
@@ -92,3 +94,50 @@ export const INTEGRATIONS_TYPES = {
     label: 'Telegram',
   },
 };
+
+export const colors = [
+  '#4CAF50',
+  '#2196F3',
+  '#FF9800',
+  '#9C27B0',
+  '#00BCD4',
+  '#F44336',
+  '#8BC34A',
+  '#FFEB3B',
+];
+
+
+export const timeRanges = [
+  { value: 'last_hour', label: 'Last hour' },
+  { value: 'last_24_hours', label: 'Last 24 hours' },
+  { value: 'last_7_days', label: 'Last 7 days' },
+  { value: 'last_30_days', label: 'Last 30 days' },
+  { value: 'last_year', label: 'Last year' },
+];
+
+export const EXPIRY_OPTIONS = [
+  { label: '1 day', value: 1 },
+  { label: '7 days', value: 7 },
+  { label: '15 days', value: 15 },
+  { label: '1 month', value: 30 },
+  { label: '3 months', value: 90 },
+];
+
+export const INTERVALS: IntervalPartition[] = [
+  { label: '1d', value: 1, unit: 'day' },
+  { label: '2d', value: 2, unit: 'day' },
+  { label: '5d', value: 5, unit: 'day' },
+  { label: '7d', value: 7, unit: 'day' },
+  { label: '10d', value: 10, unit: 'day' },
+];
+
+
+export const PARTITIONS = [
+  { label: '1m', seconds: 60 },
+  { label: '2m', seconds: 120 },
+  { label: '5m', seconds: 300 },
+  { label: '30m', seconds: 1800 },
+  { label: '1h', seconds: 3600 },
+  { label: '12h', seconds: 43200 },
+  { label: '24h', seconds: 86400 },
+];

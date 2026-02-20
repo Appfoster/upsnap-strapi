@@ -18,14 +18,8 @@ import IntervalSlider from './IntervalSlider';
 import { MONITOR, PLAN_TYPES as PLAN_TYPES_CONSTANT } from '../../utils/constants';
 import { IntervalPartition, PLAN_TYPES } from '../../utils/types';
 import { toast } from 'react-toastify';
+import { INTERVALS, EXPIRY_OPTIONS } from '../../utils/constants';
 
-const EXPIRY_OPTIONS = [
-  { label: '1 day', value: 1 },
-  { label: '7 days', value: 7 },
-  { label: '15 days', value: 15 },
-  { label: '1 month', value: 30 },
-  { label: '3 months', value: 90 },
-];
 
 export default function HealthcheckServiceBlock({
   label,
@@ -51,14 +45,6 @@ export default function HealthcheckServiceBlock({
   const update = (patch: any) => {
     onChange(serviceKey, { ...data, ...patch });
   };
-
-  const INTERVALS: IntervalPartition[] = [
-    { label: '1d', value: 1, unit: 'day' },
-    { label: '2d', value: 2, unit: 'day' },
-    { label: '5d', value: 5, unit: 'day' },
-    { label: '7d', value: 7, unit: 'day' },
-    { label: '10d', value: 10, unit: 'day' },
-  ];
 
   const restrictedWhenNotHttps = ['lighthouse', 'ssl', 'mixed_content'].includes(serviceKey);
 
