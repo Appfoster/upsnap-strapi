@@ -196,8 +196,8 @@ MIT License
 ## 👨‍💻 Author
 
 **Appfoster**  
-Website: https://appfoster.com  
-Email: info@appfoster.com  
+Website: https://upsnap.ai 
+Email: support@upsnap.ai 
 
 ---
 
