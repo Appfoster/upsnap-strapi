@@ -69,7 +69,7 @@
     "displayName": "Upsnap",
     "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues."
   },
-  "name": "@appfoster/upsnap",
+  "name": "@upsnap/strapi",
   "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues.",
   "license": "MIT",
   "author": "Appfoster <info@appfoster.com>"

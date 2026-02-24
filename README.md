@@ -25,13 +25,13 @@ Upsnap helps you detect issues before your users do.
 Install via npm:
 
 ```bash
-npm install @appfoster/strapi-plugin-upsnap
+npm install @upsnap/strapi
 ```
 
 or via yarn:
 
 ```bash
-yarn add @appfoster/strapi-plugin-upsnap
+yarn add @upsnap/strapi
 ```
 
 Restart Strapi:
