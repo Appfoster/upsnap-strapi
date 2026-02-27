@@ -17,7 +17,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
     const isValidData: any = await service({ strapi }).makeBackendRequest('/tokens/validate', {
       method: "POST",
       body: JSON.stringify({ token }),
-    });
+    }, true);
 
     if (!isValidData?.data?.valid) {
       ctx.body = { ok: false, error: 'Invalid token' };
