@@ -400,7 +400,7 @@ const IntegrationsPage: React.FC = () => {
               marginBottom={6}
             >
               <Flex alignItems="center" gap={3}>
-                <Typography variant="alpha">Integrations</Typography>
+                <Typography variant="beta">Integrations</Typography>
 
                 {planLimits && (
                   <Box

@@ -172,7 +172,7 @@ export default function ListStatusPages() {
       >
         <Box>
           <Flex direction="column" gap={1} alignItems="flex-start">
-            <Typography variant="alpha" fontWeight="bold">
+            <Typography variant="beta" fontWeight="bold">
               Status Pages
             </Typography>
             <Typography variant="pi" textColor="neutral600">
