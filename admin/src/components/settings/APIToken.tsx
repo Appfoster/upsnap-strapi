@@ -23,6 +23,11 @@ export default function APIToken() {
       method: 'POST',
       data: { token },
     }).then((res) => {
+      if (!res.ok) {
+        toast.error(res.error || 'Failed to save token');
+        setLoading(false);
+        return;
+      }
       toast.success('Token saved successfully');
       navigate('/plugins/upsnap/dashboard')
     });
