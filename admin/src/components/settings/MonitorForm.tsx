@@ -31,7 +31,6 @@ interface Props {
 }
 
 export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: Props) {
-  // const router = useRouter();
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
