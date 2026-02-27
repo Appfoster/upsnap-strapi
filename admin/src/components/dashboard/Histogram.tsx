@@ -70,7 +70,7 @@ export function HistogramChart({ data, isLoading }: HistogramChartProps) {
     return (
       <HistogramContainer>
         {Array.from({ length: LOADING_PILLS }).map((_, i) => (
-          <Tooltip key={i} label="Loading..." position="top">
+          <Tooltip key={i} label="Loading...">
             <HistogramPill
               color={activeIndex === i ? '#10B981' : '#E5E7EB'}
               style={{
@@ -106,7 +106,7 @@ export function HistogramChart({ data, isLoading }: HistogramChartProps) {
         }
 
         return (
-          <Tooltip key={i} label={tooltipLabel} position="top">
+          <Tooltip key={i} label={tooltipLabel}>
             <HistogramPill color={getColorByUptime(bucket.uptime)} />
           </Tooltip>
         );

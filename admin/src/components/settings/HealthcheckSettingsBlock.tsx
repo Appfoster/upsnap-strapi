@@ -52,7 +52,7 @@ export default function HealthcheckServiceBlock({
     <Card shadow="tableShadow" padding={0} background="neutral0">
       <CardHeader padding={4}>
         {/* SINGLE CHILD — REQUIRED */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+        <Box width="100%">
           <Flex alignItems="center" gap={4} justifyContent="space-between" width="100%">
             <Typography fontWeight="bold">{label}</Typography>
 
@@ -75,7 +75,7 @@ export default function HealthcheckServiceBlock({
         <CardContent width="100%">
           <Box
             padding={4}
-            opacity={data.enabled ? 1 : 0.5}
+            style={{ opacity: data.enabled ? 1 : 0.5 }}
             pointerEvents={data.enabled ? 'auto' : 'none'}
           >
             <Flex gap={7} direction="column" width="100%" alignItems="stretch">
@@ -118,7 +118,7 @@ export default function HealthcheckServiceBlock({
               {showStrategy && (
                 <SingleSelect
                   value={data.strategy}
-                  onChange={(v: string) => update({ strategy: v })}
+                  onChange={(v: string | number) => update({ strategy: v })}
                 >
                   <SingleSelectOption value="mobile">Mobile</SingleSelectOption>
                   <SingleSelectOption value="desktop">Desktop</SingleSelectOption>

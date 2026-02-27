@@ -1,9 +1,331 @@
-import contentAPIRoutes from './content-api';
-import adminAPIRoutes from './admin';
-
-const routes = {
-  'content-api': contentAPIRoutes,
-  admin: adminAPIRoutes,
+export default {
+  admin: {
+    type: 'admin',
+    routes: [
+    {
+      method: 'GET',
+      path: '/settings',
+      handler: 'settings.get',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/settings',
+      handler: 'settings.set',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id',
+      handler: 'monitor.getById',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitors',
+      handler: 'monitor.get',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/uptime-stats',
+      handler: 'monitor.getMonitorUptimeStats',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/histogram',
+      handler: 'monitor.getMonitorHistogram',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check',
+      handler: 'monitor.getHealthChecks',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/uptime',
+      handler: 'monitor.getUptimeHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/ssl',
+      handler: 'monitor.getSslHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/domain',
+      handler: 'monitor.getDomainHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/lighthouse',
+      handler: 'monitor.getLighthouseHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/broken-links',
+      handler: 'monitor.getBrokenLinksHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/health-check/mixed-content',
+      handler: 'monitor.getMixedContentHealthCheck',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/response-time',
+      handler: 'monitor.getMonitorResponseTime',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/:id/incidents',
+      handler: 'monitor.getMonitorIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/status-pages',
+      handler: 'statusPage.getStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/status-pages/:id',
+      handler: 'statusPage.getStatusPagesByID',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/status-pages',
+      handler: 'statusPage.saveStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/status-pages',
+      handler: 'statusPage.updateStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/status-pages/reset',
+      handler: 'statusPage.resetLink',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/status-pages/:id',
+      handler: 'statusPage.deleteStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/regions',
+      handler: 'regions.getRegions',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/settings/:id',
+      handler: 'monitor.getMonitorSettings',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/user/details',
+      handler: 'userDetails.getUserDetails',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/notification-channels',
+      handler: 'notificationChannels.getNotificationChannels',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/notification-channels',
+      handler: 'notificationChannels.createNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitors',
+      handler: 'monitor.createMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/monitors/:id',
+      handler: 'monitor.updateMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/monitors/:id',
+      handler: 'monitor.deleteMonitor',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitors/bulk-delete',
+      handler: 'monitor.deleteMonitors',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/settings/get-primary-monitor-id',
+      handler: 'settings.getPrimaryMonitorId',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/settings/set-primary-monitor-id',
+      handler: 'settings.setPrimaryMonitorId',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/integrations/supported',
+      handler: 'notificationChannels.getSupportedIntegrations',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/notification-channels/:id',
+      handler: 'notificationChannels.updateNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/notification-channels/:id/test',
+      handler: 'notificationChannels.testNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/notification-channels/:id',
+      handler: 'notificationChannels.deleteNotificationChannel',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+  ],
+  },
 };
-
-export default routes;

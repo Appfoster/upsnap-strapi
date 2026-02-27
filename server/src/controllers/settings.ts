@@ -7,8 +7,8 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
   async get(ctx) {
     const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings;
     ctx.body = {
-      token: settings.token ?? null,
-      primaryMonitorId: settings.primaryMonitorId ?? null,
+      token: settings?.token ?? null,
+      primaryMonitorId: settings?.primaryMonitorId ?? null,
     };
   },
 
@@ -45,7 +45,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async getPrimaryMonitorId(ctx) {
     const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings;
-    ctx.body = { primaryMonitorId: settings.primaryMonitorId };
+    ctx.body = { primaryMonitorId: settings?.primaryMonitorId };
   },
 });
 

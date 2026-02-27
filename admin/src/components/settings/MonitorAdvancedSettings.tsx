@@ -56,7 +56,7 @@ export default function AdvancedSettings({
             </Accordion.Trigger>
           </Accordion.Header>
 
-          <Accordion.Content width="100%">
+          <Accordion.Content>
             <Flex padding={4} direction="column" gap={6} width="100%" alignItems="flex-start">
               {/* Request timeout */}
               <Box maxWidth="60%">

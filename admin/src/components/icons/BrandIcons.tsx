@@ -90,7 +90,7 @@ export const NotificationIcon = ({ className = '' }) => (
 );
 
 // Icon mapping function to get icon component by name
-export const getIntegrationIcon = (iconName: string, className: string = 'tw-w-6 tw-h-6') => {
+export const getIntegrationIcon = (iconName: string, className: string = 'tw-w-6 tw-h-6'): JSX.Element | null => {
   const icons: Record<string, React.ReactNode> = {
     mail: <MailIcon className={className} />,
     email: <MailIcon className={className} />,
@@ -103,5 +103,5 @@ export const getIntegrationIcon = (iconName: string, className: string = 'tw-w-6
     sms: <PhoneIcon className={className} />,
   };
 
-  return icons[iconName.toLowerCase()] || <NotificationIcon className={className} />;
+  return <NotificationIcon className={className} />;
 };

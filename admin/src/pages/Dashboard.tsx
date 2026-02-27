@@ -75,9 +75,9 @@ export default function Dashboard() {
     return {};
   }
 
-  const handleTimeRangeChange = (range: string) => {
-    setResponseTimeRange(range);
-    const { start, end } = getRangeTimestamps(range || 'last_24_hours');
+  const handleTimeRangeChange = (range: string | number) => {
+    setResponseTimeRange(String(range));
+    const { start, end } = getRangeTimestamps(String(range) || 'last_24_hours');
     request(
       `/monitor/${monitorId}/response-time?start=${start}&end=${end}&region=${selectedRegion}`,
       {
@@ -155,11 +155,10 @@ export default function Dashboard() {
           }}
           direction={{ initial: 'column', medium: 'row' }}
           alignItems="start"
-          alignContent="space-around"
-          justifyItems="stretch"
+          style={{ alignContent: 'space-around', justifyItems: 'stretch' }}
         >
           <Box width="100%">
-            <Flex direction="column" gap={4} height="100%" alignItems="start" flexWrap="wrap">
+            <Flex direction="column" gap={4} height="100%" alignItems="start" style={{ flexWrap: 'wrap'}}>
               <StatisticsCards
                 monitorData={monitorData}
                 uptimeStats={uptimeStats}
