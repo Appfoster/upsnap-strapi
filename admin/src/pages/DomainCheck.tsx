@@ -61,6 +61,10 @@ export default function DomainCheck() {
   useEffect(() => {
     setLoading(true);
     request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
+      if (res?.monitor?.message === 'Invalid authentication token') {
+        setSelectedMonitor(null);
+        navigate('/plugins/upsnap/settings');
+      }
       setSelectedMonitor(res.monitor?.data || null);
       setLoading(false);
     });

@@ -90,11 +90,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     handleRefresh();
-  }, [monitorId]);
+  }, [monitorId, selectedRegion]);
 
   useEffect(() => {
     getRegionResponseTimeData();
-  }, [responseTimeData]);
+  }, [responseTimeData, selectedRegion]);
 
   const handleRefresh = () => {
     const { start, end } = getRangeTimestamps(responseTimeRange || 'last_24_hours');

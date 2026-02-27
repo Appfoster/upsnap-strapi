@@ -14,7 +14,15 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async set(ctx) {
     const { token } = ctx.request.body;
+    const isValidData: any = await service({ strapi }).makeBackendRequest('/tokens/validate', {
+      method: "POST",
+      body: JSON.stringify({ token }),
+    });
 
+    if (!isValidData?.data?.valid) {
+      ctx.body = { ok: false, error: 'Invalid token' };
+      return;
+    }
     const store = service({ strapi }).settingsStore;
     const current = ((await store.get()) as UpsnapSettings) || {};
 
