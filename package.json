@@ -1,5 +1,9 @@
 {
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Appfoster/upsnap-strapi"
+  },
   "keywords": [],
   "type": "commonjs",
   "exports": {
@@ -65,8 +69,8 @@
     "displayName": "Upsnap",
     "description": "Monitoring"
   },
-  "name": "upsnap",
-  "description": "Monitoring",
+  "name": "@upsnap/strapi",
+  "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues.",
   "license": "MIT",
   "author": "Upsnap <support@upsnap.ai>"
 }

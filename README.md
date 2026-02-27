@@ -1,24 +1,55 @@
-# 🚀 Upsnap – Advanced Website Health Monitoring for Strapi
+# UpSnap
 
-> Enterprise-grade website monitoring directly inside your Strapi Admin Panel.
+A lightweight, all-in-one monitoring plugin for Craft CMS 5 that keeps your site healthy, secure, and fast.
 
-Upsnap is a powerful monitoring plugin for Strapi that enables you to track uptime, SSL certificates, broken links, performance health, domain integrity, and mixed content issues — all from a clean, real-time dashboard inside your CMS.
+## Description
+UpSnap delivers real-time monitoring and actionable insights so you can detect downtime, performance issues, and security risks before they impact your users.
 
-Designed for agencies, SaaS platforms, and enterprise teams.
+## Core Monitoring Features
+🔍 Reachability monitoring with uptime tracking, response times, HTTP status checks, and historical trends  
+🔒 SSL/TLS certificate validation with expiry alerts and security checks  
+🔗 Broken link scanning for internal and external URLs  
+📊 Google Lighthouse analysis with Performance, Accessibility, Best Practices, and SEO scores  
+🌐 Domain health checks including DNS validation and expiry monitoring  
+🔄 Mixed content detection to identify insecure resources on HTTPS pages  
+
+---
+
+## 🌍 Multi-Region Monitoring
+Monitor your website from multiple global locations to detect regional downtime, latency issues, and real user impact across different geographies.
+
+## 📡 Public Status Page Monitoring
+Create and share public status pages to display uptime, performance history, and live monitoring stats with your users or clients.
+
+## 🚨 Incidents Lists & Reporting
+Track monitoring incidents with detailed timelines, status history, recovery tracking, and per-monitor reporting for better visibility and troubleshooting.
+
+## 🔔 Rich Notification Integrations
+Get real-time alerts through multiple channels:
+Email
+Slack
+Discord
+SMS
+Telegram
+Google Chat
+Microsoft Teams
+Webhooks
+PagerDuty
+Zapier
+…and more integrations coming soon.
+
+## 🌐 Website Monitoring
+Comprehensive website health monitoring including availability, performance checks, SSL status, and content integrity monitoring in one place.
+
+**UpSnap** helps Craft CMS developers, agencies, and site owners maintain reliable, secure, and high-performing websites - all from a simple, integrated dashboard.
 
 ---
 
-## ✨ Why Upsnap?
+## Requirements
+- Strapi v5.x
+- Nodejs ">=18.0.0 <=22.x.x"
+- React 18 (provided by Strapi)
 
-Modern websites fail silently — expired SSL, broken internal links, mixed content errors, slow response times.  
-Upsnap helps you detect issues before your users do.
-
-✔ Monitor multiple domains  
-✔ Detect critical infrastructure issues  
-✔ Visual health dashboard inside Strapi  
-✔ Built for Strapi v5 architecture  
-
----
 
 ## 📦 Installation
 
@@ -34,6 +65,14 @@ or via yarn:
 yarn add @upsnap/strapi
 ```
 
+Enable it in confing/plugins:
+
+```bash
+upsnap: {
+	enabled: true,
+}
+```
+
 Restart Strapi:
 
 ```bash
@@ -42,204 +81,30 @@ npm run develop
 
 Upsnap will appear in your admin sidebar.
 
----
-
-## ⚙️ Requirements
-
-- Strapi v5.x
-- Node.js 18+
-- React 18 (provided by Strapi)
-
----
-
-## 🛠 Features
-
-### 🌐 Uptime Monitoring
-- HTTP status validation
-- Response time measurement
-- Availability tracking
-
-### 🔐 SSL Certificate Monitoring
-- Expiry date detection
-- Certificate validity checks
-- Security warnings
-
-### 🔗 Broken Link Detection
-- Internal link scanning
-- External link validation
-- Dead link reporting
-
-### ⚡ Performance Health
-- Server response analysis
-- Latency tracking
-- Basic performance indicators
-
-### 🛡 Mixed Content Detection
-- HTTP resources inside HTTPS pages
-- Security vulnerability detection
-
-### 📊 Clean Admin Dashboard
-- Real-time monitoring overview
-- Status visualization
-- Health summary per domain
-
----
-
-## 🧠 How It Works
-
-Upsnap performs secure server-side checks:
-
-1. Fetches target domain
-2. Validates HTTP status
-3. Inspects SSL certificate
-4. Scans DOM for broken links
-5. Detects mixed content
-6. Measures response metrics
-
-All results are aggregated and displayed within Strapi's admin interface.
-
----
-
 ## 🔧 Configuration
 
-After installation:
+## Quick Setup Guide
 
-1. Go to **Settings → Plugins → Upsnap**
-2. Add your target domains
+After installing the plugin and restarting Strapi:
+
+1. Go to **Upsnap → Settings → API Token**  
+   Add your API Token from https://upsnap.ai website
+
+2. Add a new monitor  
+   or select a primary monitor if one is already created
+
 3. Configure monitoring options
-4. Save and start monitoring
 
----
+4. Save and go to dashboard
 
-## 📊 Use Cases
 
-- SaaS platforms managing multiple domains
-- Agencies maintaining client websites
-- DevOps monitoring dashboards
-- Enterprise content systems
-- Website audit automation
+## Documentation
+[Full Documentation](https://github.com/Appfoster/upsnap/wiki)
 
----
+## Issue Tracking
+[GitHub Issues](https://github.com/Appfoster/upsnap-strapi/issues)
+[Changelog](https://github.com/Appfoster/upsnap/blob/main/CHANGELOG.md)
 
-## 🏗 Development
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Appfoster/upsnap-strapi
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Build plugin:
-
-```bash
-npm run build
-```
-
-Watch mode (for development):
-
-```bash
-npm run watch
-```
-
----
-
-## 📁 Project Structure
-
-```
-/admin      → Admin UI (React)
-/server     → Backend logic
-/dist       → Compiled output (published to npm)
-```
-
----
-
-## 🔒 Security
-
-- Runs server-side within Strapi
-- No external tracking
-- No third-party data storage
-- Respects Strapi permission system
-
----
-
-## 🧩 Compatibility
-
-| Strapi Version | Supported |
-|----------------|------------|
-| v5.x           | ✅ Yes     |
-| v4.x           | ❌ No      |
-
----
-
-## 🧪 Production Readiness
-
-- Built using Strapi Plugin SDK
-- Peer dependency aligned with Strapi v5
-- TypeScript support
-- Modular architecture
-- Designed for scalability
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-## 👨‍💻 Author
-
-**Appfoster**  
-Website: https://upsnap.ai 
-Email: support@upsnap.ai 
-
----
-
-## 🌍 Roadmap
-
-- Scheduled monitoring (cron-based)
-- Email / Slack alerts
-- Historical monitoring logs
-- Public status page integration
-- Performance scoring system
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit changes
-4. Open a pull request
-
----
-
-## ⭐ Support
-
-If you find Upsnap useful:
-
-- Star the repository
-- Share with your team
-- Submit feature requests
-- Report issues
-
----
-
-## 📌 About Strapi
-
-Upsnap is built for Strapi — the leading open-source headless CMS.
-
-Learn more at: https://strapi.io
-
----
-
-Built with precision. Designed for reliability.  
-Monitor smarter with Upsnap.
+## Contact
+**Email**: support@upsnap.ai
+**Website**: [UpSnap](https://upsnap.ai/)
