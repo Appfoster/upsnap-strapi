@@ -18,7 +18,7 @@ interface RegionResponseTimeChartProps {
   monitor: MonitorData['monitor'] | undefined;
   regionResponseTimeData: Record<string, RegionResponseTimeData>;
   timeRange: string;
-  onTimeRangeChange: (range: string) => void;
+  onTimeRangeChange: (range: string | number) => void;
 }
 
 
@@ -183,7 +183,6 @@ export const RegionResponseTimeChart = ({
           <SingleSelect
             value={timeRange}
             onChange={onTimeRangeChange}
-            label="Time Range"
             disabled={monitor?.is_enabled === false}
           >
             {timeRanges.map((tr) => (

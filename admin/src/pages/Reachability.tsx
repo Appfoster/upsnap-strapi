@@ -159,11 +159,11 @@ export default function Reachability() {
       await getReachabilityData(selectedMonitor?.monitor?.config?.meta?.url, newRegionId);
     }
   };
-  const handleTimeRangeChange = (range: string) => {
-    setResponseTimeRange(range);
+  const handleTimeRangeChange = (range: string | number) => {
+    setResponseTimeRange(String(range));
     // Fetch region data if monitorData is available
     if (selectedMonitor?.monitor?.regions) {
-      fetchResponseTimeDataForRegions(selectedMonitor.monitor.regions, range || 'last_24_hours');
+      fetchResponseTimeDataForRegions(selectedMonitor.monitor.regions, String(range) || 'last_24_hours');
     }
   };
 
@@ -188,9 +188,11 @@ export default function Reachability() {
   return (
     <Main>
       <Box padding={4}>
-        <Typography variant="beta" as="h2" style={{ marginBottom: '10px' }}>
-          Reachability (<Link href={selectedMonitor?.monitor?.config?.meta?.url} isExternal>{selectedMonitor.monitor?.name || ''}</Link>)
-        </Typography>
+        <Box marginBottom={3}>
+          <Typography variant="beta">
+            Reachability (<Link href={selectedMonitor?.monitor?.config?.meta?.url} isExternal>{selectedMonitor.monitor?.name || ''}</Link>)
+          </Typography>
+        </Box>
         <StatusCard
           status={data.status}
           message={data.message}

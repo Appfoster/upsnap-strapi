@@ -123,9 +123,8 @@ export default function Lighthouse() {
                   </Typography>
                   <Box style={{ minWidth: 200 }}>
                     <SingleSelect
-                      label="Select Device"
                       value={strategy}
-                      onChange={(val: string) => {
+                      onChange={(val: string | number) => {
                         if (val === 'desktop' || val === 'mobile') setStrategy(val);
                       }}
                     >
@@ -139,7 +138,7 @@ export default function Lighthouse() {
                     gap={4}
                     marginTop={4}
                     justifyContent={{ initial: 'center', large: 'space-around' }}
-                    flexWrap="wrap"
+                    style={{ flexWrap: 'wrap' }}
                     direction={{ initial: 'column', medium: 'row' }}
                     width="100%"
                   >

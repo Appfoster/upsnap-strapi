@@ -221,11 +221,10 @@ export default function NotificationChannelsIntegration({
     <Box width="100%">
       <Accordion.Root>
         <Accordion.Item value="notification-channels">
-          <Accordion.Header width="100%">
+          <Accordion.Header>
             <Accordion.Trigger
               caretPosition="right"
               description="Choose how you want to receive alerts"
-              width="100%"
             >
               <Flex justifyContent="space-between" alignItems="center" width="100%" gap={4}>
                 <Typography fontWeight="bold">How would you like to get notified?</Typography>
@@ -239,7 +238,7 @@ export default function NotificationChannelsIntegration({
                   }}
                 >
                   <TextInput
-                    label="Search channels"
+                    placeholder="Search channels"
                     value={search}
                     onChange={(e: any) => setSearch(e.target.value)}
                     startAction={<Search />}

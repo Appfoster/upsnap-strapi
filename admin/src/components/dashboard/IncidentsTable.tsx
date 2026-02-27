@@ -56,7 +56,7 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
   return (
     <Box paddingTop={8}>
       <Box marginBottom={4}>
-        <Typography variant="beta" as="h3">
+        <Typography variant="beta">
           Recent 20 Incidents
         </Typography>
       </Box>

@@ -180,8 +180,7 @@ export const ResponseTimeChart = ({
           <Box padding={3} style={{ minWidth: 200 }}>
             <SingleSelect
               value={timeRange}
-              onChange={onTimeRangeChange}
-              label="Time Range"
+              onChange={(value: string | number) => onTimeRangeChange(value as string)}
               disabled={monitor?.is_enabled === false}
             >
               {timeRanges.map((tr) => (

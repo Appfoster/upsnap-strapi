@@ -180,7 +180,7 @@ export default function ListStatusPages() {
             </Typography>
           </Flex>
         </Box>
-        <Button startIcon={<Plus />} onClick={handleAddStatusPage} variant="primary" size="S">
+        <Button startIcon={<Plus />} onClick={handleAddStatusPage} variant="tertiary" size="S">
           Add Status Page
         </Button>
       </Flex>
@@ -296,7 +296,7 @@ export default function ListStatusPages() {
                               setSelectedPageId(page.id);
                               setIsDeleteModalOpen(true);
                             }}
-                            textColor="danger700"
+                            variant="danger"
                             startIcon={<Trash />}
                           >
                             Delete

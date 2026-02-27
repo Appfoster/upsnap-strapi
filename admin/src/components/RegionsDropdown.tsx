@@ -17,9 +17,8 @@ export const RegionsDropdown: React.FC<RegionsDropdownProps> = ({
     selectedRegions.length > 0 && (
       <SingleSelect
         key={selectedRegions.length}
-        label="Select region"
         value={value || ''}
-        onChange={(val: string) => val && onChange(val)}
+        onChange={(val: string | number) => val && onChange(String(val))}
       >
         {selectedRegions.map((region) => (
           <SingleSelectOption key={region.id} value={region.id}>

@@ -390,7 +390,7 @@ const IntegrationsPage: React.FC = () => {
 
         {/* MAIN CONTENT */}
         <Box background="neutral0" padding={4} borderRadius="8px" flex="1" overflow="auto">
-          <Box maxWidth={{inital: "100%", medium: "900px"}} margin="auto">
+          <Box maxWidth={{initial: "100%", medium: "900px"}} margin="auto">
             {/* HEADER */}
             <Flex
               direction={{ initial: 'column', medium: 'row' }}
@@ -484,9 +484,9 @@ const IntegrationsPage: React.FC = () => {
                     <Accordion.Item key={channel.type} value={channel.type}>
                       <Accordion.Header>
                         <Accordion.Trigger caretPosition="left" description={channel.description}>
-                          <Flex alignItems="center" gap={3} width={{initial: "100%", medium: "634px"}}>
+                          <Flex alignItems="center" gap={3} width={{initial: "100%", medium: "542px"}}>
                             <Box>{getIntegrationIcon(channel.icon)}</Box>
-                            <Flex width={{initial: "100%", medium: "634px"}} gap={3} justifyContent="space-between">
+                            <Flex width={{initial: "100%", medium: "542px"}} gap={3} justifyContent="space-between">
                             <Typography fontWeight="semiBold">{channel.label}</Typography>
                             <Flex justifyContent="flex-end">
                               {!planLimits?.can_add_more ? (

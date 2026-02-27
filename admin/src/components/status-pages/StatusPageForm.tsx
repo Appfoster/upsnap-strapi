@@ -157,7 +157,7 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
 
   return (
     <>
-      <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>
+      <Typography variant="beta" marginBottom={4} marginTop={2}>
         {mode === 'create' ? 'Add Status Page' : 'Edit Status Page'}
       </Typography>
       <Card marginTop={3} width="100%">
@@ -171,18 +171,15 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
             >
               <Box width="100%">
                 <TextInput
-                  name="name"
-                  label="Name"
+                  name="Enter status page name"
+                  placeholder="Name"
                   value={formData.name}
                   onChange={handleChange}
-                  error={errors.name}
-                  placeholder="Enter status page name"
                 />
               </Box>
               <Box width="100%">
                 <MultiSelect
                   withTags
-                  label="Monitors"
                   placeholder="Select monitors..."
                   value={formData.monitor_ids}
                   onChange={(selected: any) =>
@@ -191,7 +188,6 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
                       monitor_ids: selected,
                     }))
                   }
-                  onInputChange={setSearchInput}
                   disabled={isLoading}
                 >
                   {filteredOptions.length > 0 ? (
