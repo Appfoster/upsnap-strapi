@@ -1,6 +1,6 @@
 # UpSnap
 
-A lightweight, all-in-one monitoring plugin for Craft CMS 5 that keeps your site healthy, secure, and fast.
+A lightweight, all-in-one monitoring plugin for Strapi that keeps your site healthy, secure, and fast.
 
 ## Description
 UpSnap delivers real-time monitoring and actionable insights so you can detect downtime, performance issues, and security risks before they impact your users.
@@ -41,7 +41,7 @@ Zapier
 ## 🌐 Website Monitoring
 Comprehensive website health monitoring including availability, performance checks, SSL status, and content integrity monitoring in one place.
 
-**UpSnap** helps Craft CMS developers, agencies, and site owners maintain reliable, secure, and high-performing websites - all from a simple, integrated dashboard.
+**UpSnap** helps Strapi developers, agencies, and site owners maintain reliable, secure, and high-performing websites - all from a simple, integrated dashboard.
 
 ---
 
