@@ -39,7 +39,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Current Status</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     {monitorData?.monitor?.service_last_checks?.default?.uptime?.last_status ||
                       'N/A'}
                   </CardSubtitle>
@@ -53,7 +53,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last check</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     {formatDate(
                       monitorData?.monitor?.service_last_checks?.default?.uptime?.last_checked_at ||
                         'N/A'
@@ -69,7 +69,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 24 hours</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     <HistogramChart
                       data={histogramData?.histogram?.data || []}
                       isLoading={isLoading}
@@ -92,7 +92,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 24h</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     {uptimeStats?.uptime_stats?.day?.uptime_percentage
                       ? `${uptimeStats.uptime_stats.day.uptime_percentage}%`
                       : 'N/A'}
@@ -110,7 +110,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last week</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     {uptimeStats?.uptime_stats?.week?.uptime_percentage
                       ? `${uptimeStats.uptime_stats.week.uptime_percentage}%`
                       : 'N/A'}
@@ -128,7 +128,7 @@ export const StatisticsCards = ({ monitorData, uptimeStats, histogramData, isLoa
               <CardBody>
                 <CardContent paddingLeft={1}>
                   <CardTitle fontSize={3}>Last 30 days</CardTitle>
-                  <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+                  <CardSubtitle marginTop={1} fontSize={3}>
                     {uptimeStats?.uptime_stats?.month?.uptime_percentage
                       ? `${uptimeStats.uptime_stats.month.uptime_percentage}%`
                       : 'N/A'}

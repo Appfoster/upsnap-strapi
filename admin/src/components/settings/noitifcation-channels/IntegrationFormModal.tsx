@@ -419,7 +419,7 @@ export default function IntegrationFormModal({
                   }}
                 />
 
-                {errors.name && <Field.Error>{errors.name}</Field.Error>}
+                {errors.name && <Field.Error />}
               </Field.Root>
             </Box>
             {/* Dynamic fields */}
@@ -429,7 +429,7 @@ export default function IntegrationFormModal({
 
               return (
                 <Box width="100%">
-                  <Field.Root key={field.name} name={field.name} error={errors[field.name]}>
+                  <Field.Root key={field.name} name={field.name} error={errors[field.name]} hint={field.description && !errors[field.name] ? field.description : undefined}>
                     <Field.Label>{field.label}</Field.Label>
 
                     <Box position="relative">
@@ -464,10 +464,10 @@ export default function IntegrationFormModal({
                     </Box>
 
                     {field.description && !errors[field.name] && (
-                      <Field.Hint>{field.description}</Field.Hint>
+                      <Field.Hint />
                     )}
 
-                    {errors[field.name] && <Field.Error>{errors[field.name]}</Field.Error>}
+                    {errors[field.name] && <Field.Error />}
                   </Field.Root>
                 </Box>
               );

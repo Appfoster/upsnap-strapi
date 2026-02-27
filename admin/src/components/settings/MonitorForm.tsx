@@ -31,7 +31,6 @@ interface Props {
 }
 
 export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: Props) {
-  // const router = useRouter();
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -558,7 +557,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
   };
   return (
     <>
-      <Typography variant="beta" as="h2" marginBottom={4} marginTop={2}>
+      <Typography variant="beta" marginBottom={4} marginTop={2}>
         {mode === 'create' ? 'Create Monitor' : 'Edit Monitor'}
       </Typography>
       <Card marginTop={3}>
@@ -582,13 +581,11 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
 
                         <Field.Input
                           type="text"
-                          crossOrigin=""
-                          size="L"
+                          size="M"
                           name="name"
                           placeholder="Monitor name"
                           value={formData.name}
                           onChange={handleChange}
-                          error={errors.name}
                         />
                         <Field.Error />
                       </Field.Root>
@@ -601,8 +598,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
                         <Field.Label>URL to monitor</Field.Label>
                         <Field.Input
                           type="text"
-                          crossOrigin=""
-                          size="L"
+                          size="M"
                           name="url"
                           placeholder="URL to monitor"
                           value={formData.config.meta.url}

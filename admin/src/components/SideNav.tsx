@@ -12,15 +12,17 @@ import {
   Palette,
 } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
-import '../styles/custom-styles.css';
 
 const SideNav = () => {
+  // Create a flexible version of the component
+ const CustomSubNavLink = SubNavLink as any;
+
   return (
     <SubNav aria-label="Upsnap navigation">
       <SubNavHeader label="Upsnap" />
 
-      <SubNavSection>
-        <SubNavLink
+      <SubNavSection label="Upsnap">
+        <CustomSubNavLink
           as={NavLink}
           to={`dashboard`}
           icon={<House />}
@@ -30,71 +32,71 @@ const SideNav = () => {
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Dashboard
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`reachability`}
           icon={<Earth />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Reachability
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`security-certificates`}
           icon={<Lock />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Security Certificates
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`broken-links`}
           icon={<Link />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Broken Links
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`lighthouse`}
           icon={<Palette />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Lighthouse
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`domain-check`}
           icon={<Globe />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Domain Check
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`mixed-content`}
           icon={<ExternalLink />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Mixed Content
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`status-pages`}
           icon={<Monitor />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Status Pages
-        </SubNavLink>
-        <SubNavLink
+        </CustomSubNavLink>
+        <CustomSubNavLink
           as={NavLink}
           to={`settings`}
           icon={<Cog />}
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Settings
-        </SubNavLink>
+        </CustomSubNavLink>
       </SubNavSection>
     </SubNav>
   );

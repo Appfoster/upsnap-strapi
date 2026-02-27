@@ -1,5 +1,5 @@
 import { Page, Layouts } from '@strapi/strapi/admin';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SideNav from '../components/SideNav';
 import { HomePage } from './HomePage';
 import Settings from './Settings';

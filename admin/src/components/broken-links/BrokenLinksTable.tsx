@@ -108,55 +108,55 @@ export default function BrokenLinksTable({
       <Card>
         {/* Filters */}
         <CardContent>
-          <Box padding={4} display="flex" gap={4}>
+          <Box padding={4}>
             <Flex
               gap={4}
               alignItems={{ initial: 'start', medium: 'center' }}
               direction={{ initial: 'column', medium: 'row' }}
             >
+              <Box style={{ minWidth: 150 }}>
               <SingleSelect
-                label="Select Status"
                 value={statusFilter}
-                onChange={(val: string) => setStatusFilter(val || 'all')}
-                style={{ minWidth: 150 }}
+                onChange={(val: string | number) => setStatusFilter(String(val) || 'all')}
               >
                 <SingleSelectOption value="all">All Status</SingleSelectOption>
                 <SingleSelectOption value="404">404 Not Found</SingleSelectOption>
                 <SingleSelectOption value="500">500 Server Error</SingleSelectOption>
                 <SingleSelectOption value="timeout">Timeout</SingleSelectOption>
               </SingleSelect>
+              </Box>
+              <Box style={{ minWidth: 150 }}>
               <SingleSelect
-                label="Select Link Type"
                 value={linkTypeFilter}
-                onChange={(val: string) => setLinkTypeFilter(val || 'all')}
-                style={{ minWidth: 150 }}
+                onChange={(val: string | number) => setLinkTypeFilter(String(val) || 'all')}
               >
                 <SingleSelectOption value="all">All</SingleSelectOption>
                 <SingleSelectOption value="internal">Internal</SingleSelectOption>
                 <SingleSelectOption value="external">External</SingleSelectOption>
               </SingleSelect>
+              </Box>
             </Flex>
           </Box>
           <Box style={{ overflowX: 'auto' }}>
             <Table colCount={6} rowCount={filteredData.length}>
               <Thead>
                 <Tr>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Broken URL</Typography>
                   </Th>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Found On Page</Typography>
                   </Th>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Status</Typography>
                   </Th>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Classification</Typography>
                   </Th>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Link Type</Typography>
                   </Th>
-                  <Th variant="sigma">
+                  <Th>
                     <Typography variant="sigma">Issue</Typography>
                   </Th>
                 </Tr>

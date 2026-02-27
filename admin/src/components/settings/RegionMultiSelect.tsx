@@ -218,7 +218,7 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
                   placeholder={selectedRegions.length === 0 ? placeholder : ''}
                   disabled={isLoading}
                   startAction={<Search />}
-                  size="L"
+                  size="M"
                 />
               </Box>
             )}
@@ -286,7 +286,7 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
 
                           <Typography flex="1">{region.name || region.id}</Typography>
 
-                          <Checkbox checked={isPrimary} disabled label="Primary">
+                          <Checkbox checked={isPrimary} disabled>
                             Primary
                           </Checkbox>
                         </Flex>
@@ -311,7 +311,6 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
                       <Checkbox
                         checked={isPrimary}
                         onChange={() => handleSetPrimary(region.id)}
-                        label="Primary"
                       >
                         Primary
                       </Checkbox>

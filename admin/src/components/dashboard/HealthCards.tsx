@@ -203,7 +203,7 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
                     </Flex>
                   </CardTitle>
                 ))}
-              <CardSubtitle marginTop={1} fontSize={3} textColor={'green'}>
+              <CardSubtitle marginTop={1} fontSize={3}>
                 <Typography>Last checked at: </Typography> {formatDate(data?.data?.checkedAt)}
                 <Flex marginTop={2} justifyContent="space-between">
                   <Link

@@ -49,7 +49,7 @@ export default function PageHeader({
     >
       {/* Left Side — Page Title & Optional URL */}
       <Flex alignItems="center" gap={2}>
-        <Typography variant="beta" as="h2" marginBottom={4}>
+        <Typography variant="beta" marginBottom={4}>
           {title}
           {monitorUrl && (
             <>

@@ -44,7 +44,7 @@ export default function APIToken() {
       </Flex>
       <Box marginTop={6} width="100%">
         <TextInput
-          label="API Token"
+          placeholder="API Token"
           type="password"
           value={token}
           onChange={(e: any) => setToken(e.target.value)}

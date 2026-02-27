@@ -131,8 +131,7 @@ export default function MixedContent() {
                   {meta.mixedContentItems.map((url: string, idx: number) => (
                     <Link key={idx} href={url} isExternal rel="noopener noreferrer">
                       <Badge
-                        value={url}
-                        size="sm"
+                        size="S"
                         color="blue"
                         className="tw-cursor-pointer !tw-lowercase"
                       >
