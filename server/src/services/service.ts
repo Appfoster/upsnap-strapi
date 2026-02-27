@@ -15,9 +15,9 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     const settings = (await this.settingsStore.get()) as UpsnapSettings;
     return settings?.token || null;
   },
-  async makeBackendRequest(endpoint: string, options: RequestInit) {
+  async makeBackendRequest(endpoint: string, options: RequestInit, forValidation: boolean = false) {
     const token = await this.getToken();
-    if (!token) {
+    if (!token && !forValidation) {
       return {error: 'No token found in settings'};
     }
 
