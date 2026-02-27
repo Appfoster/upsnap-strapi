@@ -1,9 +1,5 @@
 {
-  "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Appfoster/upsnap-strapi"
-  },
+  "version": "0.0.0",
   "keywords": [],
   "type": "commonjs",
   "exports": {
@@ -37,40 +33,40 @@
   "dependencies": {
     "@strapi/design-system": "^2.0.0-rc.30",
     "@strapi/icons": "^2.0.0-rc.30",
-    "axios": "^1.13.4",
-    "react-apexcharts": "^1.9.0",
+    "axios": "^1.13.5",
+    "react-apexcharts": "^2.0.1",
     "react-intl": "^6.6.0",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
-    "@strapi/sdk-plugin": "^5.4.0",
-    "@strapi/strapi": "^5.34.0",
-    "@strapi/typescript-utils": "^5.34.0",
-    "@types/react": "^19.2.10",
+    "@strapi/sdk-plugin": "^6.0.1",
+    "@strapi/strapi": "^5.37.1",
+    "@strapi/typescript-utils": "^5.37.1",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "prettier": "^3.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.3",
-    "styled-components": "^6.3.8",
+    "styled-components": "^6.3.11",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "@strapi/sdk-plugin": "^5.4.0",
-    "@strapi/strapi": "^5.34.0",
+    "@strapi/strapi": "^5.37.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.3",
-    "styled-components": "^6.3.8"
+    "styled-components": "^6.3.11"
   },
   "strapi": {
     "kind": "plugin",
     "name": "upsnap",
     "displayName": "Upsnap",
-    "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues."
+    "description": "Monitoring"
   },
-  "name": "@upsnap/strapi",
-  "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues.",
+  "name": "upsnap",
+  "description": "Monitoring",
   "license": "MIT",
   "author": "Upsnap <support@upsnap.ai>"
 }

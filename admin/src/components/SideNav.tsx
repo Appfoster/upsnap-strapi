@@ -12,7 +12,6 @@ import {
   Palette,
 } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
-import '../styles/custom-styles.css';
 
 const SideNav = () => {
   return (

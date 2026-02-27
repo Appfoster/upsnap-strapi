@@ -108,7 +108,7 @@ export default function BrokenLinksTable({
       <Card>
         {/* Filters */}
         <CardContent>
-          <Box padding={4} display="flex" gap={4}>
+          <Box padding={4}>
             <Flex
               gap={4}
               alignItems={{ initial: 'start', medium: 'center' }}
@@ -117,7 +117,7 @@ export default function BrokenLinksTable({
               <SingleSelect
                 label="Select Status"
                 value={statusFilter}
-                onChange={(val: string) => setStatusFilter(val || 'all')}
+                onChange={(val: string | number) => setStatusFilter(val || 'all')}
                 style={{ minWidth: 150 }}
               >
                 <SingleSelectOption value="all">All Status</SingleSelectOption>
