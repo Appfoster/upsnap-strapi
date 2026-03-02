@@ -67,7 +67,7 @@
     "kind": "plugin",
     "name": "upsnap",
     "displayName": "Upsnap",
-    "description": "Monitoring"
+    "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues."
   },
   "name": "@upsnap/strapi",
   "description": "Complete website health monitoring for Strapi, including uptime, SSL certificates, broken links, performance metrics, domain health, and mixed content issues.",

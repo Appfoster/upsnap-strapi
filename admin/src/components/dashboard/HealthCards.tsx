@@ -176,7 +176,7 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
             <Loader small></Loader>
           ) : (
             <>
-              <CardHeader fontSize={3}>{formatTitleToUppercase(name)}</CardHeader>
+              <CardHeader fontSize={3}><Flex justifyContent="start" width="100%">{formatTitleToUppercase(name)}</Flex></CardHeader>
               {data &&
                 (data?.status === 'error' || data?.status === 'warning' ? (
                   <CardTitle marginTop={3} fontSize={3}>

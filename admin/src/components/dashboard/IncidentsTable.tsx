@@ -90,7 +90,9 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
           {isLoading ? (
             <Tr>
               <Td colSpan={6}>
-                <Typography>Loading...</Typography>
+                <Box padding={4}>
+                  <Typography>Loading...</Typography>
+                </Box>
               </Td>
             </Tr>
           ) : incidentsData?.incidents && incidentsData?.incidents?.length === 0 ? (
