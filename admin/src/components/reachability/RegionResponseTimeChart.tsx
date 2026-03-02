@@ -175,23 +175,32 @@ export const RegionResponseTimeChart = ({
 
   return (
     <Card>
-      <CardHeader display="flex" style={{ justifyContent: 'space-between' }}>
-        <Typography variant="delta" marginLeft={2} padding={3}>
-          Response Time
-        </Typography>
-        <Box padding={3} style={{ minWidth: 200 }}>
-          <SingleSelect
-            value={timeRange}
-            onChange={onTimeRangeChange}
-            disabled={monitor?.is_enabled === false}
-          >
-            {timeRanges.map((tr) => (
-              <SingleSelectOption key={tr.value} value={tr.value}>
-                {tr.label}
-              </SingleSelectOption>
-            ))}
-          </SingleSelect>
-        </Box>
+      <CardHeader display="flex" direction="column" gap={1}>
+        <Flex justifyContent="space-between" width="100%">
+          <Typography variant="delta" marginLeft={2} padding={3}>
+            Response Time
+          </Typography>
+          <Box padding={3} style={{ minWidth: 200 }}>
+            <SingleSelect
+              value={timeRange}
+              onChange={onTimeRangeChange}
+              disabled={monitor?.is_enabled === false}
+            >
+              {timeRanges.map((tr) => (
+                <SingleSelectOption key={tr.value} value={tr.value}>
+                  {tr.label}
+                </SingleSelectOption>
+              ))}
+            </SingleSelect>
+          </Box>
+        </Flex>
+        {visibleSeries.size === 0 && (
+          <Box padding={4} background="neutral100" marginTop={1} width="100%" marginBottom={2}>
+            <Typography variant="omega" textColor="neutral600">
+              No regions selected. Please select at least one region to view response time results.
+            </Typography>
+          </Box>
+        )}
       </CardHeader>
       <CardBody>
         <CardContent style={{ width: '100%' }}>
@@ -199,13 +208,6 @@ export const RegionResponseTimeChart = ({
             <Box padding={4} background="neutral100">
               <Typography variant="omega" textColor="neutral600">
                 Monitoring is Paused. Enable monitoring to see response time results.
-              </Typography>
-            </Box>
-          ) : visibleSeries.size === 0 ? (
-            <Box padding={4} background="neutral100">
-              <Typography variant="omega" textColor="neutral600">
-                No regions selected. Please select at least one region to view response time
-                results.
               </Typography>
             </Box>
           ) : (

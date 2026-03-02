@@ -10,7 +10,7 @@ export default {
       icon: PluginIcon,
       intlLabel: {
         id: `${PLUGIN_ID}.plugin.name`,
-        defaultMessage: PLUGIN_ID,
+        defaultMessage: PLUGIN_ID.slice(0, 1).toUpperCase() + PLUGIN_ID.slice(1),
       },
       Component: async () => {
         const { App } = await import('./pages/App');
