@@ -27,7 +27,7 @@ import {
   Trash,
 } from '@strapi/icons';
 import React, { useEffect, useState } from 'react';
-import { DASHBOARD_URL, PLAN_LIMITS } from '../../utils/constants';
+import { STATS_PAGE_URL, PLAN_LIMITS } from '../../utils/constants';
 import SkeletonRow from '../../components/TableSkeletonRow';
 import { useNavigate, useParams } from 'react-router-dom';
 // import { ConfirmationModal } from "../ConfirmationModal";
@@ -252,7 +252,7 @@ export default function ListStatusPages() {
                             onClick={() => {
                               if (!page.is_published || !page.shareable_id) return;
                               window.open(
-                                `${DASHBOARD_URL}/shared/${page.shareable_id}`,
+                                `${STATS_PAGE_URL}/shared/${page.shareable_id}`,
                                 '_blank',
                                 'noopener,noreferrer'
                               );

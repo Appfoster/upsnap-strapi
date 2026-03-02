@@ -21,7 +21,7 @@ const SideNav = () => {
     <SubNav aria-label="Upsnap navigation">
       <SubNavHeader label="Upsnap" />
 
-      <SubNavSection label="Upsnap">
+      <SubNavSection label="">
         <CustomSubNavLink
           as={NavLink}
           to={`dashboard`}

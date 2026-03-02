@@ -22,6 +22,7 @@ import LoadingCard from '../components/reachability/LoadingCard';
 import { request, getPrimaryMonitorId } from '../utils/helpers';
 import { LighthouseCheckData, MonitorData } from '../utils/types';
 import PageHeader from '../components/PageHeader';
+import { toast } from 'react-toastify';
 
 export default function Lighthouse() {
   const [data, setData] = useState<LighthouseCheckData | null>(null);
@@ -67,6 +68,7 @@ export default function Lighthouse() {
         data: { monitorUrl: url, strategy: selectedStrategy, force_fetch: forceFetch },
       });
       setData(res?.lighthouseHealthCheckData || null);
+      return;
     } catch (err) {
       setData(null);
     } finally {
@@ -82,10 +84,13 @@ export default function Lighthouse() {
   }, [monitorUrl, strategy]);
 
   const handleRefresh = async () => {
+    let url = monitorUrl || selectedMonitor?.monitor?.config?.meta?.url || '';
     if (monitorUrl) {
       setRefreshing(true);
-      await getLighthouseData(strategy, monitorUrl, true);
+      await getLighthouseData(strategy, url, true);
       setRefreshing(false);
+    } else if (!monitorUrl) {
+      toast.error('Something went wrong. Please try again or refresh the page.');
     }
   };
 
