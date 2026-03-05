@@ -16,6 +16,7 @@ import { IncidentsTable } from '../components/dashboard/IncidentsTable';
 import { useNavigate } from 'react-router-dom';
 import { RegionsDropdown } from '../components/RegionsDropdown';
 import PageHeader from '../components/PageHeader';
+import LoadingCard from '../components/reachability/LoadingCard';
 
 export default function Dashboard() {
   const [monitorData, setMonitorData] = useState<MonitorData | null>(null);
@@ -44,6 +45,7 @@ export default function Dashboard() {
     }
     return 'default';
   });
+  const MAX_MONITOR_RETRIES = 3;
 
   useEffect(() => {
     (async () => {
@@ -52,7 +54,7 @@ export default function Dashboard() {
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
-  
+
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
     if (!rt) return {};
@@ -96,17 +98,36 @@ export default function Dashboard() {
     getRegionResponseTimeData();
   }, [responseTimeData, selectedRegion]);
 
-  const handleRefresh = () => {
+  const fetchMonitorDataWithRetry = async (
+    retries = MAX_MONITOR_RETRIES
+  ): Promise<MonitorData | null> => {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        const res = await request(`/monitor/${monitorId}`, { method: 'GET' });
+        if (res?.monitor?.message === 'Invalid authentication token') {
+          navigate('/plugins/upsnap/settings');
+          return null;
+        }
+        if (res.monitor?.data) {
+          return res.monitor.data;
+        }
+      } catch (err) {
+        // Optionally log error
+      }
+      // Wait 500ms before retrying
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    return null;
+  };
+
+  const handleRefresh = async () => {
     const { start, end } = getRangeTimestamps(responseTimeRange || 'last_24_hours');
     setIsLoading(true);
-    request(`/monitor/${monitorId}`, {
-      method: 'GET',
-    }).then((res) => {
-      if (res?.monitor?.message === 'Invalid authentication token') {
-        navigate('/plugins/upsnap/settings');
-      }
-      setMonitorData(res.monitor?.data || null);
-    });
+    if (!monitorId) return;
+    // Retry logic for monitorData
+    const monitor = await fetchMonitorDataWithRetry();
+    setMonitorData(monitor);
+
     request(`/monitor/${monitorId}/uptime-stats?region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
@@ -137,52 +158,64 @@ export default function Dashboard() {
   return (
     <Main>
       <Box padding={1}>
-        <PageHeader
-          title={'Dashboard'}
-          monitorUrl={monitorData?.monitor?.config?.meta?.url || ''}
-          regionsDropdown={true}
-          selectedRegions={monitorData?.monitor?.regions}
-          regionId={selectedRegion}
-          onRegionChange={setSelectedRegion}
-          onRefresh={handleRefresh}
-          refreshing={isLoading}
-        />
-        <Flex
-          gap={{
-            large: 4,
-            medium: 2,
-            initial: 1,
-          }}
-          direction={{ initial: 'column', medium: 'row' }}
-          alignItems="start"
-          style={{ alignContent: 'space-around', justifyItems: 'stretch' }}
-        >
-          <Box width="100%">
-            <Flex direction="column" gap={4} height="100%" alignItems="start" style={{ flexWrap: 'wrap'}}>
-              <StatisticsCards
-                monitorData={monitorData}
-                uptimeStats={uptimeStats}
-                histogramData={histogramData}
-                isLoading={isLoading}
-              />
-              <ResponseTimeChart
-                monitor={monitorData?.monitor}
-                regionResponseTimeData={regionResponseTimeData}
-                timeRange={responseTimeRange || 'last_24_hours'}
-                onTimeRangeChange={handleTimeRangeChange}
-              />
-            </Flex>
-          </Box>
+        {!monitorData || isLoading ? (
+          <LoadingCard />
+        ) : (
+          <>
+            <PageHeader
+              title={'Dashboard'}
+              monitorUrl={monitorData?.monitor?.config?.meta?.url || ''}
+              regionsDropdown={true}
+              selectedRegions={monitorData?.monitor?.regions}
+              regionId={selectedRegion}
+              onRegionChange={setSelectedRegion}
+              onRefresh={handleRefresh}
+              refreshing={isLoading}
+            />
+            <Flex
+              gap={{
+                large: 4,
+                medium: 2,
+                initial: 1,
+              }}
+              direction={{ initial: 'column', medium: 'row' }}
+              alignItems="start"
+              style={{ alignContent: 'space-around', justifyItems: 'stretch' }}
+            >
+              <Box width="100%">
+                <Flex
+                  direction="column"
+                  gap={4}
+                  height="100%"
+                  alignItems="start"
+                  style={{ flexWrap: 'wrap' }}
+                >
+                  <StatisticsCards
+                    monitorData={monitorData}
+                    uptimeStats={uptimeStats}
+                    histogramData={histogramData}
+                    isLoading={isLoading}
+                  />
+                  <ResponseTimeChart
+                    monitor={monitorData?.monitor}
+                    regionResponseTimeData={regionResponseTimeData}
+                    timeRange={responseTimeRange || 'last_24_hours'}
+                    onTimeRangeChange={handleTimeRangeChange}
+                  />
+                </Flex>
+              </Box>
 
-          <Box width="100%">
-            <HealthCards monitorData={monitorData} isLoading={isLoading} />
-          </Box>
-        </Flex>
-        <IncidentsTable
-          incidentsData={monitorIncidents}
-          monitorName={monitorData?.monitor?.name || ''}
-          isLoading={isLoading}
-        />
+              <Box width="100%">
+                <HealthCards monitorData={monitorData} isLoading={isLoading} />
+              </Box>
+            </Flex>
+            <IncidentsTable
+              incidentsData={monitorIncidents}
+              monitorName={monitorData?.monitor?.name || ''}
+              isLoading={isLoading}
+            />
+          </>
+        )}
       </Box>
     </Main>
   );
