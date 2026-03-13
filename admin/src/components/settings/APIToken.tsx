@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { request } from '../../utils/helpers';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { DASHBOARD_URL } from '../../utils/constants';
 
-export default function APIToken() {
+export default function APIToken({
+  setShowLoginForm,
+}: {
+  setShowLoginForm: (value: boolean) => void;
+}) {
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -29,7 +32,7 @@ export default function APIToken() {
         return;
       }
       toast.success('Token saved successfully');
-      navigate('/plugins/upsnap/dashboard')
+      navigate('/plugins/upsnap/dashboard');
     });
 
     setLoading(false);
@@ -38,13 +41,23 @@ export default function APIToken() {
   return (
     <Box padding={3}>
       <Flex direction="column" gap={2} alignItems="start">
-        <Typography variant="alpha">Token Settings</Typography>
+        <Typography variant="beta">Token Settings</Typography>
         <Typography variant="omega">
-          Enter the Upsnap API Key and save to enable Healthcheck settings. To access the API key,
-          please visit the{' '}
-          <Link href={DASHBOARD_URL} isExternal>
-            Upsnap Dashboard
-          </Link>
+          Enter the Upsnap API Key and save to enable Healthcheck settings.
+          {!token && (
+            <>
+              Don't have an account?{' '}
+              <Link
+                to="#"
+                onClick={(e: any) => {
+                  e?.preventDefault();
+                  setShowLoginForm(true);
+                }}
+              >
+                please register here
+              </Link>
+            </>
+          )}
         </Typography>
       </Flex>
       <Box marginTop={6} width="100%">

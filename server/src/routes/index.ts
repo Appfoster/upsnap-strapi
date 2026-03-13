@@ -326,6 +326,15 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'POST',
+      path: '/signup',
+      handler: 'userDetails.signUp',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
   },
 };
