@@ -335,6 +335,24 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'POST',
+      path: '/login',
+      handler: 'userDetails.signIn',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/forgot-password',
+      handler: 'userDetails.forgotPassword',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
   },
 };

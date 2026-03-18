@@ -11,90 +11,71 @@ import {
 import { useState } from 'react';
 import { Typography } from '@strapi/design-system';
 import { Button } from '@strapi/design-system';
-import { loginSchema } from '../../utils/types';
+import { registerSchema } from '../../utils/types';
 import { z } from 'zod';
 import { request } from '../../utils/helpers';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-type LoginForm = z.infer<typeof loginSchema>;
-type FormErrors = z.ZodError<LoginForm> | null;
+type RegisterForm = z.infer<typeof registerSchema>;
+type FormErrors = z.ZodError<RegisterForm> | null;
 
-export default function LogInForm({
-  setShowLoginForm,
+export default function RegisterForm({
   setShowRegisterForm,
+  setShowLoginForm,
   setShowExpiredMessage
 }: {
-  setShowLoginForm: (value: boolean) => void;
   setShowRegisterForm: (value: boolean) => void;
+  setShowLoginForm: (value: boolean) => void;
   setShowExpiredMessage: (value: string) => void;
 }) {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [errors, setErrors] = useState<FormErrors>(null);
   const [loading, setLoading] = useState(false);
-  const [forgotPasswordError, setForgotPasswordError] = useState('')
   const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const result = loginSchema.safeParse({ email, password });
+    const result = registerSchema.safeParse({ email, password, fullName, confirmPassword });
     if (!result.success) {
       setErrors(result.error);
       setLoading(false);
       return;
     }
     setErrors(null);
-
-    request('/login', {
+    const domainUrl = (window as any).strapi?.backendURL || window.location.origin;
+    request('/signup', {
       method: 'POST',
       data: {
         email,
         password,
+        fullName,
+        source: 'strapi',
+        site_url: domainUrl,
       },
     })
       .then((res) => {
         if (res?.ok) {
-          toast.success('Login Successful');
+          toast.success(res?.message || 'UpSnap Connected.');
+          toast.success('Your site is now being monitored every 5 minutes.');
           navigate('/plugins/upsnap/dashboard');
           return;
         }
-        toast.error(res?.message || 'Not able to login, please try again.');
-        setShowExpiredMessage(res?.message);
+        toast.error('Not able to register, please try again.');
       })
       .catch((err) => {
-        toast.error('Not able to login, please try again.');
+        toast.error('Not able to register, please try again.');
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  const handleForgotPassword = () => {
-    if (!email) {
-      setForgotPasswordError('Please enter the email.')
-    }
-    request('/forgot-password', {
-      method: 'POST',
-      data: {
-        email,
-      },
-    })
-      .then((res) => {
-        if (res?.ok) {
-          toast.success(res?.message);
-          return;
-        }
-        toast.error(res?.message || 'Not able to login, please try again.');
-        setShowExpiredMessage(res?.message);
-      })
-      .catch((err) => {
-        toast.error('Not able to send email, please try again.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
   return (
     <Box margin="auto" width={{ initial: '100%', medium: '55%' }}>
       <Card>
@@ -108,9 +89,9 @@ export default function LogInForm({
                 justifyContent="start"
                 alignItems="start"
               >
-                <Typography variant="beta">Sign In</Typography>
+                <Typography variant="beta">Register</Typography>
                 <Typography variant="epsilon" textColor="neutral600" marginBottom={3}>
-                  Enter your email and password to Sign In.
+                  Create a free UpSnap beta account to start monitoring your site.
                 </Typography>
               </Flex>
               <Divider marginBottom={3} />
@@ -118,7 +99,23 @@ export default function LogInForm({
                 <Flex direction="column" gap={3} width="100%">
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'email')?.message || forgotPasswordError}
+                    error={errors?.issues.find((issue) => issue.path[0] === 'fullName')?.message}
+                    required
+                  >
+                    <Field.Label>Full Name</Field.Label>
+                    <Field.Input
+                      type="text"
+                      placeholder="Ted Lasso"
+                      value={fullName}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFullName(e.target.value)
+                      }
+                    />
+                    <Field.Error />
+                  </Field.Root>
+                  <Field.Root
+                    width="100%"
+                    error={errors?.issues.find((issue) => issue.path[0] === 'email')?.message}
                     required
                   >
                     <Field.Label required>Email</Field.Label>
@@ -142,28 +139,41 @@ export default function LogInForm({
                       type="password"
                       placeholder="Enter a password"
                       value={password}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPassword(e.target.value)
-                      }
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = e.target.value;
+                        setPassword(value);
+                      }}
                     />
                     <Field.Error />
                   </Field.Root>
-                  <Box width="100%">
-                    <Flex justifyContent="end" marginTop={4}>
-                      <Link
-                        to="#"
-                        onClick={(e: any) => {
-                          e?.preventDefault();
-                          handleForgotPassword();
-                        }}
-                      >
-                        forgot password?
-                      </Link>
-                    </Flex>
-                  </Box>
+                  <Field.Root
+                    width="100%"
+                    error={
+                      errors?.issues.find((issue) => issue.path[0] === 'confirmPassword')
+                        ?.message || confirmPasswordError
+                    }
+                    required
+                  >
+                    <Field.Label required>Confirm Password</Field.Label>
+                    <Field.Input
+                      type="password"
+                      placeholder="Confirm password"
+                      value={confirmPassword}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = e.target.value;
+                        setConfirmPassword(value);
+                        if (password && value && password !== value) {
+                          setConfirmPasswordError('Passwords do not match');
+                        } else {
+                          setConfirmPasswordError('');
+                        }
+                      }}
+                    />
+                    <Field.Error />
+                  </Field.Root>
                   <Flex width="100%" justifyContent="end" marginTop={3}>
                     <Button size="L" type="submit" loading={loading}>
-                      Sign In
+                      Start Free Beta Monitoring
                     </Button>
                   </Flex>
                 </Flex>
@@ -173,11 +183,11 @@ export default function LogInForm({
                   to="#"
                   onClick={(e: any) => {
                     e?.preventDefault();
-                    setShowLoginForm(false);
-                    setShowRegisterForm(true);
+                    setShowRegisterForm(false);
+                    setShowLoginForm(true);
                   }}
                 >
-                  Not registered? Create account
+                  Already have an account?
                 </Link>
               </Flex>
             </Box>

@@ -4,11 +4,7 @@ import { request } from '../../utils/helpers';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-export default function APIToken({
-  setShowLoginForm,
-}: {
-  setShowLoginForm: (value: boolean) => void;
-}) {
+export default function APIToken() {
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -47,15 +43,6 @@ export default function APIToken({
           {!token && (
             <>
               Don't have an account?{' '}
-              <Link
-                to="#"
-                onClick={(e: any) => {
-                  e?.preventDefault();
-                  setShowLoginForm(true);
-                }}
-              >
-                please register here
-              </Link>
             </>
           )}
         </Typography>

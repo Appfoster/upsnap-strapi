@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react';
 import { Tabs, Box, Typography, CardBody, CardContent, Card } from '@strapi/design-system';
 import Monitors from '../settings/Monitors';
 import APIToken from './APIToken';
 import IntegrationsPage from './noitifcation-channels';
 import { Flex } from '@strapi/design-system';
-import { request } from '../../utils/helpers';
-import LoginForm from './LoginForm';
 
 interface Tabs {
   name: string;
@@ -21,14 +18,7 @@ export default function SettingsTabs({
   activeTab: string;
   onTabChange: (tab: string) => void;
 }) {
-  const [showLogin, setShowLogin] = useState(false);
-  useEffect(() => {
-    request('/settings', {
-      method: 'GET',
-    }).then((res) => {
-      if (!res?.token) setShowLogin(true);
-    });
-  }, []);
+
   return (
     <Box padding={8}>
       <Card>
@@ -61,14 +51,11 @@ export default function SettingsTabs({
                     <IntegrationsPage />
                   </Box>
                 )}
-                {activeTab === 'api_key' &&
-                  (showLogin ? (
-                    <LoginForm setShowLoginForm={setShowLogin} />
-                  ) : (
-                    <Box padding={1}>
-                      <APIToken setShowLoginForm={setShowLogin} />
-                    </Box>
-                  ))}
+                {/* {activeTab === 'api_key' &&
+                  <Box padding={1}>
+                    <APIToken />
+                  </Box>
+                }    */}
               </Tabs.Content>
             </Tabs.Root>
           </CardContent>
