@@ -441,7 +441,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
             regions: buildRegionsPayload(),
             is_enabled: true,
           };
-          console.log('payload ', payload);
+
           result = await request('/monitors', {
             method: 'POST',
             data: payload,

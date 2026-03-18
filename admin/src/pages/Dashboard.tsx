@@ -104,7 +104,7 @@ export default function Dashboard() {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const res = await request(`/monitor/${monitorId}`, { method: 'GET' });
-        if (res?.monitor?.message === 'Invalid authentication token') {
+        if (res?.monitor?.message === 'Invalid authentication token' || res?.monitor?.status == 'error') {
           navigate('/plugins/upsnap/settings');
           return null;
         }

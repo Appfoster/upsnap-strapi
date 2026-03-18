@@ -16,7 +16,7 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
       true,
       sessionToken
     );
-    console.log('api tokens in user ', apiTokens);
+ 
     if (apiTokens?.data?.tokens) {
       const token = apiTokens?.data?.tokens?.filter(
         (token: any) => token?.token_hash !== null
@@ -34,22 +34,21 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
       true,
       sessionToken
     );
-    console.log('api tokens in user ', apiTokens);
+
     const tokens = apiTokens?.data?.tokens || [];
     let apiToken = '';
-    console.log('tokens ', tokens);
     if (apiTokens?.status === 'success' && tokens.length === 0 ) {
         apiToken = await this.createUserApiToken(sessionToken);
     } else if (tokens.length > 0) {
       apiToken = tokens?.[0]?.token_hash;
-      console.log('api token ', apiToken);
+
       return apiToken;
     }
     return null;
   },
   async createInitialMonitor(site_url: string, apiToken: string) {
     try {
-        console.log('site url ', site_url)
+
       const payload = {
         name: 'Initial site',
         service_type: 'website',
@@ -104,7 +103,7 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
         method: 'POST',
         body: JSON.stringify(payload),
       }, true, apiToken);
-      console.log('monitor data created ', monitorsData);
+
       if (monitorsData?.status === "success") {
         const monitorId = monitorsData?.data?.monitor?.id;
         return monitorId;

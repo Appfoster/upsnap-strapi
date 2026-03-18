@@ -18,7 +18,7 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
       method: "POST",
       body: JSON.stringify({ token }),
     }, true);
-    console.log('token valid data ', isValidData);
+
     if (!isValidData?.data?.valid) {
       ctx.body = { ok: false, error: 'Invalid token' };
       return;

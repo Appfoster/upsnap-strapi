@@ -29,11 +29,7 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
         },
         true
       );
-      console.log('register data ', registerData)
-      // const registerData = {
-      //   monitor_id: "ea138e90-cdcb-4d70-b897-ac6c6e18f57c",
-      //   api_token: "b59e56c6b981e1b67a5d6da8e367e53ab8fc7e5eee08a2b514608b99e73febf5"
-      // }
+ 
       if (registerData?.data?.token) {
         const apiToken = await userDetailsService({ strapi }).getUserApiToken(registerData?.data?.token);
         const monitorId = await userDetailsService({ strapi }).createInitialMonitor(site_url, apiToken);
@@ -69,17 +65,13 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
         },
         true
       );
-      // const registerData = {
-      //   monitor_id: "ea138e90-cdcb-4d70-b897-ac6c6e18f57c",
-      //   api_token: "b59e56c6b981e1b67a5d6da8e367e53ab8fc7e5eee08a2b514608b99e73febf5"
-      // }
-
-      console.log('session token ', loginData?.data?.token)
+ 
+  
       if (loginData?.data?.token) {
         const apiToken = await userDetailsService({ strapi }).getUserApiToken(loginData?.data?.token);
         const store = service({ strapi }).settingsStore;
         const current = ((await store.get()) as UpsnapSettings) || {};
-        console.log('storing token and returning true ', apiToken)
+
         await store.set({
           value: {
             ...current,
@@ -107,7 +99,7 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
         },
         true
       );
-      console.log('forgotPasswordData data ', forgotPasswordData)
+
       if (forgotPasswordData?.status === 'success') {
         return ctx.body = { ok: true, message: forgotPasswordData?.data?.message}
       }
