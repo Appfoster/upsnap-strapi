@@ -154,7 +154,7 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
     <Box width="100%">
       { alertMessage && (
         <Box width="100%" padding={3}>
-            <Alert closeLabel="Close" title="" variant="info">
+            <Alert closeLabel="Close" title="">
               {alertMessage.charAt(0).toUpperCase() + alertMessage.slice(1)}
             </Alert>
         </Box>
