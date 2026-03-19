@@ -23,7 +23,7 @@ type FormErrors = z.ZodError<RegisterForm> | null;
 export default function RegisterForm({
   setShowRegisterForm,
   setShowLoginForm,
-  setShowExpiredMessage
+  setShowExpiredMessage,
 }: {
   setShowRegisterForm: (value: boolean) => void;
   setShowLoginForm: (value: boolean) => void;

@@ -237,7 +237,7 @@ export async function handleLogout() {
       method: 'POST',
       data: { token: null, logOut: true },
     })
-    console.log('response from logout ', res)
+
     if (res.ok) {
       return true;
     }
