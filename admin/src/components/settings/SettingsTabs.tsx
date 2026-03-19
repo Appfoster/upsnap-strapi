@@ -1,6 +1,5 @@
 import { Tabs, Box, Typography, CardBody, CardContent, Card } from '@strapi/design-system';
 import Monitors from '../settings/Monitors';
-import APIToken from './APIToken';
 import IntegrationsPage from './noitifcation-channels';
 import { Flex } from '@strapi/design-system';
 
@@ -51,11 +50,6 @@ export default function SettingsTabs({
                     <IntegrationsPage />
                   </Box>
                 )}
-                {/* {activeTab === 'api_key' &&
-                  <Box padding={1}>
-                    <APIToken />
-                  </Box>
-                }    */}
               </Tabs.Content>
             </Tabs.Root>
           </CardContent>

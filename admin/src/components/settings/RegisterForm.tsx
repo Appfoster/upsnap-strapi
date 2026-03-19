@@ -118,7 +118,7 @@ export default function RegisterForm({
                     error={errors?.issues.find((issue) => issue.path[0] === 'email')?.message}
                     required
                   >
-                    <Field.Label required>Email</Field.Label>
+                    <Field.Label>Email</Field.Label>
                     <Field.Input
                       type="email"
                       placeholder="example@gmail.com"
@@ -134,7 +134,7 @@ export default function RegisterForm({
                     error={errors?.issues.find((issue) => issue.path[0] === 'password')?.message}
                     required
                   >
-                    <Field.Label required>Password</Field.Label>
+                    <Field.Label>Password</Field.Label>
                     <Field.Input
                       type="password"
                       placeholder="Enter a password"
@@ -154,7 +154,7 @@ export default function RegisterForm({
                     }
                     required
                   >
-                    <Field.Label required>Confirm Password</Field.Label>
+                    <Field.Label>Confirm Password</Field.Label>
                     <Field.Input
                       type="password"
                       placeholder="Confirm password"
@@ -180,7 +180,6 @@ export default function RegisterForm({
               </form>
               <Flex justifyContent="center" marginTop={4}>
                 <Link
-                  to="#"
                   onClick={(e: any) => {
                     e?.preventDefault();
                     setShowRegisterForm(false);

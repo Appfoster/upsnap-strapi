@@ -277,7 +277,7 @@ export const statusPageSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string()
+  password: z.string().min(1, 'Password is required')
 });
 export const registerSchema = z.object({
     fullName: z
@@ -290,12 +290,9 @@ export const registerSchema = z.object({
       .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
       .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
       .regex(/\d/, 'Password must contain at least one number'),
-    confirmPassword: z.string(),
+    confirmPassword: z.string().min(1, 'Confirm password is required'),
   })
-  .refine((data) => {
-    if (!data.confirmPassword) return true; // don't validate yet
-    return data.password === data.confirmPassword;
-  }, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });

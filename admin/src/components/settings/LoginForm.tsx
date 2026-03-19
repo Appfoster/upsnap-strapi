@@ -23,7 +23,7 @@ type FormErrors = z.ZodError<LoginForm> | null;
 export default function LogInForm({
   setShowLoginForm,
   setShowRegisterForm,
-  setShowExpiredMessage
+  setShowExpiredMessage,
 }: {
   setShowLoginForm: (value: boolean) => void;
   setShowRegisterForm: (value: boolean) => void;
@@ -33,7 +33,7 @@ export default function LogInForm({
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FormErrors>(null);
   const [loading, setLoading] = useState(false);
-  const [forgotPasswordError, setForgotPasswordError] = useState('')
+  const [forgotPasswordError, setForgotPasswordError] = useState('');
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +72,10 @@ export default function LogInForm({
 
   const handleForgotPassword = () => {
     if (!email) {
-      setForgotPasswordError('Please enter the email.')
+      setForgotPasswordError('Please enter the email.');
+      return;
     }
+    setForgotPasswordError('');
     request('/forgot-password', {
       method: 'POST',
       data: {
@@ -94,7 +96,7 @@ export default function LogInForm({
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
   return (
     <Box margin="auto" width={{ initial: '100%', medium: '55%' }}>
       <Card>
@@ -118,10 +120,13 @@ export default function LogInForm({
                 <Flex direction="column" gap={3} width="100%">
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'email')?.message || forgotPasswordError}
+                    error={
+                      errors?.issues.find((issue) => issue.path[0] === 'email')?.message ||
+                      forgotPasswordError
+                    }
                     required
                   >
-                    <Field.Label required>Email</Field.Label>
+                    <Field.Label>Email</Field.Label>
                     <Field.Input
                       type="email"
                       placeholder="example@gmail.com"
@@ -137,7 +142,7 @@ export default function LogInForm({
                     error={errors?.issues.find((issue) => issue.path[0] === 'password')?.message}
                     required
                   >
-                    <Field.Label required>Password</Field.Label>
+                    <Field.Label>Password</Field.Label>
                     <Field.Input
                       type="password"
                       placeholder="Enter a password"
@@ -151,7 +156,6 @@ export default function LogInForm({
                   <Box width="100%">
                     <Flex justifyContent="end" marginTop={4}>
                       <Link
-                        to="#"
                         onClick={(e: any) => {
                           e?.preventDefault();
                           handleForgotPassword();
@@ -170,7 +174,6 @@ export default function LogInForm({
               </form>
               <Flex justifyContent="center" marginTop={4}>
                 <Link
-                  to="#"
                   onClick={(e: any) => {
                     e?.preventDefault();
                     setShowLoginForm(false);

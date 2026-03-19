@@ -82,7 +82,7 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
       ctx.body = { ok: false, message: loginData?.message };
     } catch (err) {
-      console.log('Error signing up ', err);
+      console.log('Error signing in ', err);
       ctx.body = { ok: false };
     }
   },

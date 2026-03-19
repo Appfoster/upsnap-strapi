@@ -229,3 +229,22 @@ export async function getPrimaryMonitorId(): Promise<string | null> {
     return null;
   }
 }
+
+export async function handleLogout() {
+  try {
+    await setPrimaryMonitorId('');
+    const res = await request('/settings', {
+      method: 'POST',
+      data: { token: null, logOut: true },
+    })
+    console.log('response from logout ', res)
+    if (res.ok) {
+      return true;
+    }
+    return false
+  
+  } catch (err) {
+    console.log('Error while logging out ', err);
+    return;
+  }
+}

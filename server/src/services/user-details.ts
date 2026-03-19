@@ -18,9 +18,7 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
     );
  
     if (apiTokens?.data?.tokens) {
-      const token = apiTokens?.data?.tokens?.filter(
-        (token: any) => token?.token_hash !== null
-      )?.token_hash;
+      const token = apiTokens?.data?.tokens?.[0]?.token_hash;
       return token;
     }
     return null;
@@ -38,13 +36,11 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
     const tokens = apiTokens?.data?.tokens || [];
     let apiToken = '';
     if (apiTokens?.status === 'success' && tokens.length === 0 ) {
-        apiToken = await this.createUserApiToken(sessionToken);
+      apiToken = await this.createUserApiToken(sessionToken);
     } else if (tokens.length > 0) {
       apiToken = tokens?.[0]?.token_hash;
-
-      return apiToken;
     }
-    return null;
+    return apiToken;
   },
   async createInitialMonitor(site_url: string, apiToken: string) {
     try {
