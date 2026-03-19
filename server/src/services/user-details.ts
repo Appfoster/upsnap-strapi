@@ -46,7 +46,7 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
     try {
 
       const payload = {
-        name: 'Initial site',
+        name: 'Default Monitor',
         service_type: 'website',
         is_enabled: true,
         channel_ids: [],
