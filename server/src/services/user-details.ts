@@ -16,9 +16,9 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
       true,
       sessionToken
     );
- 
-    if (apiTokens?.data?.tokens) {
-      const token = apiTokens?.data?.tokens?.[0]?.token_hash;
+
+    if (apiTokens?.data?.token_hash) {
+      const token = apiTokens?.data?.token_hash;
       return token;
     }
     return null;
@@ -40,6 +40,7 @@ const userDetailsService = ({ strapi }: { strapi: Core.Strapi }) => ({
     } else if (tokens.length > 0) {
       apiToken = tokens?.[0]?.token_hash;
     }
+
     return apiToken;
   },
   async createInitialMonitor(site_url: string, apiToken: string) {

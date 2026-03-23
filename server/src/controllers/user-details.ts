@@ -29,10 +29,16 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
         },
         true
       );
- 
+
       if (registerData?.data?.token) {
         const apiToken = await userDetailsService({ strapi }).getUserApiToken(registerData?.data?.token);
+
         const monitorId = await userDetailsService({ strapi }).createInitialMonitor(site_url, apiToken);
+        if (!apiToken || !monitorId) {
+          ctx.body = { ok: false, message: 'Error creating API token or Monitor' };
+          return;
+        }
+
         const store = service({ strapi }).settingsStore;
         const current = ((await store.get()) as UpsnapSettings) || {};
 
