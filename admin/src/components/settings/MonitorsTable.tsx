@@ -19,7 +19,7 @@ import {
 } from '@strapi/design-system';
 import { toast } from 'react-toastify';
 import { Pencil, Trash } from '@strapi/icons';
-
+import { useNavigate } from 'react-router-dom';
 import { getUserData } from '../../utils/userStorage';
 import { getPrimaryMonitorId, setPrimaryMonitorId } from '../../utils/helpers';
 import { Monitor } from '../../utils/types';
@@ -66,7 +66,7 @@ export default function MonitorsTable({
   const [defaultEmail, setDefaultEmail] = useState();
   const isInternalUpdate = useRef(false);
   const [primaryMonitorId, setPrimaryMonitorIdState] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function fetchPrimaryMonitorId() {
       try {
@@ -146,6 +146,8 @@ export default function MonitorsTable({
       if (result) {
         toast.success('Primary monitor set successfully');
         setPrimaryMonitorIdState(monitor.id);
+        navigate('/plugins/upsnap/dashboard');
+        return;
       } else {
         toast.error('Failed to set primary monitor');
       }

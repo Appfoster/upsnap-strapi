@@ -13,16 +13,19 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async set(ctx) {
-    const { token } = ctx.request.body;
-    const isValidData: any = await service({ strapi }).makeBackendRequest('/tokens/validate', {
-      method: "POST",
-      body: JSON.stringify({ token }),
-    }, true);
+    const { token, logOut } = ctx.request.body;
+    if (!logOut) {
+      const isValidData: any = await service({ strapi }).makeBackendRequest('/tokens/validate', {
+        method: "POST",
+        body: JSON.stringify({ token }),
+      }, true);
 
-    if (!isValidData?.data?.valid) {
-      ctx.body = { ok: false, error: 'Invalid token' };
-      return;
+      if (!isValidData?.data?.valid) {
+        ctx.body = { ok: false, error: 'Invalid token' };
+        return;
+      }
     }
+    
     const store = service({ strapi }).settingsStore;
     const current = ((await store.get()) as UpsnapSettings) || {};
 

@@ -34,6 +34,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       },
     });
     const monitor = await monitorResponse.json();
+
     ctx.body = { monitor };
   },
 
