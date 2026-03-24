@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Box, Card, CardContent, CardBody, Typography, Grid, Divider, Link } from '@strapi/design-system';
+import { Box, Card, CardContent, CardBody, Typography, Divider, Link } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
 import RegionWiseCards from '../components/reachability/RegionWiseCards';
-import { MonitorData, Region, UptimeHealthCheckData, ResponseTimeData } from '../utils/types';
+import { MonitorData, Region, UptimeHealthCheckData } from '../utils/types';
 import { RegionResponseTimeChart } from '../components/reachability/RegionResponseTimeChart';
 import { Flex } from '@strapi/design-system';
+import PageHeader from '../components/PageHeader';
 
 interface RegionResponseTimeData {
   chart_data: Array<{ timestamp: number; response_time: number }>;
@@ -21,6 +22,7 @@ interface RegionResponseTimeData {
 export default function Reachability() {
   const [data, setData] = useState<UptimeHealthCheckData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
   const [regionId, setRegionId] = useState<string | null>(null);
   const [regionResponseTimeData, setRegionResponseTimeData] = useState<
@@ -38,6 +40,7 @@ export default function Reachability() {
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
+
   const fetchResponseTimeDataForRegions = async (
     regions: { id: string; is_primary: boolean; name: string }[],
     timeRange: string
@@ -66,31 +69,39 @@ export default function Reachability() {
     }
   };
 
-  // Fetch monitor details
-  useEffect(() => {
+  const fetchMonitorDetails = async () => {
     if (monitorId) {
       setLoading(true);
-      request(`/monitor/${monitorId}`, { method: 'GET' }).then((res) => {
+      try {
+        const res = await request(`/monitor/${monitorId}`, { method: 'GET' });
         if (res?.monitor?.message === 'Invalid authentication token') {
           setSelectedMonitor(null);
           navigate('/plugins/upsnap/settings');
+        } else {
+          const monitorData = res.monitor?.data || null;
+          setSelectedMonitor(monitorData);
+          if (monitorData?.monitor?.regions) {
+            await fetchResponseTimeDataForRegions(
+              monitorData.monitor.regions,
+              responseTimeRange || 'last_24_hours'
+            );
+          }
         }
-        setSelectedMonitor(res.monitor?.data || null);
-        // Fetch region data after monitorData is set
-        if (res.monitor?.data?.monitor?.regions) {
-          fetchResponseTimeDataForRegions(
-            res.monitor.data.monitor.regions,
-            responseTimeRange || 'last_24_hours'
-          );
-        }
+      } catch (error) {
+        console.error('Error fetching monitor details:', error);
+      } finally {
         setLoading(false);
-      });
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchMonitorDetails();
   }, [monitorId]);
 
-  // Fetch reachability data
-  const getReachabilityData = async (url: string, region?: string | null) => {
-    setLoading(true);
+  const getReachabilityData = async (url: string) => {
+    const stateSetter = loading ? setLoading : setRefreshing;
+    stateSetter(true);
     try {
       const res = await request('/monitor/health-check/uptime', {
         method: 'POST',
@@ -100,7 +111,7 @@ export default function Reachability() {
     } catch (err) {
       setData(null);
     } finally {
-      setLoading(false);
+      stateSetter(false);
     }
   };
 
@@ -122,7 +133,7 @@ export default function Reachability() {
     if (selectedMonitor) {
       const primaryRegion = selectedMonitor?.monitor?.regions?.find((r: Region) => r.is_primary);
       setRegionId(primaryRegion?.id || null);
-      getReachabilityData(selectedMonitor?.monitor?.config?.meta?.url, primaryRegion?.id || null);
+      getReachabilityData(selectedMonitor?.monitor?.config?.meta?.url);
     }
   }, [selectedMonitor]);
 
@@ -153,17 +164,18 @@ export default function Reachability() {
     }
   }, [selectedMonitor?.monitor?.id, selectedMonitor?.monitor?.regions, responseTimeRange]);
 
-  const handleRegionChange = async (newRegionId: string) => {
-    setRegionId(newRegionId);
-    if (selectedMonitor) {
-      await getReachabilityData(selectedMonitor?.monitor?.config?.meta?.url, newRegionId);
-    }
-  };
+
   const handleTimeRangeChange = (range: string | number) => {
     setResponseTimeRange(String(range));
     // Fetch region data if monitorData is available
     if (selectedMonitor?.monitor?.regions) {
       fetchResponseTimeDataForRegions(selectedMonitor.monitor.regions, String(range) || 'last_24_hours');
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (selectedMonitor) {
+      await getReachabilityData(selectedMonitor.monitor.config.meta.url);
     }
   };
 
@@ -188,11 +200,12 @@ export default function Reachability() {
   return (
     <Main>
       <Box padding={4}>
-        <Box marginBottom={3}>
-          <Typography variant="beta">
-            Reachability (<Link href={selectedMonitor?.monitor?.config?.meta?.url} isExternal>{selectedMonitor.monitor?.name || ''}</Link>)
-          </Typography>
-        </Box>
+        <PageHeader
+          title="Reachability"
+          monitorUrl={selectedMonitor.monitor?.config?.meta?.url}
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
+        />
         <StatusCard
           status={data.status}
           message={data.message}
