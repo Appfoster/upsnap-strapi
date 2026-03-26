@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Flex } from '@strapi/design-system';
+import { Box, Grid, Alert, Flex, Link } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useState, useEffect } from 'react';
 import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
@@ -16,7 +16,9 @@ import { IncidentsTable } from '../components/dashboard/IncidentsTable';
 import { useNavigate } from 'react-router-dom';
 import { RegionsDropdown } from '../components/RegionsDropdown';
 import PageHeader from '../components/PageHeader';
+
 import LoadingCard from '../components/reachability/LoadingCard';
+import ShowBlurImage from '../components/ShowBlurImage';
 
 export default function Dashboard() {
   const [monitorData, setMonitorData] = useState<MonitorData | null>(null);
@@ -38,19 +40,16 @@ export default function Dashboard() {
   });
   const navigate = useNavigate();
   const [monitorId, setMonitorId] = useState<string | null>();
-  const [regionId, setRegionId] = useState<string | null>(() => {
-    if (monitorData?.monitor.regions && Array.isArray(monitorData?.monitor.regions)) {
-      const primaryRegion = monitorData?.monitor.regions.find((r) => r.is_primary);
-      return primaryRegion?.id || 'default';
-    }
-    return 'default';
-  });
+  const [showImageBlur, setShowImageBlur] = useState(false);
   const MAX_MONITOR_RETRIES = 3;
 
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
+      if (!fetchedMonitorId){
+        setShowImageBlur(true);
+        return;
+      }
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
@@ -159,7 +158,16 @@ export default function Dashboard() {
     <Main>
       <Box padding={1}>
         {!monitorData || isLoading ? (
-          <LoadingCard />
+          showImageBlur ? (
+            <Flex direction="column" alignItems="center" gap={4} padding={4}>
+              <Alert closeLabel="Close" margin={1} variant="warning" title="Need to register for this feature. Your dashboard will look like this once registered." action={<Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>Register</Link>}>
+                Register to unlock complete monitoring insights - last 24-hour histograms, uptime statistics, response time charts, live incident notifications, a public status page, and more.
+              </Alert>
+              <ShowBlurImage forPage="dashboard" />
+            </Flex>
+          ) : (
+            <LoadingCard />
+          )
         ) : (
           <>
             <PageHeader

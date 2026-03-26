@@ -20,7 +20,7 @@ export default function Settings() {
       if (!res?.token) {
         setShowRegister(true);
         setShowLogin(false);
-      };
+      }
     });
   }, []);
   const handleTabChange = (tab: string) => {
@@ -36,44 +36,58 @@ export default function Settings() {
     setLoading(true);
     const result = await handleLogout();
     if (result) {
-      toast.success('Logged out successfully.')
+      toast.success('Logged out successfully.');
       setLoading(false);
       setShowLogin(true);
       return;
     }
     setLoading(false);
-    toast.error('Not able to log out, please try again.')
+    toast.error('Not able to log out, please try again.');
     return;
-  }
+  };
 
   return (
     <>
       {showExpiredMessage && (
         <Box margin={2}>
-         <Alert closeLabel="Close" title="" variant="danger">
-          {showExpiredMessage.charAt(0).toUpperCase() + showExpiredMessage.slice(1)}
-        </Alert>
+          <Alert closeLabel="Close" title="" variant="danger">
+            {showExpiredMessage.charAt(0).toUpperCase() + showExpiredMessage.slice(1)}
+          </Alert>
         </Box>
       )}
-      {showLogin && <LogInForm setShowLoginForm={setShowLogin} setShowRegisterForm={setShowRegister} setShowExpiredMessage={setShowExpiredMessage} />}
-      {showRegister && (
-        <RegisterForm setShowRegisterForm={setShowRegister} setShowLoginForm={setShowLogin} setShowExpiredMessage={setShowExpiredMessage} />
-      )} 
-      {!showLogin && !showRegister && (
-        <>
-        <Box width="100%" paddingRight={8}>
-          <Flex justifyContent="end">
-            <Button onClick={logOut} loading={loading}>Log out</Button>
-          </Flex>
-        </Box>
-        <SettingsTabs
-          tabs={[
-            { name: 'Monitors', value: 'monitors' },
-            { name: 'Notification Channels', value: 'notification_channels' },
-          ]}
-          activeTab={activeTab}
+      {showLogin && (
+        <LogInForm
+          setShowLoginForm={setShowLogin}
+          setShowRegisterForm={setShowRegister}
+          setShowExpiredMessage={setShowExpiredMessage}
           onTabChange={handleTabChange}
         />
+      )}
+      {showRegister && (
+        <RegisterForm
+          setShowRegisterForm={setShowRegister}
+          setShowLoginForm={setShowLogin}
+          setShowExpiredMessage={setShowExpiredMessage}
+          onTabChange={handleTabChange}
+        />
+      )}
+      {!showLogin && !showRegister && (
+        <>
+          <Box width="100%" paddingRight={8}>
+            <Flex justifyContent="end">
+              <Button onClick={logOut} loading={loading}>
+                Log out
+              </Button>
+            </Flex>
+          </Box>
+          <SettingsTabs
+            tabs={[
+              { name: 'Monitors', value: 'monitors' },
+              { name: 'Notification Channels', value: 'notification_channels' },
+            ]}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+          />
         </>
       )}
     </>
