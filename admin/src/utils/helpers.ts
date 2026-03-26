@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MonitorSettings, UserDetails } from './types';
+import { MonitorSettings, Region, UserDetails } from './types';
 import { Monitor } from './types';
 import { REGIONS, MONITOR_TYPE } from './constants';
 import { setUserDetails } from './userStorage';
@@ -8,11 +8,15 @@ export function getMonitorPrimaryRegion(monitor: Monitor) {
   return monitor.regions?.find((region) => region.is_primary);
 }
 
-export const request = async (url: string, options = {}) => {
+export const request = async (url: string, options: any = {}) => {
   const response = await axios({
     url: `/upsnap${url}`,
     ...options,
   });
+  // If expecting file → return full response
+  if (options?.responseType === 'blob') {
+    return response;
+  }
   return response.data;
 };
 
@@ -248,3 +252,23 @@ export async function handleLogout() {
     return;
   }
 }
+
+/**
+ * Fetches regions and returns an array of Region objects.
+ * Returns an empty array if the API call fails.
+ *
+ * @returns {Promise<Region[]>} A promise that resolves to an array of regions.
+ */
+export const fetchRegionsData = async (): Promise<Region[]> => {
+    try {
+        const result = await request(`/regions`);
+        if (!result) return [];
+        if (result?.regionsData?.status === "success" && Array.isArray(result?.regionsData?.data)) {
+            return result?.regionsData?.data;
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching regions:", error);
+        return [];
+    }
+};

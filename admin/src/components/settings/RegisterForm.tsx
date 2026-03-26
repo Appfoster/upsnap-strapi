@@ -24,10 +24,12 @@ export default function RegisterForm({
   setShowRegisterForm,
   setShowLoginForm,
   setShowExpiredMessage,
+  onTabChange,
 }: {
   setShowRegisterForm: (value: boolean) => void;
   setShowLoginForm: (value: boolean) => void;
   setShowExpiredMessage: (value: string) => void;
+  onTabChange: (tab: string) => void;
 }) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +65,9 @@ export default function RegisterForm({
         if (res?.ok) {
           toast.success(res?.message || 'UpSnap Connected.');
           toast.success('Your site is now being monitored every 5 minutes.');
-          navigate('/plugins/upsnap/dashboard');
+          setShowLoginForm(false);
+          setShowRegisterForm(false);
+          onTabChange('monitors');
           return;
         }
         toast.error('Not able to register, please try again.');

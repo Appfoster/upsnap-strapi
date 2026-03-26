@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 import CreateMonitor from './monitors/new';
+import IncidentsPage from './Incidents';
 
 const StyledContainer = styled(ToastContainer)`
   // https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/lighthouse" element={<Lighthouse />} />
             <Route path="/domain-check" element={<DomainCheck />} />
             <Route path="/mixed-content" element={<MixedContent />} />
+            <Route path="/incidents" element={<IncidentsPage />} />
             <Route path="/status-pages" element={<ListStatusPages />} />
             <Route path="/status-pages/new" element={<CreateStatusPage />} />
             <Route path="/status-pages/:id" element={<UpdateStatusPage />} />

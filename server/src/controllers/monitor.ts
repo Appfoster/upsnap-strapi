@@ -339,7 +339,89 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       body: JSON.stringify({ ids: monitorIds, action: 'delete' }),
     });
     ctx.body = { monitorsData };
+  },
+
+  async getAllIncidents(ctx) {
+    const { ...params } = ctx.request.body;
+    const {
+			monitorId,
+			timeRange,
+			page,
+			pageSize,
+			checkType,
+			region,
+			search,
+			sortBy,
+			sortOrder,
+		} = params;
+
+    const queryParams = new URLSearchParams();
+
+    queryParams.set("monitorId", monitorId);
+		if (timeRange) queryParams.set("time_range", timeRange);
+		if (page !== undefined) queryParams.set("page", page.toString());
+		if (pageSize !== undefined)
+			queryParams.set("page_size", pageSize.toString());
+		if (checkType) queryParams.set("check_type", checkType);
+		if (region) queryParams.set("region", region);
+		if (search) queryParams.set("search", search);
+		if (sortBy) queryParams.set("sort_by", sortBy);
+		if (sortOrder) queryParams.set("sort_order", sortOrder);
+
+    const incidentsData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/incidents?${queryParams.toString()}`,
+      {
+        method: 'GET',
+      }
+    );
+    ctx.body = { incidentsData };
+  },
+
+async exportIncidents(ctx) {
+  try {
+    const { monitorId, region, type, start_time, end_time, search, file_type } = ctx.request.body;
+
+    const queryParams = new URLSearchParams();
+    if (type) queryParams.set("type", type);
+    if (start_time) queryParams.set("start_time", start_time);
+    if (end_time) queryParams.set("end_time", end_time);
+    if (search) queryParams.set("search", search);
+    if (file_type) queryParams.set("file_type", file_type);
+    if (region) queryParams.set("region", region);
+
+    const response: any = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/${monitorId}/incidents/export?${queryParams.toString()}`,
+      { method: 'GET' }
+    );
+
+    // JSON fallback
+    if (!response?.type) {
+      ctx.body = response.data;
+      return;
+    }
+
+    // Set headers for file download
+    const contentType = response.headers.get('content-type') || 'application/octet-stream';
+    const disposition =
+      response.headers.get('content-disposition') ||
+      `attachment; filename=incidents.${file_type === 'excel' ? 'xlsx' : file_type || 'csv'}`;
+
+    ctx.set('Content-Type', contentType);
+    ctx.set('Content-Disposition', disposition);
+
+    // Send correct data
+    if (response.type === 'csv') {
+      ctx.body = response.data; // text
+    } else {
+      ctx.body = Buffer.from(response.data); // binary
+    }
+
+  } catch (error) {
+    console.error('Error exporting incidents: ', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Failed to export incidents' };
   }
+}
 });
 
 export default monitor;

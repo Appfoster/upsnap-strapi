@@ -10,6 +10,7 @@ import {
   Lock,
   Monitor,
   Palette,
+  BulletList,
 } from '@strapi/icons';
 import { PLUGIN_ID } from '../pluginId';
 
@@ -33,7 +34,7 @@ const SideNav = () => {
         >
           Dashboard
         </CustomSubNavLink>
-        <CustomSubNavLink
+        {/* <CustomSubNavLink
           as={NavLink}
           to={`reachability`}
           icon={<Earth />}
@@ -80,6 +81,14 @@ const SideNav = () => {
           style={{ marginLeft: '10px', marginBottom: '10px' }}
         >
           Mixed Content
+        </CustomSubNavLink> */}
+         <CustomSubNavLink
+          as={NavLink}
+          to={`incidents`}
+          icon={<BulletList />}
+          style={{ marginLeft: '10px', marginBottom: '10px' }}
+        >
+          Incidents
         </CustomSubNavLink>
         <CustomSubNavLink
           as={NavLink}

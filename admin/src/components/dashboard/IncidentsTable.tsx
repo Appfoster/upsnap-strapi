@@ -10,9 +10,11 @@ import {
   Tooltip,
   Box,
   Badge,
+  EmptyStateLayout,
 } from '@strapi/design-system';
 import { formatCheckType } from '../../utils/helpers';
 import { Flex } from '@strapi/design-system';
+import LoadingCard from '../reachability/LoadingCard';
 
 interface Incident {
   monitor_id: string;
@@ -41,6 +43,37 @@ const getStatusCodeColor = (statusCode: number | string | undefined) => {
   return 'secondary';
 };
 
+const getBadgeColor = (statusCode: number | string | undefined) => {
+  const status = getStatusCodeColor(statusCode);
+  switch (status) {
+    case 'success':
+      return {
+        backgroundColor: 'success100',
+        textColor: 'success600',
+      };
+    case 'primary':
+      return {
+        backgroundColor: 'primary100',
+        textColor: 'primary600',
+      };
+    case 'warning':
+      return {
+        backgroundColor: 'warning100',
+        textColor: 'warning600',
+      };
+    case 'danger':
+      return {
+        backgroundColor: 'danger100',
+        textColor: 'danger600',
+      };
+    default:
+      return {
+        backgroundColor: 'neutral100',
+        textColor: 'neutral600',
+      };
+  }
+};
+
 const formatMonitorName = (name: string) => {
   return name?.length > MAX_MESSAGE_LENGTH ? name.slice(0, MAX_MESSAGE_LENGTH) + '...' : name;
 };
@@ -56,13 +89,8 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
   return (
     <Box paddingTop={8}>
       <Box marginBottom={4}>
-        <Typography variant="beta">
-          Recent 20 Incidents
-        </Typography>
+        <Typography variant="beta">Recent 20 Incidents</Typography>
       </Box>
-      {/* <Typography variant="omega" textColor="neutral600" marginBottom={4}>
-        Recent 20 incidents. For more, visit the <span style={{ color: '#4945ff', cursor: 'pointer', textDecoration: 'underline' }}>incidents section</span>.
-      </Typography> */}
       <Table colCount={6} rowCount={incidentsData?.incidents?.length || 2}>
         <Thead>
           <Tr>
@@ -90,70 +118,66 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
           {isLoading ? (
             <Tr>
               <Td colSpan={6}>
-                <Box padding={4}>
-                  <Typography>Loading...</Typography>
-                </Box>
+                <LoadingCard />
               </Td>
             </Tr>
           ) : incidentsData?.incidents && incidentsData?.incidents?.length === 0 ? (
             <Tr>
               <Td colSpan={6}>
-                <Flex
-                  width="100%"
-                  justifyContent="center"
-                  direction="column"
-                  gap={1}
-                  padding={2}
-                  margin={2}
-                >
-                  <Typography fontWeight="bold">All good 🎉</Typography>
-                  <Typography variant="omega" textColor="neutral500">
-                    No recent incidents.
-                  </Typography>
-                </Flex>
+                <EmptyStateLayout
+                  content="All good 🎉 No recent incidents."
+                />
               </Td>
             </Tr>
           ) : (
-            incidentsData?.incidents?.map((incident, idx) => (
-              <Tr key={idx} fontSize={3}>
-                <Td>
-                  {showMonitorName(monitorName) ? (
-                    <Tooltip description={showMonitorName(monitorName)}>
-                      <span style={{ cursor: 'pointer' }}>{formatMonitorName(monitorName)}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{formatMonitorName(monitorName)}</span>
-                  )}
-                </Td>
-                <Td>
-                  <span>{formatCheckType(incident.region) || 'N/A'}</span>
-                </Td>
-                <Td>
-                  <span style={{ textTransform: 'capitalize' }}>
-                    {formatCheckType ? formatCheckType(incident.check_type) : incident.check_type}
-                  </span>
-                </Td>
-                <Td>
-                  <Badge>{incident.status_code || 'N/A'}</Badge>
-                </Td>
-                <Td>
-                  {incident.error_message?.length > MAX_MESSAGE_LENGTH ? (
-                    <Tooltip description={incident.error_message}>
-                      <span style={{ cursor: 'pointer' }}>
-                        {incident.error_message.slice(0, 21) + '...'}
-                      </span>
-                    </Tooltip>
-                  ) : (
-                    <span>{incident.error_message}</span>
-                  )}
-                </Td>
-                <Td>
-                  <span>
-                    {incident.timestamp && new Date(incident.timestamp * 1000).toLocaleString()}
-                  </span>
-                </Td>
-              </Tr>
-            ))
+            incidentsData?.incidents?.map((incident, idx) => {
+              const badgeColors = getBadgeColor(incident.status_code);
+              return (
+                <Tr key={idx} fontSize={3}>
+                  <Td>
+                    {showMonitorName(monitorName) ? (
+                      <Tooltip description={showMonitorName(monitorName)}>
+                        <span style={{ cursor: 'pointer' }}>{formatMonitorName(monitorName)}</span>
+                      </Tooltip>
+                    ) : (
+                      <span>{formatMonitorName(monitorName)}</span>
+                    )}
+                  </Td>
+                  <Td>
+                    <span>{formatCheckType(incident.region) || 'N/A'}</span>
+                  </Td>
+                  <Td>
+                    <span style={{ textTransform: 'capitalize' }}>
+                      {formatCheckType ? formatCheckType(incident.check_type) : incident.check_type}
+                    </span>
+                  </Td>
+                  <Td>
+                    <Badge
+                      backgroundColor={badgeColors.backgroundColor}
+                      textColor={badgeColors.textColor}
+                    >
+                      {incident.status_code || 'N/A'}
+                    </Badge>
+                  </Td>
+                  <Td>
+                    {incident.error_message?.length > MAX_MESSAGE_LENGTH ? (
+                      <Tooltip description={incident.error_message}>
+                        <span style={{ cursor: 'pointer' }}>
+                          {incident.error_message.slice(0, 21) + '...'}
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      <span>{incident.error_message}</span>
+                    )}
+                  </Td>
+                  <Td>
+                    <span>
+                      {incident.timestamp && new Date(incident.timestamp * 1000).toLocaleString()}
+                    </span>
+                  </Td>
+                </Tr>
+              );
+            })
           )}
         </Tbody>
       </Table>
