@@ -134,7 +134,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
       if (!fetchedMonitorId) {
         setHasNoMonitors(true);
         setIsLoading(false);
-        console.log('setting incidents');
+
         setIncidentsData((prev: any) => ({
           ...prev,
           incidents: [
