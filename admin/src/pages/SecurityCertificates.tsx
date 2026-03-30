@@ -103,6 +103,7 @@ export default function SecurityCertificates() {
           monitorUrl={monitorUrl}
           onRefresh={handleRefresh}
           refreshing={refreshing}
+          showBackButton={true}
         />
         {/* Status summary card */}
         <StatusCard

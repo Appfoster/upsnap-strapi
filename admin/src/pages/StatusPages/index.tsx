@@ -15,6 +15,8 @@ import {
   IconButton,
   SimpleMenu,
   MenuItem,
+  Alert,
+  Link,
 } from '@strapi/design-system';
 import {
   ArrowsCounterClockwise,
@@ -32,9 +34,11 @@ import SkeletonRow from '../../components/TableSkeletonRow';
 import { useNavigate, useParams } from 'react-router-dom';
 // import { ConfirmationModal } from "../ConfirmationModal";
 import { getUserDetailsCached } from '../../utils/userStorage';
-import { request } from '../../utils/helpers';
+import { request, getPrimaryMonitorId } from '../../utils/helpers';
 import { toast } from 'react-toastify';
 import { ConfirmationModal } from '../../components/DeleteConfirmation';
+import ShowBlurImage from '../../components/ShowBlurImage';
+import LoadingCard from '../../components/reachability/LoadingCard';
 
 export default function ListStatusPages() {
   const [statusPages, setStatusPages] = useState<any[]>([]);
@@ -44,6 +48,18 @@ export default function ListStatusPages() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
+  const [showImageBlur, setShowImageBlur] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const fetchedMonitorId = await getPrimaryMonitorId();
+      if (!fetchedMonitorId) {
+        setShowImageBlur(true);
+        return;
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     fetchStatusPages();
   }, []);
@@ -162,167 +178,198 @@ export default function ListStatusPages() {
 
   return (
     <>
-      {/* Title + Button */}
-      <Flex
-        justifyContent="space-between"
-        gap={2}
-        alignItems={{ initial: 'start', medium: 'center' }}
-        direction={{ initial: 'column', medium: 'row' }}
-        marginBottom={6}
-      >
-        <Box>
-          <Flex direction="column" gap={1} alignItems="flex-start">
-            <Typography variant="beta" fontWeight="bold">
-              Status Pages
-            </Typography>
-            <Typography variant="pi" textColor="neutral600">
-              Manage your Status Pages
-            </Typography>
+      {showImageBlur ? (
+        <Flex direction="column" alignItems="center" gap={4} padding={4}>
+          <Alert
+            closeLabel=""
+            variant="warning"
+            title="Need to register for this feature. Your status pages will look like this once registered."
+            action={
+              <Link href="#"  
+                onClick={(event: any) => {
+                event.preventDefault();
+                navigate('/plugins/upsnap/settings');
+              }}>
+                Register
+              </Link>
+            }
+          >
+            Register to activate this feature and get a public status page accessible via a
+            shareable link.
+          </Alert>
+          <ShowBlurImage forPage="status_page" />
+        </Flex>
+      ) : (
+        <>
+          {/* Title + Button */}
+          <Flex
+            justifyContent="space-between"
+            gap={2}
+            alignItems={{ initial: 'start', medium: 'center' }}
+            direction={{ initial: 'column', medium: 'row' }}
+            marginBottom={6}
+          >
+            <Box>
+              <Flex direction="column" gap={1} alignItems="flex-start">
+                <Typography variant="beta" fontWeight="bold">
+                  Status Pages
+                </Typography>
+                <Typography variant="pi" textColor="neutral600">
+                  Manage your Status Pages
+                </Typography>
+              </Flex>
+            </Box>
+            <Button startIcon={<Plus />} onClick={handleAddStatusPage} variant="tertiary" size="S">
+              Add Status Page
+            </Button>
           </Flex>
-        </Box>
-        <Button startIcon={<Plus />} onClick={handleAddStatusPage} variant="tertiary" size="S">
-          Add Status Page
-        </Button>
-      </Flex>
-      <Card>
-        <Box style={{ overflowX: 'auto' }}>
-          <Table colCount={3} rowCount={statusPages.length}>
-            <Thead>
-              <Tr>
-                <Th>
-                  <Typography variant="sigma">Name</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Status</Typography>
-                </Th>
-                <Th>
-                  <Flex justifyContent="flex-end" width="100%">
-                    <Typography variant="sigma">Actions</Typography>
-                  </Flex>
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <SkeletonRow rows={3} />
-              ) : statusPages.length === 0 ? (
-                <Tr>
-                  <Td colSpan={3}>
-                    <Flex justifyContent="center" alignItems="center" padding={5}>
-                      <Typography>No status pages found</Typography>
-                    </Flex>
-                  </Td>
-                </Tr>
-              ) : (
-                statusPages.map((page, index) => (
-                  <Tr key={page.id}>
-                    <Td>
-                      <Box>
-                        <Flex direction="column" gap={1} alignItems="flex-start">
-                          <Typography variant="omega" fontWeight="bold">
-                            {page.name}
-                          </Typography>
-                          <Typography variant="pi" textColor="neutral600">
-                            {page.monitor_ids.length} monitors
-                          </Typography>
-                        </Flex>
-                      </Box>
-                    </Td>
-                    <Td>
-                      <Badge
-                        backgroundColor={page.is_published ? 'success100' : 'neutral200'}
-                        textColor={page.is_published ? 'success700' : 'neutral700'}
-                      >
-                        {page.is_published ? 'Published' : 'Unpublished'}
-                      </Badge>
-                    </Td>
-                    <Td>
-                      <Flex gap={2} justifyContent="flex-end">
-                        <Tooltip
-                          description={
-                            !page.is_published || !page?.shareable_id
-                              ? 'This page is not published yet'
-                              : 'View public page'
-                          }
-                        >
-                          <Button
-                            variant="secondary"
-                            size="S"
-                            disabled={!page.is_published}
-                            onClick={() => {
-                              if (!page.is_published || !page.shareable_id) return;
-                              window.open(
-                                `${STATS_PAGE_URL}/shared/${page.shareable_id}`,
-                                '_blank',
-                                'noopener,noreferrer'
-                              );
-                            }}
-                            startIcon={<Eye />}
-                          >
-                            View
-                          </Button>
-                        </Tooltip>
-                        <SimpleMenu label="Actions" tag={IconButton} icon={<ChevronDown />}>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              handlePublishToggle(page);
-                            }}
-                            startIcon={page.is_published === true ? <MinusCircle /> : <Rocket />}
-                          >
-                            {page.is_published === true ? <>Un-publish</> : <>Publish</>}
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              resetShareableLink(page);
-                            }}
-                            startIcon={<ArrowsCounterClockwise />}
-                          >
-                            Reset Shareable Link
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              navigate(`/plugins/upsnap/status-pages/${page.id}`);
-                            }}
-                            startIcon={<Pencil />}
-                          >
-                            Edit
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              setSelectedPageId(page.id);
-                              setIsDeleteModalOpen(true);
-                            }}
-                            variant="danger"
-                            startIcon={<Trash />}
-                          >
-                            Delete
-                          </MenuItem>
-                        </SimpleMenu>
+          <Card>
+            <Box style={{ overflowX: 'auto' }}>
+              <Table colCount={3} rowCount={statusPages.length}>
+                <Thead>
+                  <Tr>
+                    <Th>
+                      <Typography variant="sigma">Name</Typography>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">Status</Typography>
+                    </Th>
+                    <Th>
+                      <Flex justifyContent="flex-end" width="100%">
+                        <Typography variant="sigma">Actions</Typography>
                       </Flex>
-                    </Td>
+                    </Th>
                   </Tr>
-                ))
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-        <ConfirmationModal
-          open={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
-          onConfirm={handleDeleteConfirm}
-          title="Delete Status Page"
-          description="Are you sure you want to delete this status page? This action cannot be undone."
-          confirmText="Delete"
-          cancelText="Cancel"
-          confirmColor="red"
-          isLoading={isDeleting}
-          loadingText="Deleting..."
-        />
-      </Card>
+                </Thead>
+                <Tbody>
+                  {isLoading ? (
+                    <Tr>
+                      <Td colSpan={3}>
+                        <LoadingCard />
+                      </Td>
+                    </Tr>
+                  ) : statusPages.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={3}>
+                        <Flex justifyContent="center" alignItems="center" padding={5}>
+                          <Typography>No status pages found</Typography>
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  ) : (
+                    statusPages.map((page, index) => (
+                      <Tr key={page.id}>
+                        <Td>
+                          <Box>
+                            <Flex direction="column" gap={1} alignItems="flex-start">
+                              <Typography variant="omega" fontWeight="bold">
+                                {page.name}
+                              </Typography>
+                              <Typography variant="pi" textColor="neutral600">
+                                {page.monitor_ids.length} monitors
+                              </Typography>
+                            </Flex>
+                          </Box>
+                        </Td>
+                        <Td>
+                          <Badge
+                            backgroundColor={page.is_published ? 'success100' : 'neutral200'}
+                            textColor={page.is_published ? 'success700' : 'neutral700'}
+                          >
+                            {page.is_published ? 'Published' : 'Unpublished'}
+                          </Badge>
+                        </Td>
+                        <Td>
+                          <Flex gap={2} justifyContent="flex-end">
+                            <Tooltip
+                              description={
+                                !page.is_published || !page?.shareable_id
+                                  ? 'This page is not published yet'
+                                  : 'View public page'
+                              }
+                            >
+                              <Button
+                                variant="secondary"
+                                size="S"
+                                disabled={!page.is_published}
+                                onClick={() => {
+                                  if (!page.is_published || !page.shareable_id) return;
+                                  window.open(
+                                    `${STATS_PAGE_URL}/shared/${page.shareable_id}`,
+                                    '_blank',
+                                    'noopener,noreferrer'
+                                  );
+                                }}
+                                startIcon={<Eye />}
+                              >
+                                View
+                              </Button>
+                            </Tooltip>
+                            <SimpleMenu label="Actions" tag={IconButton} icon={<ChevronDown />}>
+                              <MenuItem
+                                onClick={(e: any) => {
+                                  e.stopPropagation();
+                                  handlePublishToggle(page);
+                                }}
+                                startIcon={
+                                  page.is_published === true ? <MinusCircle /> : <Rocket />
+                                }
+                              >
+                                {page.is_published === true ? <>Un-publish</> : <>Publish</>}
+                              </MenuItem>
+                              <MenuItem
+                                onClick={(e: any) => {
+                                  e.stopPropagation();
+                                  resetShareableLink(page);
+                                }}
+                                startIcon={<ArrowsCounterClockwise />}
+                              >
+                                Reset Shareable Link
+                              </MenuItem>
+                              <MenuItem
+                                onClick={(e: any) => {
+                                  e.stopPropagation();
+                                  navigate(`/plugins/upsnap/status-pages/${page.id}`);
+                                }}
+                                startIcon={<Pencil />}
+                              >
+                                Edit
+                              </MenuItem>
+                              <MenuItem
+                                onClick={(e: any) => {
+                                  e.stopPropagation();
+                                  setSelectedPageId(page.id);
+                                  setIsDeleteModalOpen(true);
+                                }}
+                                variant="danger"
+                                startIcon={<Trash />}
+                              >
+                                Delete
+                              </MenuItem>
+                            </SimpleMenu>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                </Tbody>
+              </Table>
+            </Box>
+            <ConfirmationModal
+              open={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={handleDeleteConfirm}
+              title="Delete Status Page"
+              description="Are you sure you want to delete this status page? This action cannot be undone."
+              confirmText="Delete"
+              cancelText="Cancel"
+              confirmColor="red"
+              isLoading={isDeleting}
+              loadingText="Deleting..."
+            />
+          </Card>
+        </>
+      )}
     </>
   );
 }
