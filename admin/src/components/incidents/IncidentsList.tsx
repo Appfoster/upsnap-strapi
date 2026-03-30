@@ -447,7 +447,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
     items.push(totalPages - 1, totalPages);
 
     // Remove duplicates and sort
-    return Array.from(new Set(items.filter(i => typeof i === 'number' && i >= 1 && i <= totalPages || i === 'dots')));
+    return Array.from(new Set(items.filter(page => typeof page === 'number' && page >= 1 && page <= totalPages || page === 'dots')));
   }
 
   const incidents = incidentsData?.incidents || [];
