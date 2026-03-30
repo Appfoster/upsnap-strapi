@@ -24,10 +24,12 @@ export default function LogInForm({
   setShowLoginForm,
   setShowRegisterForm,
   setShowExpiredMessage,
+  onTabChange,
 }: {
   setShowLoginForm: (value: boolean) => void;
   setShowRegisterForm: (value: boolean) => void;
   setShowExpiredMessage: (value: string) => void;
+  onTabChange: (tab: string) => void;
 }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,7 +58,9 @@ export default function LogInForm({
       .then((res) => {
         if (res?.ok) {
           toast.success('Login Successful');
-          navigate('/plugins/upsnap/dashboard');
+          setShowLoginForm(false);
+          setShowRegisterForm(false);
+          onTabChange('monitors');
           return;
         }
         toast.error(res?.message || 'Not able to login, please try again.');
