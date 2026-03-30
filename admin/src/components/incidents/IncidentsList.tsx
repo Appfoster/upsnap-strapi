@@ -22,7 +22,7 @@ import {
   MenuItem,
   Alert,
   Link,
-  IconButton
+  IconButton,
 } from '@strapi/design-system';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -179,17 +179,17 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
               timestamp: 1773853260, // Mar 18, 2026, 07:41 PM UTC
             },
           ],
-		  total_count: 5,
-		  page: 1,
-		  page_size: 20,
-		  total_pages: 1,
-		  incidents_by_check: {},
+          total_count: 5,
+          page: 1,
+          page_size: 20,
+          total_pages: 1,
+          incidents_by_check: {},
         }));
         return;
       }
-	  setSelectedMonitorId(fetchedMonitorId);
-	  setHasNoMonitors(false);
-      setIsLoading(false);
+      // setSelectedMonitorId(fetchedMonitorId);
+      setHasNoMonitors(false);
+      // setIsLoading(false);
     })();
   }, []);
 
@@ -204,8 +204,8 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   const fetchMonitors = async () => {
     try {
       const response = await request('/monitors', {
-		method: 'GET',
-	  });
+        method: 'GET',
+      });
 
       const fetchedMonitors = response?.monitorsData?.data?.monitors || [];
       setMonitors(fetchedMonitors);
@@ -284,7 +284,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
         const result = await fetchIncidentsFromBackend(params, 10000);
 
         if (result) {
-            setIncidentsData(result);
+          setIncidentsData(result);
           if (!isPaginationClickRef.current) {
             setCurrentPage(page);
           }
@@ -387,7 +387,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
       if (searchValue) {
         params.search = searchValue;
       }
-	  params.monitorId = effectiveMonitorId;
+      params.monitorId = effectiveMonitorId;
       const monitorName = monitor?.name ? monitor.name.replace(/[^a-zA-Z0-9_-]+/g, '_') : 'monitor';
       const startDate = new Date(start * 1000).toISOString().slice(0, 10);
       const fileName = `incidents_${monitorName}_${startDate}`;
@@ -423,16 +423,13 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   const incidents = incidentsData?.incidents || [];
   const totalCount = incidentsData?.total_count || 0;
   const totalPages = incidentsData?.total_pages || 0;
-  
 
   return (
     <>
       <Box marginBottom={4}>
         <Flex justifyContent="space-between" alignItems="start">
           <Flex direction="column" gap={2} justifyContent="start" alignItems="start">
-            <Typography variant="beta">
-              Incidents
-            </Typography>
+            <Typography variant="beta">Incidents</Typography>
             <Typography variant="epsilon" textColor="neutral600">
               {monitor?.name ? (
                 <>
@@ -460,22 +457,23 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
           )}
         </Flex>
       </Box>
-	  {hasNoMonitors && (
-		<Flex direction="column" gap={4} paddingBottom={4} width="100%">
-			<Alert
-				closeLabel=""
-				variant="warning"
-				title="This is a demo preview of your incidents page."
-				action={
-					<Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
-						Register
-					</Link>
-				}
-			>
-				Register here to start monitoring your sites and see real incident data here.
-			</Alert>
-		</Flex>
-	  )}
+      {hasNoMonitors && (
+        <Flex direction="column" gap={4} paddingBottom={4} width="100%">
+          <Alert
+            closeLabel=""
+            variant="warning"
+            title="This is a demo preview of your incidents page."
+            action={
+              <Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
+                Register
+              </Link>
+            }
+            width="100%"
+          >
+            Register here to start monitoring your sites and see real incident data here.
+          </Alert>
+        </Flex>
+      )}
       <Box
         background="neutral0"
         shadow="sm"
@@ -512,15 +510,15 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
               </Box>
             </Flex>
             <Flex gap={2}>
-				<IncidentsFilter
-					incidentTypeFilters={incidentTypeFilters}
-					regionFilter={regionFilter}
-					onIncidentTypeChange={setIncidentTypeFilters}
-					onRegionChange={setRegionFilter}
-					incidentTypeOptions={filterOptions}
-					regions={regions}
-					hasNoMonitors={hasNoMonitors}
-				/>
+              <IncidentsFilter
+                incidentTypeFilters={incidentTypeFilters}
+                regionFilter={regionFilter}
+                onIncidentTypeChange={setIncidentTypeFilters}
+                onRegionChange={setRegionFilter}
+                incidentTypeOptions={filterOptions}
+                regions={regions}
+                hasNoMonitors={hasNoMonitors}
+              />
               <SimpleMenu label="Export" disabled={hasNoMonitors || totalCount === 0}>
                 <MenuItem
                   startIcon={<FileCsv />}
@@ -541,36 +539,38 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
         <Table colCount={5} rowCount={incidents.length || 5}>
           <Thead>
             <Tr>
-                {['Check Type', 'Region', 'Message', 'Status Code', 'Occurred At'].map((header) => {
-					const currentSort = sortOption?.includes(header) ? sortOption : null;
-					const isDescending = currentSort?.includes('↓');
-					return (
-						<Th
-							key={header}
-							action={
-								<IconButton
-									variant="ghost"
-									onClick={() => {
-										setSortOption(isDescending ? `${header} ↑` : `${header} ↓`);
-										setCurrentPage(1);
-									}}
-									label={`Sort by ${header} ${isDescending ? 'ascending' : 'descending'}`}
-								>
-									{isDescending ? <CaretDown /> : <CaretUp />}
-								</IconButton>
-							}
-						><Typography variant="sigma">{header}</Typography></Th>
-					)
-				})}
+              {['Check Type', 'Region', 'Message', 'Status Code', 'Occurred At'].map((header) => {
+                const currentSort = sortOption?.includes(header) ? sortOption : null;
+                const isDescending = currentSort?.includes('↓');
+                return (
+                  <Th
+                    key={header}
+                    action={
+                      <IconButton
+                        variant="ghost"
+                        onClick={() => {
+                          setSortOption(isDescending ? `${header} ↑` : `${header} ↓`);
+                          setCurrentPage(1);
+                        }}
+                        label={`Sort by ${header} ${isDescending ? 'ascending' : 'descending'}`}
+                      >
+                        {isDescending ? <CaretDown /> : <CaretUp />}
+                      </IconButton>
+                    }
+                  >
+                    <Typography variant="sigma">{header}</Typography>
+                  </Th>
+                );
+              })}
             </Tr>
           </Thead>
           <Tbody>
             {isLoading ? (
-				<Tr>
-					<Td colSpan={5}>
-					<LoadingCard />
-					</Td>
-				</Tr>
+              <Tr>
+                <Td colSpan={5}>
+                  <LoadingCard />
+                </Td>
+              </Tr>
             ) : incidents.length === 0 ? (
               <Tr>
                 <Td colSpan={5}>
@@ -616,28 +616,20 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
                 </Typography>
               </Flex>
               <Pagination activePage={currentPage} pageCount={totalPages}>
-                <PreviousLink
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                >
+                <PreviousLink onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}>
                   Go to previous page
                 </PreviousLink>
                 {[...Array(totalPages)].map((_, i) => (
-                  <PageLink
-                    key={i}
-                    number={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                  >
+                  <PageLink key={i} number={i + 1} onClick={() => setCurrentPage(i + 1)}>
                     Go to page {i + 1}
                   </PageLink>
                 ))}
-                <NextLink
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                >
+                <NextLink onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}>
                   Go to next page
                 </NextLink>
               </Pagination>
               <Flex gap={2} alignItems="center">
-				<Box paddingLeft={2}>
+                <Box paddingLeft={2}>
                   <Typography variant="sigma">Rows per page</Typography>
                 </Box>
                 <Box width="100px">

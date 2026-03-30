@@ -106,134 +106,146 @@ export default function IncidentsFilter({
     <Popover.Root>
       <Popover.Trigger disabled={hasNoMonitors}>
         <Button variant="tertiary" startIcon={<Filter />}>
-        <Flex direction="row" alignItems="center" gap={2}>
-        Filter
-        {totalFilters > 0 && (
-          <Box
-            background="primary600"
-            color="neutral0"
-            paddingTop="2px"
-            paddingBottom="2px"
-            paddingLeft="7px"
-            paddingRight="7px"
-            borderRadius="5px"
-            marginLeft={2}
-            fontSize={1}
-            style={{ minWidth: 24, textAlign: 'center' }}
-          >
-            {totalFilters}
-          </Box>
-        )}
-        </Flex>
+          <Flex direction="row" alignItems="center" gap={2}>
+            Filter
+            {totalFilters > 0 && (
+              <Box
+                background="primary600"
+                color="neutral0"
+                paddingTop="2px"
+                paddingBottom="2px"
+                paddingLeft="7px"
+                paddingRight="7px"
+                borderRadius="5px"
+                marginLeft={2}
+                fontSize={1}
+                style={{ minWidth: 24, textAlign: 'center' }}
+              >
+                {totalFilters}
+              </Box>
+            )}
+          </Flex>
         </Button>
       </Popover.Trigger>
       <Popover.Content>
         <Box>
-        <Accordion.Root>
-          <Accordion.Item value="acc-01">
-            <Accordion.Header>
-              <Accordion.Trigger description="Your personal information">
-                <Typography variant="pi" fontWeight="bold">
-                  Filter by Incident Type
-                </Typography>
-              </Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Content>
-            <Flex padding={3} direction="column" gap={3} justifyContent="start" alignItems="start">
-              {incidentTypeItems.map((item, index) => (
-                <Flex
-                  key={item}
-                  alignItems="center"
-                  gap={2}
-                  paddingBottom={index !== incidentTypeItems.length - 1 ? 2 : 0}
-                >
-                  <Checkbox
-                    checked={incidentTypeFilters.includes(item)}
-                    onCheckedChange={() => toggleIncidentType(item)}
-                    aria-label={
-                      INCIDENT_CHECK_TYPES[item as keyof typeof INCIDENT_CHECK_TYPES] || item
-                    }
-                  />
-                  <Typography variant="pi">
-                    {INCIDENT_CHECK_TYPES[item as keyof typeof INCIDENT_CHECK_TYPES] || item}
+          <Accordion.Root>
+            <Accordion.Item value="acc-01">
+              <Accordion.Header>
+                <Accordion.Trigger description="Your personal information">
+                  <Typography variant="pi" fontWeight="bold">
+                    Filter by Incident Type
                   </Typography>
-                </Flex>
-              ))}
-              </Flex>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion.Root>
-        <Accordion.Root>
-          <Accordion.Item value="acc-01">
-            <Accordion.Header>
-              <Accordion.Trigger description="Your personal information">
-                <Typography variant="pi" fontWeight="bold">
-                  Filter by Region
-                </Typography>
-              </Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Content>
-                <Flex padding={3} direction="column" gap={3} justifyContent="start" alignItems="start">
-              {regions.map((region, index) => {
-                const isDisabled = isTrialUser && region.id !== DEFAULT_REGION.id;
-                const regionContent = (
-                  <Flex
-                    key={region.id}
-                    alignItems="center"
-                    gap={2}
-                    style={{ cursor: isDisabled ? 'not-allowed' : undefined }}
-                  >
-                    <Checkbox
-                      checked={regionFilter.includes(region.id)}
-                      onCheckedChange={() => toggleRegion(region.id)}
-                      disabled={isDisabled}
-                      aria-label={region.name}
-                    />
-                    <Typography variant="pi">{region.name}</Typography>
-                  </Flex>
-                );
-                if (isDisabled) {
-                  return (
-                    <Tooltip
-                      label={
-                        <Box>
-                          <Typography fontWeight="bold" variant="pi">
-                            Unlock Global Monitoring
-                          </Typography>
-                          <Typography variant="pi">
-                            Upgrade to a paid plan to filter incidents from multiple regions
-                            worldwide.
-                          </Typography>
-                        </Box>
-                      }
-                      side={"left"}
-                      key={region.id}
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content>
+                <Flex
+                  padding={3}
+                  direction="column"
+                  gap={3}
+                  justifyContent="start"
+                  alignItems="start"
+                >
+                  {incidentTypeItems.map((item, index) => (
+                    <Flex
+                      key={item}
+                      alignItems="center"
+                      gap={2}
+                      paddingBottom={index !== incidentTypeItems.length - 1 ? 2 : 0}
                     >
-                      {regionContent}
-                    </Tooltip>
-                  );
-                }
-                return regionContent;
-              })}
-              </Flex>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion.Root>
+                      <Checkbox
+                        checked={incidentTypeFilters.includes(item)}
+                        onCheckedChange={() => toggleIncidentType(item)}
+                        aria-label={
+                          INCIDENT_CHECK_TYPES[item as keyof typeof INCIDENT_CHECK_TYPES] || item
+                        }
+                      />
+                      <Typography variant="pi">
+                        {INCIDENT_CHECK_TYPES[item as keyof typeof INCIDENT_CHECK_TYPES] || item}
+                      </Typography>
+                    </Flex>
+                  ))}
+                </Flex>
+              </Accordion.Content>
+            </Accordion.Item>
+          </Accordion.Root>
+          <Accordion.Root>
+            <Accordion.Item value="acc-01">
+              <Accordion.Header>
+                <Accordion.Trigger description="Your personal information">
+                  <Typography variant="pi" fontWeight="bold">
+                    Filter by Region
+                  </Typography>
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content>
+                <Flex
+                  padding={3}
+                  direction="column"
+                  gap={3}
+                  justifyContent="start"
+                  alignItems="start"
+                >
+                  {regions.map((region, index) => {
+                    const isDisabled = isTrialUser && region.id !== DEFAULT_REGION.id;
+                    const regionContent = (
+                      <Flex
+                        key={region.id}
+                        alignItems="center"
+                        gap={2}
+                        style={{ cursor: isDisabled ? 'not-allowed' : undefined }}
+                      >
+                        <Checkbox
+                          checked={regionFilter.includes(region.id)}
+                          onCheckedChange={() => toggleRegion(region.id)}
+                          disabled={isDisabled}
+                          aria-label={region.name}
+                        />
+                        <Typography variant="pi">{region.name}</Typography>
+                      </Flex>
+                    );
+                    if (isDisabled) {
+                      return (
+                        <Tooltip
+                          label={
+                            <Box>
+                              <Typography fontWeight="bold" variant="pi">
+                                Unlock Global Monitoring
+                              </Typography>
+                              <Typography variant="pi">
+                                Upgrade to a paid plan to filter incidents from multiple regions
+                                worldwide.
+                              </Typography>
+                            </Box>
+                          }
+                          side={'left'}
+                          key={region.id}
+                        >
+                          {regionContent}
+                        </Tooltip>
+                      );
+                    }
+                    return regionContent;
+                  })}
+                </Flex>
+              </Accordion.Content>
+            </Accordion.Item>
+          </Accordion.Root>
 
-        {(incidentTypeFilters.length > 0 || regionFilter.length > 0) && (
-          <Box padding={4} borderColor="neutral200">
-            <Button
-              variant="tertiary"
-              fullWidth
-              onClick={() => {
-                onIncidentTypeChange([]);
-                onRegionChange([]);
-              }}
-            >
-              Clear All Filters
-            </Button>
-          </Box>
-        )}
+          {(incidentTypeFilters.length > 0 || regionFilter.length > 0) && (
+            <Box padding={4} borderColor="neutral200">
+              <Button
+                variant="tertiary"
+                fullWidth
+                onClick={() => {
+                  onIncidentTypeChange([]);
+                  onRegionChange([]);
+                }}
+              >
+                Clear All Filters
+              </Button>
+            </Box>
+          )}
         </Box>
       </Popover.Content>
     </Popover.Root>

@@ -99,6 +99,7 @@ export default function DomainCheck() {
         monitorUrl={selectedMonitor?.monitor?.config?.meta?.url}
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        showBackButton={true}
       />
       {/* Status summary card */}
       <StatusCard

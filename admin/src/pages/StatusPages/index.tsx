@@ -190,7 +190,8 @@ export default function ListStatusPages() {
               </Link>
             }
           >
-            Register to activate this feature and get a public status page accessible via a shareable link.
+            Register to activate this feature and get a public status page accessible via a
+            shareable link.
           </Alert>
           <ShowBlurImage forPage="status_page" />
         </Flex>

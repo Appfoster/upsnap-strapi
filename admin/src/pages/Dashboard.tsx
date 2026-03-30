@@ -46,7 +46,7 @@ export default function Dashboard() {
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId){
+      if (!fetchedMonitorId) {
         setShowImageBlur(true);
         return;
       }
@@ -103,7 +103,10 @@ export default function Dashboard() {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const res = await request(`/monitor/${monitorId}`, { method: 'GET' });
-        if (res?.monitor?.message === 'Invalid authentication token' || res?.monitor?.status === 'error') {
+        if (
+          res?.monitor?.message === 'Invalid authentication token' ||
+          res?.monitor?.status === 'error'
+        ) {
           navigate('/plugins/upsnap/settings');
           return null;
         }
@@ -160,8 +163,20 @@ export default function Dashboard() {
         {!monitorData || isLoading ? (
           showImageBlur ? (
             <Flex direction="column" alignItems="center" gap={4} padding={4}>
-              <Alert closeLabel="Close" margin={1} variant="warning" title="Need to register for this feature. Your dashboard will look like this once registered." action={<Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>Register</Link>}>
-                Register to unlock complete monitoring insights - last 24-hour histograms, uptime statistics, response time charts, live incident notifications, a public status page, and more.
+              <Alert
+                closeLabel="Close"
+                margin={1}
+                variant="warning"
+                title="Need to register for this feature. Your dashboard will look like this once registered."
+                action={
+                  <Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
+                    Register
+                  </Link>
+                }
+              >
+                Register to unlock complete monitoring insights - last 24-hour histograms, uptime
+                statistics, response time charts, live incident notifications, a public status page,
+                and more.
               </Alert>
               <ShowBlurImage forPage="dashboard" />
             </Flex>

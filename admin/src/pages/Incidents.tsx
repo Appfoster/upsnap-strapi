@@ -1,7 +1,4 @@
-"use client";
-
-import React, { useEffect } from "react";
-import IncidentsList from "../components/incidents/IncedentsList";
+import IncidentsList from "../components/incidents/IncidentsList";
 
 export default function IncidentsPage() {
 	return <IncidentsList />;
