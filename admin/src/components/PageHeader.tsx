@@ -44,7 +44,10 @@ export default function PageHeader({
     <Box>
       {showBackButton && (
         <Box padding={0}>
-          <Link href="#" onClick={() => window.history.back()} startIcon={<ArrowLeft />} size="M">
+          <Link href="#" onClick={(e: any) => {
+            e.preventDefault();
+            window.history.back()
+          }} startIcon={<ArrowLeft />}>
             Back
           </Link>
         </Box>

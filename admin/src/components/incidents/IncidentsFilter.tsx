@@ -8,7 +8,7 @@ import {
   Box,
   Popover,
 } from '@strapi/design-system';
-import { Filter, Lock } from '@strapi/icons';
+import { Filter } from '@strapi/icons';
 import { Region } from '../../utils/types';
 import React from 'react';
 import { INCIDENT_CHECK_TYPES, DEFAULT_REGION, PLAN_TYPES } from '../../utils/constants';
@@ -23,33 +23,8 @@ export interface FilterMenuProps {
   regions: Region[];
   hasNoMonitors: boolean;
 }
-interface IconProps {
-  id: number;
-  open: number | null;
-}
 
-function Icon({ id, open }: IconProps) {
-  return (
-    <Box
-      style={{
-        display: 'inline-block',
-        transition: 'transform 0.2s',
-        transform: id === open ? 'rotate(180deg)' : 'none',
-      }}
-    >
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </Box>
-  );
-}
+
 export default function IncidentsFilter({
   incidentTypeFilters,
   regionFilter,
@@ -94,12 +69,6 @@ export default function IncidentsFilter({
       ? regionFilter.filter((r) => r !== regionId)
       : [...regionFilter, regionId];
     onRegionChange(updated);
-  };
-
-  const [openAccordion, setOpenAccordion] = React.useState<number | null>(0);
-
-  const handleAccordionOpen = (value: number) => {
-    setOpenAccordion(openAccordion === value ? null : value);
   };
 
   return (

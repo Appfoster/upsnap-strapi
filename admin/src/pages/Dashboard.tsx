@@ -169,7 +169,11 @@ export default function Dashboard() {
                 variant="warning"
                 title="Need to register for this feature. Your dashboard will look like this once registered."
                 action={
-                  <Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
+                  <Link href="#"  
+                    onClick={(event: any) => {
+                      event.preventDefault();
+                      navigate('/plugins/upsnap/settings');
+                  }}>
                     Register
                   </Link>
                 }

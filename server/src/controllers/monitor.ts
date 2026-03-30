@@ -355,6 +355,12 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
 			sortOrder,
 		} = params;
 
+    if (!monitorId) {
+      ctx.status = 400;
+      ctx.body = { error: 'monitorId is required' };
+      return;
+    }
+
     const queryParams = new URLSearchParams();
 
     queryParams.set("monitorId", monitorId);
@@ -381,6 +387,12 @@ async exportIncidents(ctx) {
   try {
     const { monitorId, region, type, start_time, end_time, search, file_type } = ctx.request.body;
 
+    if (!monitorId) {
+      ctx.status = 400;
+      ctx.body = { error: 'monitorId is required' };
+      return;
+    }
+
     const queryParams = new URLSearchParams();
     if (type) queryParams.set("type", type);
     if (start_time) queryParams.set("start_time", start_time);
@@ -396,7 +408,7 @@ async exportIncidents(ctx) {
 
     // JSON fallback
     if (!response?.type) {
-      ctx.body = response.data;
+      ctx.body = response;
       return;
     }
 

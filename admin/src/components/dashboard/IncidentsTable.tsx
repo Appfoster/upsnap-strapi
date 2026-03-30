@@ -144,7 +144,7 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
                     )}
                   </Td>
                   <Td>
-                    <span>{formatCheckType(incident.region) || 'N/A'}</span>
+                    <span>{incident.region || 'N/A'}</span>
                   </Td>
                   <Td>
                     <span style={{ textTransform: 'capitalize' }}>

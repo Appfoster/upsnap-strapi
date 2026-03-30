@@ -185,7 +185,11 @@ export default function ListStatusPages() {
             variant="warning"
             title="Need to register for this feature. Your status pages will look like this once registered."
             action={
-              <Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
+              <Link href="#"  
+                onClick={(event: any) => {
+                event.preventDefault();
+                navigate('/plugins/upsnap/settings');
+              }}>
                 Register
               </Link>
             }

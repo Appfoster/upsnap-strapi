@@ -23,6 +23,7 @@ import {
   Alert,
   Link,
   IconButton,
+  Dots
 } from '@strapi/design-system';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -236,7 +237,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   const fetchMonitor = async () => {
     try {
       if (!effectiveMonitorId) return;
-      const { data: result } = await request(`/monitor/${effectiveMonitorId}`);
+      const result = await request(`/monitor/${effectiveMonitorId}`);
       if (result) {
         setMonitor(result.monitor?.data?.monitor);
       }
@@ -360,7 +361,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
       const end = now;
 
       const SECONDS_PER_DAY = 24 * 60 * 60;
-      switch (timeRangeParam) {
+      switch (normalizedTimeRange) {
         case '7D':
           start = now - 7 * SECONDS_PER_DAY;
           break;
@@ -420,6 +421,35 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
     return INCIDENT_CHECK_TYPE_KEYS;
   }, []);
 
+  function getPaginationItems(currentPage: number, totalPages: number) {
+    const items: (number | 'dots')[] = [];
+
+    if (totalPages <= 6) {
+      for (let i = 1; i <= totalPages; i++) items.push(i);
+      return items;
+    }
+
+    // Always show first two pages
+    items.push(1, 2);
+
+    // Show dots if currentPage is far from start
+    if (currentPage > 4) items.push('dots');
+
+    // Show currentPage-1, currentPage, currentPage+1 if in the middle
+    for (let i = Math.max(3, currentPage - 1); i <= Math.min(totalPages - 2, currentPage + 1); i++) {
+      if (i > 2 && i < totalPages - 1) items.push(i);
+    }
+
+    // Show dots if currentPage is far from end
+    if (currentPage < totalPages - 3) items.push('dots');
+
+    // Always show last two pages
+    items.push(totalPages - 1, totalPages);
+
+    // Remove duplicates and sort
+    return Array.from(new Set(items.filter(i => typeof i === 'number' && i >= 1 && i <= totalPages || i === 'dots')));
+  }
+
   const incidents = incidentsData?.incidents || [];
   const totalCount = incidentsData?.total_count || 0;
   const totalPages = incidentsData?.total_pages || 0;
@@ -464,7 +494,10 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
             variant="warning"
             title="This is a demo preview of your incidents page."
             action={
-              <Link href="#" onClick={() => navigate('/plugins/upsnap/settings')}>
+              <Link href="#" onClick={(event: any) =>{
+                event.preventDefault();
+                navigate('/plugins/upsnap/settings');
+              }}>
                 Register
               </Link>
             }
@@ -619,11 +652,19 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
                 <PreviousLink onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}>
                   Go to previous page
                 </PreviousLink>
-                {[...Array(totalPages)].map((_, i) => (
-                  <PageLink key={i} number={i + 1} onClick={() => setCurrentPage(i + 1)}>
-                    Go to page {i + 1}
-                  </PageLink>
-                ))}
+                {getPaginationItems(currentPage, totalPages).map((item, idx) =>
+                  item === 'dots' ? (
+                    <Dots key={`dots-${idx}`}>…</Dots>
+                  ) : (
+                    <PageLink
+                      key={item}
+                      number={item as number}
+                      onClick={() => setCurrentPage(item as number)}
+                    >
+                      Go to page {item}
+                    </PageLink>
+                  )
+                )}
                 <NextLink onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}>
                   Go to next page
                 </NextLink>
