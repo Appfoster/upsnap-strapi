@@ -108,6 +108,7 @@ export default function Lighthouse() {
           monitorUrl={monitorUrl}
           onRefresh={handleRefresh}
           refreshing={refreshing}
+          showBackButton={true}
         />
 
         <StatusCard

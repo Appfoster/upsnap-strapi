@@ -15,10 +15,15 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     const settings = (await this.settingsStore.get()) as UpsnapSettings;
     return settings?.token || null;
   },
-  async makeBackendRequest(endpoint: string, options: RequestInit, forValidation: boolean = false, sessionToken: string = '') {
+  async makeBackendRequest(
+    endpoint: string,
+    options: RequestInit,
+    forValidation: boolean = false,
+    sessionToken: string = ''
+  ) {
     const token = await this.getToken();
     if (!token && !forValidation) {
-      return {error: 'No token found in settings'};
+      return { error: 'No token found in settings' };
     }
 
     const response = await fetch(`${BACKEND_URL}${endpoint}`, {
@@ -29,7 +34,30 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
         ...(options.headers || {}),
       },
     });
-    return response.json();
+
+    const contentType = response.headers.get('content-type') || '';
+
+    // Handle JSON
+    if (contentType.includes('application/json')) {
+
+      return await response.json();
+    }
+
+    // Handle CSV
+    if (contentType.includes('text/csv')) {
+      return {
+        type: 'csv',
+        data: await response.text(),
+        headers: response.headers,
+      };
+    }
+
+    // Handle binary (Excel, PDF, etc.)
+    return {
+      type: 'blob',
+      data: await response.arrayBuffer(),
+      headers: response.headers,
+    };
   },
 });
 

@@ -97,6 +97,7 @@ export default function BrokenLinks() {
           monitorUrl={monitorUrl}
           onRefresh={handleRefresh}
           refreshing={refreshing}
+          showBackButton={true}
         />
 
         {/* Status summary card */}

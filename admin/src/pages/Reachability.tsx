@@ -205,6 +205,7 @@ export default function Reachability() {
           monitorUrl={selectedMonitor.monitor?.config?.meta?.url}
           onRefresh={handleRefresh}
           refreshing={refreshing}
+          showBackButton={true}
         />
         <StatusCard
           status={data.status}

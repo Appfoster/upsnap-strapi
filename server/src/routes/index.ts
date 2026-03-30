@@ -353,6 +353,24 @@ export default {
         auth: false,
       },
     },
+    {
+      method: 'POST',
+      path: '/monitor/all-incidents',
+      handler: 'monitor.getAllIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/monitor/incidents/export',
+      handler: 'monitor.exportIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
   },
 };

@@ -143,3 +143,18 @@ export const PARTITIONS = [
   { label: '12h', seconds: 43200 },
   { label: '24h', seconds: 86400 },
 ];
+
+export const INCIDENT_CHECK_TYPES = {
+  ssl: "Security certificate",
+  uptime: "Uptime",
+  lighthouse: "Lighthouse",
+  domain: "Domain",
+  broken_links: "Broken links",
+  mixed_content: "Mixed content",
+};
+
+export const INCIDENTS_EXPORT_TYPES = {
+  csv : "csv",
+  pdf : "pdf"
+}
+export const INCIDENT_CHECK_TYPE_KEYS = Object.keys(INCIDENT_CHECK_TYPES) as Array<keyof typeof INCIDENT_CHECK_TYPES>;

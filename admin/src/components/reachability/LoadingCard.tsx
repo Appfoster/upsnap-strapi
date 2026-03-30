@@ -1,5 +1,4 @@
-import React from 'react';
-import { Card, CardBody, Typography, Loader } from '@strapi/design-system';
+import { Typography, Loader } from '@strapi/design-system';
 import { Flex } from '@strapi/design-system';
 
 const LoadingCard = () => (

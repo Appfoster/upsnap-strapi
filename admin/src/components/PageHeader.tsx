@@ -1,5 +1,5 @@
 import { Typography, Button, Box, Flex, Link } from '@strapi/design-system';
-import { ArrowsCounterClockwise } from '@strapi/icons';
+import { ArrowsCounterClockwise, ArrowLeft } from '@strapi/icons';
 import { RegionsDropdown } from './RegionsDropdown';
 import { Region } from '../utils/types';
 
@@ -13,6 +13,7 @@ interface PageHeaderProps {
   regionId?: string | null;
   onRegionChange?: (regionId: string) => void;
   selectedRegions?: Region[];
+  showBackButton?: boolean;
 }
 
 export default function PageHeader({
@@ -25,6 +26,7 @@ export default function PageHeader({
   regionId = null,
   onRegionChange,
   selectedRegions = [],
+  showBackButton = false,
 }: PageHeaderProps) {
   // Extract only the hostname (domain) from the URL
   const displayUrl = (() => {
@@ -39,68 +41,80 @@ export default function PageHeader({
   })();
 
   return (
-    <Flex
-      direction={{ initial: 'column', medium: 'row' }}
-      justifyContent="space-between"
-      alignItems={{ initial: 'flex-start', medium: 'center' }}
-      gap={3}
-      marginBottom={4}
-      marginTop={4}
-    >
-      {/* Left Side — Page Title & Optional URL */}
-      <Flex alignItems="center" gap={2}>
-        <Typography variant="beta" marginBottom={4}>
-          {title}
-          {monitorUrl && (
-            <>
-              <Typography style={{ fontWeight: 500, fontSize: 16 }}> (</Typography>
-              <Link
-                isExternal
-                href={monitorUrl}
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: 16,
-                  fontWeight: 500,
-                  marginLeft: 2,
-                  marginRight: 2,
-                }}
-              >
-                {displayUrl}
-              </Link>
-              <Typography style={{ fontWeight: 500, fontSize: 16 }}>)</Typography>
-            </>
-          )}
-        </Typography>
-      </Flex>
-
-      {/* Right Side — Optional Refresh Button */}
-      {showRefresh && onRefresh && (
-        <Flex
-          alignItems={{ initial: 'start', medium: 'center' }}
-          direction={{ initial: 'column', medium: 'row' }}
-          gap={4}
-        >
-          {regionsDropdown && onRegionChange && (
-            <Box style={{ minWidth: 180 }}>
-              <RegionsDropdown
-                value={regionId}
-                onChange={onRegionChange}
-                selectedRegions={selectedRegions}
-              />
-            </Box>
-          )}
-
-          <Button
-            size="S"
-            variant="secondary"
-            startIcon={<ArrowsCounterClockwise />}
-            onClick={onRefresh}
-            disabled={refreshing}
-          >
-            {refreshing ? 'Checking...' : 'Check Now'}
-          </Button>
-        </Flex>
+    <Box>
+      {showBackButton && (
+        <Box padding={0}>
+          <Link href="#" onClick={(e: any) => {
+            e.preventDefault();
+            window.history.back()
+          }} startIcon={<ArrowLeft />}>
+            Back
+          </Link>
+        </Box>
       )}
-    </Flex>
+      <Flex
+        direction={{ initial: 'column', medium: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ initial: 'flex-start', medium: 'center' }}
+        gap={3}
+        marginBottom={4}
+        marginTop={4}
+      >
+        {/* Left Side — Page Title & Optional URL */}
+        <Flex alignItems="center" gap={2}>
+          <Typography variant="beta" marginBottom={4}>
+            {title}
+            {monitorUrl && (
+              <>
+                <Typography style={{ fontWeight: 500, fontSize: 16 }}> (</Typography>
+                <Link
+                  isExternal
+                  href={monitorUrl}
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 500,
+                    marginLeft: 2,
+                    marginRight: 2,
+                  }}
+                >
+                  {displayUrl}
+                </Link>
+                <Typography style={{ fontWeight: 500, fontSize: 16 }}>)</Typography>
+              </>
+            )}
+          </Typography>
+        </Flex>
+
+        {/* Right Side — Optional Refresh Button */}
+        {showRefresh && onRefresh && (
+          <Flex
+            alignItems={{ initial: 'start', medium: 'center' }}
+            direction={{ initial: 'column', medium: 'row' }}
+            gap={4}
+          >
+            {regionsDropdown && onRegionChange && (
+              <Box style={{ minWidth: 180 }}>
+                <RegionsDropdown
+                  value={regionId}
+                  onChange={onRegionChange}
+                  selectedRegions={selectedRegions}
+                />
+              </Box>
+            )}
+
+            <Button
+              size="S"
+              variant="secondary"
+              startIcon={<ArrowsCounterClockwise />}
+              onClick={onRefresh}
+              disabled={refreshing}
+            >
+              {refreshing ? 'Checking...' : 'Check Now'}
+            </Button>
+          </Flex>
+        )}
+      </Flex>
+    </Box>
   );
 }
