@@ -425,7 +425,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
     const items: (number | 'dots')[] = [];
 
     if (totalPages <= 6) {
-      for (let i = 1; i <= totalPages; i++) items.push(i);
+      for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) items.push(pageNumber);
       return items;
     }
 
@@ -436,8 +436,8 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
     if (currentPage > 4) items.push('dots');
 
     // Show currentPage-1, currentPage, currentPage+1 if in the middle
-    for (let i = Math.max(3, currentPage - 1); i <= Math.min(totalPages - 2, currentPage + 1); i++) {
-      if (i > 2 && i < totalPages - 1) items.push(i);
+    for (let page = Math.max(3, currentPage - 1); page <= Math.min(totalPages - 2, currentPage + 1); page++) {
+      if (page > 2 && page < totalPages - 1) items.push(page);
     }
 
     // Show dots if currentPage is far from end
