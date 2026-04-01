@@ -89,7 +89,7 @@ export default function KeywordInput({
               placeholder="Enter keyword"
               value={keywordInput}
               onChange={(e: any) => setKeywordInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
             />
           </Box>
           <Button disabled={!keywordInput.trim()} onClick={handleAddKeyword}>

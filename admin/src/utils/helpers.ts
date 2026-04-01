@@ -274,8 +274,8 @@ export const fetchRegionsData = async (): Promise<Region[]> => {
 };
 
 export const fetchTags = async (
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setTags: React.Dispatch<React.SetStateAction<Tag[]>>
+  setIsLoading: (value: boolean) => void,
+  setTags: (value: Tag[]) => void,
 ): Promise<void> => {
   setIsLoading(true);
   try {

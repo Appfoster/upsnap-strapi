@@ -33,7 +33,14 @@ const tags = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async updateTags(ctx) {
-    const { id, ...data } = ctx.request.body;
+    const id = ctx.params.id;
+    const { ...data } = ctx.request.body;
+    
+    if (!id) {
+      ctx.status = 400;
+      ctx.body = { error: 'Tag ID is required' };
+      return;
+    }
 
     const tagsData = await service({ strapi }).makeBackendRequest(
       `/user/tags/${id}`,

@@ -11,7 +11,7 @@ import {
   Button,
 } from '@strapi/design-system';
 import { ChevronDown, Cross, Search, Plus } from '@strapi/icons';
-import { TagsApiResponse } from '../../../utils/types';
+import { TagsApiCreateResponse } from '../../../utils/types';
 import { generateRandomColor } from '../../../utils/constants';
 interface TagMultiSelectProps {
   selectedTagIds: string[];
@@ -44,7 +44,7 @@ export const TagMultiSelect: React.FC<TagMultiSelectProps> = ({
   const createTag = async (tagName: string): Promise<Tag | null> => {
     setIsCreating(true);
     try {
-      const result: TagsApiResponse = await request(apiEndpoint, {
+      const result: TagsApiCreateResponse = await request(apiEndpoint, {
         method: 'POST',
         data: {
           name: tagName,
@@ -53,7 +53,7 @@ export const TagMultiSelect: React.FC<TagMultiSelectProps> = ({
       });
       if (!result?.tagsData) return null;
 
-      const newTag = result?.tagsData?.data[0] || result?.tagsData?.data;
+      const newTag: Tag = result?.tagsData?.data;
 
       // Add new tag to available tags
       setAvailableTags((prev) => [...prev, newTag]);

@@ -400,7 +400,7 @@ export default {
     },
     {
       method: 'PUT',
-      path: '/tags',
+      path: '/tags/:id',
       handler: 'tags.updateTags',
       config: {
         policies: [],
