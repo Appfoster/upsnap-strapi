@@ -11,17 +11,25 @@ import {
   Box,
   Field,
 } from '@strapi/design-system';
-import { Monitor, monitorSchema, VALID_HOST_REGEX, Keyword } from '../../utils/types';
+import { Monitor, monitorSchema, VALID_HOST_REGEX, Keyword } from '../../../utils/types';
 import { toast } from 'react-toastify';
-import { DEFAULT_REGION, MONITOR, MONITOR_TYPE, MONITOR_TYPE_OPTIONS } from '../../utils/constants';
+import {
+  DEFAULT_REGION,
+  MONITOR,
+  MONITOR_TYPE,
+  MONITOR_TYPE_OPTIONS,
+} from '../../../utils/constants';
 import AdvancedSettings from './MonitorAdvancedSettings';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { clearAllStoredMonitors } from '../../utils/userStorage';
+import { clearAllStoredMonitors } from '../../../utils/userStorage';
 import NotificationChannelsIntegration from './NotificationChannelsIntegration';
-
+import { TagMultiSelect } from './TagMultiSelect';
 import { RegionsMultiSelect } from './RegionMultiSelect';
-import { fetchMonitorSettings, request, settingsToConfig } from '../../utils/helpers';
+import PortAdvancedSettings from './PortAdvancedSettings';
+import KeywordInput from './KeywordInput';
+import KeywordAdvancedSettings from './KeywordAdvancedSettings';
+import { fetchMonitorSettings, request, settingsToConfig } from '../../../utils/helpers';
 
 interface Props {
   monitor?: Monitor | null;
@@ -311,7 +319,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
 
     try {
       let result;
-
+      let url = mode === 'create' ? '/monitors' : `/monitors/${monitor?.id}`;
+      let method = mode === 'create' ? 'POST' : 'PUT';
       if (monitorType === MONITOR_TYPE.PORT) {
         // Validate port form data
         const portNumber = parseInt(portFormData.port, 10);
@@ -362,8 +371,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
           ...(mode === 'create' ? { is_enabled: true } : { id: monitor?.id }),
         };
 
-        result = await request('/monitors', {
-          method: mode === 'create' ? 'POST' : 'PATCH',
+        result = await request(url, {
+          method: method,
           data: payload,
         });
       } else if (monitorType === MONITOR_TYPE.KEYWORD) {
@@ -417,8 +426,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
           ...(mode === 'create' ? { is_enabled: true } : { id: monitor?.id }),
         };
 
-        result = await request('/monitors', {
-          method: mode === 'create' ? 'POST' : 'PUT',
+        result = await request(url, {
+          method: method,
           data: payload,
         });
       } else {
@@ -442,8 +451,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
             is_enabled: true,
           };
 
-          result = await request('/monitors', {
-            method: 'POST',
+          result = await request(url, {
+            method: method,
             data: payload,
           });
         } else {
@@ -463,8 +472,8 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
             regions: buildRegionsPayload(),
           };
 
-          result = await request(`/monitors/${monitor?.id}`, {
-            method: 'PUT',
+          result = await request(url, {
+            method: method,
             data: payload,
           });
         }
@@ -474,14 +483,13 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
       if (result.monitorsData.status === 'success') {
         const monitorId = result.monitorsData.data.monitor.id;
         clearAllStoredMonitors();
-        
+
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
         if (load) load();
         if (handleCancelEdit) handleCancelEdit();
         navigate('/plugins/upsnap/settings');
-
       } else {
         toast.error(result.monitorsData.data?.message || 'Something went wrong.');
       }
@@ -563,6 +571,26 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
       <Card marginTop={3}>
         <CardBody width="100%">
           <Flex direction="column" gap={6} width="100%">
+            {/* Monitor Type Selector */}
+            <Box width="100%">
+              <Field.Root>
+                <Field.Label>Monitor Type</Field.Label>
+                <SingleSelect
+                  value={monitorType}
+                  onChange={(value: string | number) => {
+                    setMonitorType(value as string);
+                    setErrors({});
+                  }}
+                  disabled={mode === 'edit'}
+                >
+                  {MONITOR_TYPE_OPTIONS.map((option) => (
+                    <SingleSelectOption key={option.value} value={option.value}>
+                      {option.label}
+                    </SingleSelectOption>
+                  ))}
+                </SingleSelect>
+              </Field.Root>
+            </Box>
 
             {/* Website Monitoring Form */}
             {monitorType === MONITOR_TYPE.WEBSITE && (
@@ -589,9 +617,6 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
                         />
                         <Field.Error />
                       </Field.Root>
-                      {/* {errors.name && (
-                    <p className="tw-text-xs tw-text-red-500 tw-mt-1"></p>
-                  )} */}
                     </Box>
                     <Box width="100%">
                       <Field.Root error={errors.url}>
@@ -675,6 +700,19 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
                       )}
                     </Box>
                   </Flex>
+                  {/* Tags */}
+                  <Box width="100%">
+                    <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
+                      <Typography variant="epsilon">Add tags</Typography>
+                      <Typography textColor="neutral600" variant="pi">
+                        Tags will enable you to organize your monitors in a better way
+                      </Typography>
+                    </Flex>
+                    <TagMultiSelect
+                      selectedTagIds={selectedTagIds}
+                      onTagsChange={setSelectedTagIds}
+                    />
+                  </Box>
                   <Flex width="100%" direction="column" gap={2} alignItems="start">
                     <Typography variant="epsilon">Notifications</Typography>
                     {/* Notifications */}
@@ -698,6 +736,301 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
               </>
             )}
 
+            {/* Port Monitoring Form */}
+            {monitorType === MONITOR_TYPE.PORT && (
+              <>
+                <Flex direction="column" gap={4} width="100%">
+                  {/* Name and Host Row */}
+                  <Flex
+                    direction={{ initial: 'column', medium: 'row' }}
+                    gap={5}
+                    marginBottom={3}
+                    width="100%"
+                  >
+                    <Box width="100%">
+                      <Field.Root error={errors.name}>
+                        <Field.Label>Monitor name</Field.Label>
+                        <Field.Input
+                          type="text"
+                          size="M"
+                          name="portName"
+                          placeholder="Monitor name"
+                          value={portFormData.name}
+                          onChange={(e: any) => {
+                            setPortFormData((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }));
+                            if (errors.name) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                name: undefined,
+                              }));
+                            }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                    </Box>
+                    <Box width="100%">
+                      <Field.Root error={errors.host}>
+                        <Field.Label>Host / Address</Field.Label>
+                        <Field.Input
+                          type="text"
+                          size="M"
+                          name="host"
+                          placeholder="example.com or 192.168.1.1"
+                          value={portFormData.host}
+                          onChange={(e: any) => {
+                            setPortFormData((prev) => ({
+                              ...prev,
+                              host: e.target.value.trim(),
+                            }));
+                            if (errors.host) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                host: undefined,
+                              }));
+                            }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                      <Typography variant="pi" textColor="neutral600" marginTop={1}>
+                        Enter domain or IP only (no protocol or paths)
+                      </Typography>
+                    </Box>
+                  </Flex>
+
+                  {/* Port and Tags Row */}
+                  <Flex
+                    direction={{ initial: 'column', medium: 'row' }}
+                    gap={5}
+                    marginBottom={3}
+                    width="100%"
+                  >
+                    <Box width="100%">
+                      <Field.Root error={errors.port}>
+                        <Field.Label>Port</Field.Label>
+                        <Typography variant="pi" textColor="neutral600" marginBottom={2}>
+                          The network port to monitor (e.g. 80, 443, 3306). Port range: 1-65535
+                        </Typography>
+                        <Field.Input
+                          type="number"
+                          size="M"
+                          name="port"
+                          min={1}
+                          max={65535}
+                          placeholder="Port"
+                          value={portFormData.port}
+                          onChange={(e: any) => {
+                            setPortFormData((prev) => ({
+                              ...prev,
+                              port: e.target.value,
+                            }));
+                            if (errors.port) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                port: undefined,
+                              }));
+                            }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                    </Box>
+
+                    {/* Tags */}
+                    <Box width="100%">
+                      <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
+                        <Typography variant="epsilon">Add tags</Typography>
+                        <Typography textColor="neutral600" variant="pi">
+                          Tags will enable you to organize your monitors in a better way
+                        </Typography>
+                      </Flex>
+                      <TagMultiSelect
+                        selectedTagIds={selectedTagIds}
+                        onTagsChange={setSelectedTagIds}
+                      />
+                    </Box>
+                  </Flex>
+
+                  {/* Notifications */}
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Notifications</Typography>
+                    <NotificationChannelsIntegration
+                      value={formData.channel_ids}
+                      onChange={(ids) => updateNotificationChannels(ids)}
+                    />
+                  </Flex>
+
+                  {/* Advanced Settings for Port Monitoring */}
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Advanced settings</Typography>
+                    <PortAdvancedSettings
+                      timeout={portFormData.timeout}
+                      onTimeoutChange={(value: number) => {
+                        setPortFormData((prev) => ({
+                          ...prev,
+                          timeout: value,
+                        }));
+                      }}
+                      monitorInterval={portFormData.monitor_interval}
+                      onMonitorIntervalChange={(value: number) => {
+                        setPortFormData((prev) => ({
+                          ...prev,
+                          monitor_interval: value,
+                        }));
+                      }}
+                    />
+                  </Flex>
+                </Flex>
+              </>
+            )}
+
+            {/* Keyword Monitoring Form */}
+            {monitorType === MONITOR_TYPE.KEYWORD && (
+              <>
+                <Flex direction="column" gap={4} width="100%">
+                  {/* Name and URL Row */}
+                  <Flex
+                    direction={{ initial: 'column', medium: 'row' }}
+                    gap={5}
+                    marginBottom={3}
+                    width="100%"
+                  >
+                    <Box width="100%">
+                      <Field.Root error={errors.name}>
+                        <Field.Label>Monitor name</Field.Label>
+                        <Field.Input
+                          type="text"
+                          size="M"
+                          name="keywordName"
+                          placeholder="Monitor name"
+                          value={keywordFormData.name}
+                          onChange={(e: any) => {
+                            setKeywordFormData((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }));
+                            if (errors.name) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                name: undefined,
+                              }));
+                            }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                    </Box>
+                    <Box width="100%">
+                      <Field.Root error={errors.url}>
+                        <Field.Label>URL</Field.Label>
+                        <Field.Input
+                          type="text"
+                          size="M"
+                          name="keywordUrl"
+                          placeholder="https://example.com"
+                          value={keywordFormData.url}
+                          onChange={(e: any) => {
+                            setKeywordFormData((prev) => ({
+                              ...prev,
+                              url: e.target.value,
+                            }));
+                            if (errors.url) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                url: undefined,
+                              }));
+                            }
+                          }}
+                        />
+                        <Field.Error />
+                      </Field.Root>
+                    </Box>
+                  </Flex>
+
+                  {/* Tags */}
+                  <Box width="100%">
+                    <Flex direction="column" gap={1} marginBottom={2} alignItems="start">
+                      <Typography variant="epsilon">Add tags</Typography>
+                      <Typography textColor="neutral600" variant="pi">
+                        Tags will enable you to organize your monitors in a better way
+                      </Typography>
+                    </Flex>
+                    <TagMultiSelect
+                      selectedTagIds={selectedTagIds}
+                      onTagsChange={setSelectedTagIds}
+                    />
+                  </Box>
+
+                  {/* Keywords Input Component */}
+                  <Box width="100%">
+                    <KeywordInput
+                      keywords={keywordFormData.keywords}
+                      onKeywordsChange={(keywords: Keyword[]) => {
+                        setKeywordFormData((prev) => ({
+                          ...prev,
+                          keywords,
+                        }));
+                        if (errors.keywords) {
+                          setErrors((prev) => ({
+                            ...prev,
+                            keywords: undefined,
+                          }));
+                        }
+                      }}
+                      error={errors.keywords}
+                      matchAll={keywordFormData.matchAll}
+                      onMatchAllChange={(value: boolean) => {
+                        setKeywordFormData((prev) => ({
+                          ...prev,
+                          matchAll: value,
+                        }));
+                      }}
+                    />
+                  </Box>
+
+                  {/* Notifications */}
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Notifications</Typography>
+                    <NotificationChannelsIntegration
+                      value={formData.channel_ids}
+                      onChange={(ids) => updateNotificationChannels(ids)}
+                    />
+                  </Flex>
+
+                  {/* Advanced Settings for Keyword Monitoring */}
+                  <Flex width="100%" direction="column" gap={2} alignItems="start">
+                    <Typography variant="epsilon">Advanced settings</Typography>
+                    <KeywordAdvancedSettings
+                      timeout={keywordFormData.timeout}
+                      onTimeoutChange={(value: number) => {
+                        setKeywordFormData((prev) => ({
+                          ...prev,
+                          timeout: value,
+                        }));
+                      }}
+                      followRedirects={keywordFormData.followRedirects}
+                      onFollowRedirectsChange={(value: boolean) => {
+                        setKeywordFormData((prev) => ({
+                          ...prev,
+                          followRedirects: value,
+                        }));
+                      }}
+                      monitorInterval={keywordFormData.monitor_interval}
+                      onMonitorIntervalChange={(value: number) => {
+                        setKeywordFormData((prev) => ({
+                          ...prev,
+                          monitor_interval: value,
+                        }));
+                      }}
+                    />
+                  </Flex>
+                </Flex>
+              </>
+            )}
 
             {/* Submit Button */}
             <Flex justifyContent="flex-end" gap={3} marginTop={2} width="100%" marginBottom={4}>

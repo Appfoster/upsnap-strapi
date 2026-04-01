@@ -371,6 +371,51 @@ export default {
         auth: false,
       },
     },
+        {
+      method: 'GET',
+      path: '/tags',
+      handler: 'tags.getTags',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/tags/:id',
+      handler: 'tags.getTagsByID',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/tags',
+      handler: 'tags.createTag',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/tags',
+      handler: 'tags.updateTags',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/tags/:id',
+      handler: 'tags.deleteTags',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
   ],
   },
 };

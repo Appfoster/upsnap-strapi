@@ -2,13 +2,13 @@ import { CardContent, Flex, CardBody, Alert, Button, Box } from '@strapi/design-
 import { Plus, Trash } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
 import MonitorsTable from './MonitorsTable';
-import { getUserData } from '../../utils/userStorage';
-import { getPrimaryMonitorId, getUserDetails, request } from '../../utils/helpers';
+import { getUserData } from '../../../utils/userStorage';
+import { getPrimaryMonitorId, getUserDetails, request } from '../../../utils/helpers';
 import { useEffect, useState } from 'react';
-import { Monitor } from '../../utils/types';
+import { Monitor } from '../../../utils/types';
 import { toast } from 'react-toastify';
 import MonitorForm from './MonitorForm';
-import { ConfirmationModal } from '../DeleteConfirmation';
+import { ConfirmationModal } from '../../DeleteConfirmation';
 
 async function getMonitors() {
   const res = await request('/monitors', {
@@ -36,7 +36,7 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
   useEffect(() => {
     (async () => {
       const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) setAlertMessage("Please select a primary monitor to continue!")
+      if (!fetchedMonitorId) setAlertMessage('Please select a primary monitor to continue!');
     })();
   }, []);
 
@@ -152,11 +152,11 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
 
   return (
     <Box width="100%">
-      { alertMessage && (
+      {alertMessage && (
         <Box width="100%" padding={3}>
-            <Alert closeLabel="Close" title="">
-              {alertMessage.charAt(0).toUpperCase() + alertMessage.slice(1)}
-            </Alert>
+          <Alert closeLabel="Close" title="">
+            {alertMessage.charAt(0).toUpperCase() + alertMessage.slice(1)}
+          </Alert>
         </Box>
       )}
       {!showEdit && (

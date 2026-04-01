@@ -1,6 +1,6 @@
 import { Tabs, Box, Typography, CardBody, CardContent, Card } from '@strapi/design-system';
-import Monitors from '../settings/Monitors';
-import IntegrationsPage from './noitifcation-channels';
+import Monitors from './monitors/Monitors';
+import IntegrationsPage from './noitification-channels';
 import { Flex } from '@strapi/design-system';
 
 interface Tabs {

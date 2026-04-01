@@ -44,7 +44,7 @@ export const fetchIncidentsFromBackend = async (
       }
 
       if (!result?.incidentsData) {
-        console.error('Failed to fetch incidents:', result.status);
+        console.error('Failed to fetch incidents:', result?.incidentsData.status);
         return null;
       }
 

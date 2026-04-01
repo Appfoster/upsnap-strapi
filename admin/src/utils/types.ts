@@ -299,13 +299,13 @@ export const registerSchema = z.object({
 export type StatusPageFormData = z.infer<typeof statusPageSchema>;
 
 export interface Tag {
-  id: string;
-  user_id: number;
-  organisation_id: number | null;
-  name: string;
-  color: string;
-  created_at: string;
-  updated_at: string;
+	id: string;
+	user_id: number;
+	organisation_id: number | null;
+	name: string;
+	color: string;
+	created_at: string;
+	updated_at: string;
 }
 
 export const serviceConfigSchema = z.object({
@@ -419,3 +419,11 @@ export interface IntervalPartition {
 }
 
 export type PLAN_TYPES = string;
+
+export interface TagsApiResponse {
+  tagsData: {
+    status: string;
+    message: string;
+    data: Tag[];
+  }
+}

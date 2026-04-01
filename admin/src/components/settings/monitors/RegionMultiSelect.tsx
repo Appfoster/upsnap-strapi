@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getUserDetails, request } from '../../utils/helpers';
-import { Region } from '../../utils/types';
+import { getUserDetails, request } from '../../../utils/helpers';
+import { Region } from '../../../utils/types';
 import {
   Box,
   Flex,
@@ -12,8 +12,8 @@ import {
   Checkbox,
 } from '@strapi/design-system';
 import { ChevronDown, Cross, Search } from '@strapi/icons';
-import { getUserDetailsCached } from '../../utils/userStorage';
-import { DEFAULT_REGION, PLAN_TYPES } from '../../utils/constants';
+import { getUserDetailsCached } from '../../../utils/userStorage';
+import { DEFAULT_REGION, PLAN_TYPES } from '../../../utils/constants';
 
 interface RegionsApiResponse {
   status: string;
@@ -308,10 +308,7 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
 
                       <Typography flex="1">{region.name || region.id}</Typography>
 
-                      <Checkbox
-                        checked={isPrimary}
-                        onChange={() => handleSetPrimary(region.id)}
-                      >
+                      <Checkbox checked={isPrimary} onChange={() => handleSetPrimary(region.id)}>
                         Primary
                       </Checkbox>
                     </Flex>

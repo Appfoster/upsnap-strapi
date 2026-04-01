@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@strapi/design-system';
-import { PLAN_TYPES as PLAN_TYPES_CONSTANT, PARTITIONS } from '../../utils/constants';
-import { PLAN_TYPES } from '../../utils/types';
+import { PLAN_TYPES as PLAN_TYPES_CONSTANT, PARTITIONS } from '../../../utils/constants';
+import { PLAN_TYPES } from '../../../utils/types';
 
 const format = (s: number) => {
   if (s < 60) return `${s}s`;
@@ -48,7 +48,7 @@ export default function MonitorIntervalSlider({
 
   return (
     <Box width="100%">
-      <Typography variant="pi" fontWeight="bold">
+      <Typography variant="delta" fontWeight="bold">
         Monitor interval
       </Typography>
 
@@ -101,7 +101,7 @@ export default function MonitorIntervalSlider({
               style={{
                 left: `${pos}%`,
                 transform: 'translateX(-50%)',
-                fontSize: 11,
+                fontSize: 10,
                 color: disabled ? '#C0C0CF' : '#666687',
                 cursor: disabled ? 'not-allowed' : 'default',
               }}
