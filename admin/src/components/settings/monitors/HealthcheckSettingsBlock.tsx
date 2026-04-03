@@ -15,10 +15,10 @@ import {
 
 import MonitorIntervalSlider from './MonitorIntervalSlider';
 import IntervalSlider from './IntervalSlider';
-import { MONITOR, PLAN_TYPES as PLAN_TYPES_CONSTANT } from '../../utils/constants';
-import { IntervalPartition, PLAN_TYPES } from '../../utils/types';
+import { MONITOR, PLAN_TYPES as PLAN_TYPES_CONSTANT } from '../../../utils/constants';
+import { IntervalPartition, PLAN_TYPES } from '../../../utils/types';
 import { toast } from 'react-toastify';
-import { INTERVALS, EXPIRY_OPTIONS } from '../../utils/constants';
+import { INTERVALS, EXPIRY_OPTIONS } from '../../../utils/constants';
 
 
 export default function HealthcheckServiceBlock({

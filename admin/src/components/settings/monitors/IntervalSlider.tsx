@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Typography } from '@strapi/design-system';
-import { IntervalPartition, IntervalUnit } from '../../utils/types';
+import { IntervalPartition, IntervalUnit } from '../../../utils/types';
 
 interface IntervalSliderProps {
   value: number; // seconds
@@ -66,7 +66,7 @@ export default function IntervalSlider({
 
   return (
     <Box width="100%">
-      <Typography variant="pi" fontWeight="bold">
+      <Typography variant="delta" fontWeight="bold">
         Monitor interval
       </Typography>
 

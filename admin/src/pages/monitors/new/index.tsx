@@ -1,4 +1,4 @@
-import MonitorForm from '../../../components/settings/MonitorForm';
+import MonitorForm from '../../../components/settings/monitors/MonitorForm';
 
 export default function CreateMonitor() {
   return (
