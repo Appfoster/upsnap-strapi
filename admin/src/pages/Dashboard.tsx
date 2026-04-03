@@ -232,9 +232,11 @@ export default function Dashboard() {
                 </Flex>
               </Box>
 
-              <Box width="100%">
-                <HealthCards monitorData={monitorData} isLoading={isLoading} />
-              </Box>
+              {monitorData?.monitor?.service_type === 'website' && (
+                <Box width="100%">
+                  <HealthCards monitorData={monitorData} isLoading={isLoading} />
+                </Box>
+              )}
             </Flex>
             <IncidentsTable
               incidentsData={monitorIncidents}

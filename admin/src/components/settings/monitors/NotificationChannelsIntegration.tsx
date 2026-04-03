@@ -19,10 +19,10 @@ import {
 
 import { ChevronDown, Search } from '@strapi/icons';
 
-import { getUserData } from '../../utils/userStorage';
-import { INTEGRATIONS_TYPES } from '../../utils/constants';
-import { getUserDetails, request } from '../../utils/helpers';
-import { getIntegrationIcon } from '../../components/icons/BrandIcons';
+import { getUserData } from '../../../utils/userStorage';
+import { INTEGRATIONS_TYPES } from '../../../utils/constants';
+import { getUserDetails, request } from '../../../utils/helpers';
+import { getIntegrationIcon } from '../../icons/BrandIcons';
 
 const DEFAULT_EMAIL = getUserData()?.user?.email ?? '';
 

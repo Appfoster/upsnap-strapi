@@ -5,6 +5,7 @@ import statusPage from './status-page';
 import regions from './regions';
 import userDetails from './user-details';
 import notificationChannels from './notification-channels';
+import tags from './tags';
 
 export default {
   controller,
@@ -14,4 +15,5 @@ export default {
   regions,
   userDetails,
   notificationChannels,
+  tags
 };
