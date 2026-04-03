@@ -370,9 +370,19 @@ const IntegrationsPage: React.FC = () => {
 
   return (
     <Box padding={2}>
-      <Flex direction={{ initial: 'column', medium: 'row' }} alignItems="stretch" gap={4} height="100%">
+      <Flex
+        direction={{ initial: 'column', medium: 'row' }}
+        alignItems="stretch"
+        gap={4}
+        height="100%"
+      >
         {/* LEFT SIDEBAR */}
-        <Box background="neutral0" padding={4} borderRadius="8px" width={{ initial: '100%', medium: '260px' }}>
+        <Box
+          background="neutral0"
+          padding={4}
+          borderRadius="8px"
+          width={{ initial: '100%', medium: '260px' }}
+        >
           <Flex direction="column" gap={2} alignItems="stretch">
             {filterCategories.map((filter: any) => (
               <Button
@@ -390,7 +400,7 @@ const IntegrationsPage: React.FC = () => {
 
         {/* MAIN CONTENT */}
         <Box background="neutral0" padding={4} borderRadius="8px" flex="1" overflow="auto">
-          <Box maxWidth={{initial: "100%", medium: "900px"}} margin="auto">
+          <Box maxWidth={{ initial: '100%', medium: '900px' }} margin="auto">
             {/* HEADER */}
             <Flex
               direction={{ initial: 'column', medium: 'row' }}
@@ -418,7 +428,7 @@ const IntegrationsPage: React.FC = () => {
                 )}
               </Flex>
 
-              <Box width={{initial: '100%', medium: '280px' }}>
+              <Box width={{ initial: '100%', medium: '280px' }}>
                 <TextInput
                   placeholder="Search by integration type…"
                   value={searchQuery}
@@ -430,12 +440,12 @@ const IntegrationsPage: React.FC = () => {
 
             {/* CONTENT */}
             {channelsLoading ? (
-              <Box padding={{initial: 2, medium: 8}} textAlign="center">
+              <Box padding={{ initial: 2, medium: 8 }} textAlign="center">
                 <Typography textColor="neutral500">Loading integrations…</Typography>
               </Box>
             ) : activeFilter === 'my' ? (
               integrations.length === 0 ? (
-                <Box padding={{initial: 2, medium: 8}} textAlign="center" width="100%">
+                <Box padding={{ initial: 2, medium: 8 }} textAlign="center" width="100%">
                   <Flex
                     direction="column"
                     alignItems="center"
@@ -464,7 +474,7 @@ const IntegrationsPage: React.FC = () => {
                 </Flex>
               )
             ) : filteredChannels.length === 0 ? (
-              <Box padding={{initial: 2, medium: 8}} textAlign="center">
+              <Box padding={{ initial: 2, medium: 8 }} textAlign="center">
                 <Flex direction="column" alignItems="center" gap={3} marginBottom={4} width="100%">
                   <Typography variant="delta">No integrations available</Typography>
                   <Typography variant="pi" textColor="neutral500">
@@ -484,13 +494,34 @@ const IntegrationsPage: React.FC = () => {
                     <Accordion.Item key={channel.type} value={channel.type}>
                       <Accordion.Header>
                         <Accordion.Trigger caretPosition="left" description={channel.description}>
-                          <Flex alignItems="center" gap={3} width={{initial: "100%", medium: "542px"}}>
+                          <Flex
+                            alignItems="center"
+                            gap={3}
+                            width={{ initial: '100%', medium: '542px' }}
+                          >
                             <Box>{getIntegrationIcon(channel.icon)}</Box>
-                            <Flex width={{initial: "100%", medium: "542px"}} gap={3} justifyContent="space-between">
-                            <Typography fontWeight="semiBold">{channel.label}</Typography>
-                            <Flex justifyContent="flex-end">
-                              {!planLimits?.can_add_more ? (
-                                <Tooltip label="Max integrations limit reached for your plan.">
+                            <Flex
+                              width={{ initial: '100%', medium: '542px' }}
+                              gap={3}
+                              justifyContent="space-between"
+                            >
+                              <Typography fontWeight="semiBold">{channel.label}</Typography>
+                              <Flex justifyContent="flex-end">
+                                {!planLimits?.can_add_more ? (
+                                  <Tooltip label="Max integrations limit reached for your plan.">
+                                    <Button
+                                      startIcon={<Plus />}
+                                      disabled={!planLimits?.can_add_more}
+                                      onClick={(e: any) => {
+                                        e.stopPropagation();
+                                        handleAddClick(channel);
+                                      }}
+                                      style={{ cursor: 'not-allowed' }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </Tooltip>
+                                ) : (
                                   <Button
                                     startIcon={<Plus />}
                                     disabled={!planLimits?.can_add_more}
@@ -498,24 +529,11 @@ const IntegrationsPage: React.FC = () => {
                                       e.stopPropagation();
                                       handleAddClick(channel);
                                     }}
-                                    style={{ cursor: 'not-allowed'}}
                                   >
                                     Add
                                   </Button>
-                                </Tooltip>
-                              ) : (
-                                <Button
-                                  startIcon={<Plus />}
-                                  disabled={!planLimits?.can_add_more}
-                                  onClick={(e: any) => {
-                                    e.stopPropagation();
-                                    handleAddClick(channel);
-                                  }}
-                                >
-                                  Add
-                                </Button>
-                              )}
-                            </Flex>
+                                )}
+                              </Flex>
                             </Flex>
                           </Flex>
                         </Accordion.Trigger>
@@ -524,7 +542,7 @@ const IntegrationsPage: React.FC = () => {
                       <Accordion.Content>
                         <Flex direction="column" gap={3} paddingTop={4}>
                           {channelIntegrations.length === 0 && (
-                            <Box padding={{initial: 2, medium: 8}} textAlign="center">
+                            <Box padding={{ initial: 2, medium: 8 }} textAlign="center">
                               <Flex
                                 direction="column"
                                 alignItems="center"

@@ -419,3 +419,19 @@ export interface IntervalPartition {
 }
 
 export type PLAN_TYPES = string;
+
+export interface TagsApiResponse {
+  tagsData: {
+    status: string;
+    message: string;
+    data: Tag[];
+  }
+}
+
+export interface TagsApiCreateResponse {
+  tagsData: {
+    status: string;
+    message: string;
+    data: Tag;
+  }
+}

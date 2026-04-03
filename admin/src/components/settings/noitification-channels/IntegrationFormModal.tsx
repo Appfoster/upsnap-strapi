@@ -27,8 +27,8 @@ const setNestedValue = (obj: any, path: string, value: any): any => {
   const result = { ...obj };
   let current = result;
 
-  for (let i = 0; i < keys.length - 1; i++) {
-    const key = keys[i];
+  for (let index = 0; index < keys.length - 1; index++) {
+    const key = keys[index];
     current[key] = current[key] ? { ...current[key] } : {};
     current = current[key];
   }
@@ -80,11 +80,11 @@ export default function IntegrationFormModal({
         // Initialize with empty string
         const keys = field.name.split('.');
         let current = initialData;
-        for (let i = 0; i < keys.length - 1; i++) {
-          if (!current[keys[i]]) {
-            current[keys[i]] = {};
+        for (let index = 0; index < keys.length - 1; index++) {
+          if (!current[keys[index]]) {
+            current[keys[index]] = {};
           }
-          current = current[keys[i]];
+          current = current[keys[index]];
         }
         current[keys[keys.length - 1]] = '';
       }
@@ -117,11 +117,11 @@ export default function IntegrationFormModal({
       if (value !== undefined) {
         const keys = field.name.split('.');
         let current = populatedData;
-        for (let i = 0; i < keys.length - 1; i++) {
-          if (!current[keys[i]]) {
-            current[keys[i]] = {};
+        for (let index = 0; index < keys.length - 1; index++) {
+          if (!current[keys[index]]) {
+            current[keys[index]] = {};
           }
-          current = current[keys[i]];
+          current = current[keys[index]];
         }
         current[keys[keys.length - 1]] = value;
       }
@@ -227,11 +227,11 @@ export default function IntegrationFormModal({
         // Reconstruct nested structure
         const keys = field.name.split('.');
         let current = config;
-        for (let i = 0; i < keys.length - 1; i++) {
-          if (!current[keys[i]]) {
-            current[keys[i]] = {};
+        for (let index = 0; index < keys.length - 1; index++) {
+          if (!current[keys[index]]) {
+            current[keys[index]] = {};
           }
-          current = current[keys[i]];
+          current = current[keys[index]];
         }
         current[keys[keys.length - 1]] = value;
       }
@@ -429,7 +429,12 @@ export default function IntegrationFormModal({
 
               return (
                 <Box width="100%">
-                  <Field.Root key={field.name} name={field.name} error={errors[field.name]} hint={field.description && !errors[field.name] ? field.description : undefined}>
+                  <Field.Root
+                    key={field.name}
+                    name={field.name}
+                    error={errors[field.name]}
+                    hint={field.description && !errors[field.name] ? field.description : undefined}
+                  >
                     <Field.Label>{field.label}</Field.Label>
 
                     <Box position="relative">
@@ -463,9 +468,7 @@ export default function IntegrationFormModal({
                       )}
                     </Box>
 
-                    {field.description && !errors[field.name] && (
-                      <Field.Hint />
-                    )}
+                    {field.description && !errors[field.name] && <Field.Hint />}
 
                     {errors[field.name] && <Field.Error />}
                   </Field.Root>

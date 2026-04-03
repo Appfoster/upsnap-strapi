@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MonitorSettings, Region, UserDetails } from './types';
+import { MonitorSettings, Region, UserDetails, TagsApiResponse, Tag } from './types';
 import { Monitor } from './types';
 import { REGIONS, MONITOR_TYPE } from './constants';
 import { setUserDetails } from './userStorage';
@@ -271,4 +271,25 @@ export const fetchRegionsData = async (): Promise<Region[]> => {
         console.error("Error fetching regions:", error);
         return [];
     }
+};
+
+export const fetchTags = async (
+  setIsLoading: (value: boolean) => void,
+  setTags: (value: Tag[]) => void,
+): Promise<void> => {
+  setIsLoading(true);
+  try {
+    const result: TagsApiResponse = await request('/tags', {
+      method: "GET",
+    });
+
+    if (!result?.tagsData) {
+      throw new Error("Failed to fetch tags");
+    }
+    setTags(result?.tagsData?.data);
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+  } finally {
+    setIsLoading(false);
+  }
 };

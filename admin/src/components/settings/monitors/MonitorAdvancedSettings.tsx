@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Accordion, Box, Typography, Switch, Flex } from '@strapi/design-system';
 
 import HealthcheckServiceBlock from './HealthcheckSettingsBlock';
-import { getUserDetailsCached } from '../../utils/userStorage';
-import { PLAN_TYPES } from '../../utils/constants';
+import { getUserDetailsCached } from '../../../utils/userStorage';
+import { PLAN_TYPES } from '../../../utils/constants';
 
 interface AdvancedSettingsProps {
   services: any;
@@ -41,7 +41,7 @@ export default function AdvancedSettings({
     fetchUser();
   }, []);
 
-  const getPercent = (value: number) => ((value - 6) / 55) * 100;
+  const getPercent = (value: number) => ((value - 5) / 55) * 100;
 
   return (
     <Box width="100%">
@@ -59,7 +59,7 @@ export default function AdvancedSettings({
           <Accordion.Content>
             <Flex padding={4} direction="column" gap={6} width="100%" alignItems="flex-start">
               {/* Request timeout */}
-              <Box maxWidth="60%">
+              <Box maxWidth="60%" paddingLeft={4}>
                 <Typography variant="beta" fontWeight="bold">
                   Request timeout
                 </Typography>
@@ -113,7 +113,7 @@ export default function AdvancedSettings({
               </Box>
 
               {/* Follow redirects */}
-              <Box>
+              <Box paddingLeft={6}>
                 <Flex alignItems="center" gap={3}>
                   <Switch
                     checked={meta.follow_redirects}
@@ -121,7 +121,7 @@ export default function AdvancedSettings({
                       updateMeta('follow_redirects', checked);
                     }}
                   />
-                  <Typography variant="beta" fontWeight="bold">
+                  <Typography variant="delta" fontWeight="bold">
                     Follow redirection
                   </Typography>
                 </Flex>
@@ -134,8 +134,8 @@ export default function AdvancedSettings({
               </Box>
 
               {/* Healthcheck settings */}
-              <Box width="100%">
-                <Typography variant="alpha" fontWeight="bold">
+              <Box width="100%" paddingLeft={5}>
+                <Typography variant="beta" fontWeight="bold">
                   Healthcheck settings
                 </Typography>
 

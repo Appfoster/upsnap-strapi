@@ -158,3 +158,25 @@ export const INCIDENTS_EXPORT_TYPES = {
   pdf : "pdf"
 }
 export const INCIDENT_CHECK_TYPE_KEYS = Object.keys(INCIDENT_CHECK_TYPES) as Array<keyof typeof INCIDENT_CHECK_TYPES>;
+
+// Utility function to generate random colors for new tags
+export const generateRandomColor = (): string => {
+  const colors = [
+    '#d3ed75',
+    '#33FF57',
+    '#3357FF',
+    '#FF33F5',
+    '#33FFF5',
+    '#eed33b',
+    '#47c8ff',
+    '#4169E1',
+    '#32CD32',
+    '#FF1493',
+    '#8A2BE2',
+    '#00CED1',
+    '#FF4500',
+    '#2E8B57',
+    '#DC143C',
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};

@@ -1,10 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
-  Accordion,
   Box,
   Flex,
   Typography,
-  TextInput,
   Checkbox,
   IconButton,
   Table,
@@ -20,11 +18,8 @@ import {
 import { toast } from 'react-toastify';
 import { Pencil, Trash } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
-import { getUserData } from '../../utils/userStorage';
-import { getPrimaryMonitorId, setPrimaryMonitorId } from '../../utils/helpers';
-import { Monitor } from '../../utils/types';
-
-const DEFAULT_EMAIL = getUserData()?.user?.email ?? '';
+import { fetchTags, getPrimaryMonitorId, setPrimaryMonitorId } from '../../../utils/helpers';
+import { Monitor, Tag } from '../../../utils/types';
 
 // ========== Types ==========
 export interface ChannelConfig {
@@ -58,15 +53,18 @@ export default function MonitorsTable({
   handleDelete,
   setBulkDeleteIds,
 }: MonitorsTableProps) {
-  const [open, setOpen] = useState(false);
-  const [channels, setChannels] = useState<NotificationChannel[]>([]);
   const [selected, setSelected] = useState<any>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [defaultEmail, setDefaultEmail] = useState();
   const isInternalUpdate = useRef(false);
   const [primaryMonitorId, setPrimaryMonitorIdState] = useState<string | null>(null);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchTags(setLoading, setAvailableTags);
+  }, [monitors]);
+
   useEffect(() => {
     async function fetchPrimaryMonitorId() {
       try {
@@ -80,11 +78,7 @@ export default function MonitorsTable({
   }, []);
 
   /* --------------------------------------
-        Fetch channels on mount
-    --------------------------------------*/
-
-  /* --------------------------------------
-        Create or toggle a channel
+        Create or toggle a monitor
     --------------------------------------*/
   const toggle = async (row: Monitor) => {
     const stringId = row.id!.toString();
@@ -107,7 +101,7 @@ export default function MonitorsTable({
   const toggleAll = async () => {
     // Get all valid monitor IDs
     const allMonitorIds = Array.isArray(monitors)
-      ? monitors.filter((m) => m.id !== null).map((m) => m.id!.toString())
+      ? monitors.filter((monitor) => monitor.id !== null).map((monitor) => monitor.id!.toString())
       : [];
 
     // Check if all monitors are selected
@@ -119,19 +113,6 @@ export default function MonitorsTable({
       return updated;
     });
   };
-
-  /* --------------------------------------
-        Search Filter
-    --------------------------------------*/
-  const filtered = Array.isArray(channels)
-    ? channels.filter((ch) => {
-        const email = ch.config?.recipients?.to ?? '';
-        return (
-          ch.name.toLowerCase().includes(search.toLowerCase()) ||
-          email.toLowerCase().includes(search.toLowerCase())
-        );
-      })
-    : [];
 
   useEffect(() => {
     if (isInternalUpdate.current) {
@@ -167,7 +148,9 @@ export default function MonitorsTable({
                 <Checkbox
                   checked={
                     monitors.length > 0 &&
-                    monitors.every((c) => c.id !== null && selected.includes(c.id.toString()))
+                    monitors.every(
+                      (monitor) => monitor.id !== null && selected.includes(monitor.id.toString())
+                    )
                   }
                   onCheckedChange={toggleAll}
                 />
@@ -201,9 +184,39 @@ export default function MonitorsTable({
                 <Td>
                   <Flex gap={2} alignItems="self-start" direction="column">
                     <Typography fontWeight="semiBold">{monitor.name}</Typography>
-                    <Typography variant="pi" textColor="neutral500">
-                      {monitor.config.meta.url}
-                    </Typography>
+                    <Flex direction="row" gap={1}>
+                      <Badge
+                        size="S"
+                        active={monitor.is_enabled}
+                        textColor="primary500"
+                        background="neutral150"
+                      >
+                        {monitor.service_type}
+                      </Badge>
+                      <Typography variant="pi" textColor="neutral500">
+                        {monitor.config.meta.url}
+                      </Typography>
+                      {monitor.tag_ids && monitor.tag_ids.length > 0 && (
+                        <Flex wrap="wrap" gap={1} width="300px">
+                          {monitor.tag_ids.map((tagId) => {
+                            const tag = availableTags.find((tag) => tag.id === tagId);
+                            if (!tag) return null;
+                            return (
+                              <Badge
+                                key={tagId}
+                                size="S"
+                                style={{
+                                  backgroundColor: `${tag.color}20`,
+                                  border: `1px solid ${tag.color}40`,
+                                }}
+                              >
+                                {tag.name}
+                              </Badge>
+                            );
+                          })}
+                        </Flex>
+                      )}
+                    </Flex>
                   </Flex>
                 </Td>
 
