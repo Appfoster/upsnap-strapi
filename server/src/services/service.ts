@@ -1,6 +1,7 @@
 import type { Core } from '@strapi/strapi';
 import { UpsnapSettings } from '../types';
 import { BACKEND_URL } from '../utils/constants';
+import packageJson from '../../../package.json';
 
 const service = ({ strapi }: { strapi: Core.Strapi }) => ({
   getWelcomeMessage() {
@@ -58,6 +59,48 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
       data: await response.arrayBuffer(),
       headers: response.headers,
     };
+  },
+  async trackInstallation() {
+    try {
+      const settings = (await this.settingsStore.get()) as UpsnapSettings | null;
+
+      if (settings?.installationTracked) {
+        return;
+      }
+
+      const pluginVersion = packageJson.version;
+      const strapiVersion = strapi.config.get('info.strapi');
+      const siteUrl =
+        strapi.config.get('server.url') ||
+        `http://${strapi.config.get('server.host') || 'localhost'}:${strapi.config.get('server.port') || 1337}`;
+
+      const response: any = await this.makeBackendRequest(
+        '/installation-data',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            platform: 'strapi',
+            details: {
+              version: pluginVersion,
+              site_url: siteUrl,
+              strapi_version: strapiVersion,
+            },
+          }),
+        },
+        true
+      );
+
+      if (response?.status === 'success') {
+        await this.settingsStore.set({
+          value: {
+            ...settings,
+            installationTracked: true,
+          },
+        });
+      }
+    } catch (error) {
+      console.log('UpSnap: Failed to track installation data ', error);
+    }
   },
 });
 
