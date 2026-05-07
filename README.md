@@ -26,17 +26,7 @@ Track monitoring incidents with detailed timelines, status history, recovery tra
 
 ## 🔔 Rich Notification Integrations
 Get real-time alerts through multiple channels:
-Email
-Slack
-Discord
-SMS
-Telegram
-Google Chat
-Microsoft Teams
-Webhooks
-PagerDuty
-Zapier
-…and more integrations coming soon.
+Email, Slack, Discord, SMS, Telegram, Google Chat, Microsoft Teams, Webhooks, PagerDuty, Zapier, and more.
 
 ## 🌐 Website Monitoring
 Comprehensive website health monitoring including availability, performance checks, SSL status, and content integrity monitoring in one place.
@@ -49,7 +39,6 @@ Comprehensive website health monitoring including availability, performance chec
 - Strapi v5.x
 - Nodejs ">=18.0.0 <=22.x.x"
 - React 18 (provided by Strapi)
-
 
 ## 📦 Installation
 
@@ -68,9 +57,12 @@ yarn add @upsnap/strapi
 Enable it in confing/plugins:
 
 ```bash
-upsnap: {
-	enabled: true,
-}
+module.exports = {
+  // ...
+  upsnap: {
+    enabled: true,
+  },
+};
 ```
 
 Restart Strapi:
@@ -87,23 +79,18 @@ Upsnap will appear in your admin sidebar.
 
 After installing the plugin and restarting Strapi:
 
-1. Go to **Upsnap → Settings → API Token**  
-   Add your API Token from https://upsnap.ai website
-
-2. Add a new monitor  
-   or select a primary monitor if one is already created
-
-3. Configure monitoring options
-
-4. Save and go to dashboard
+1. Authenticate: Go to Upsnap → Settings and login with your UpSnap account or register for a new one directly within the plugin.
+2. Add Monitor: Add a new monitor or select a primary monitor if one is already created.
+3. Configure: Set up your monitoring options and notification channels.
+4. Save: Save your settings and head to the dashboard to see your site's health in real-time.
 
 
 ## Documentation
-[Full Documentation](https://github.com/Appfoster/upsnap/wiki)
+[Full Documentation](https://github.com/Appfoster/upsnap-docs/blob/master/strapi/Home.md)
 
 ## Issue Tracking
 [GitHub Issues](https://github.com/Appfoster/upsnap-strapi/issues)
-[Changelog](https://github.com/Appfoster/upsnap/blob/main/CHANGELOG.md)
+[Changelog](https://github.com/Appfoster/upsnap-docs/blob/master/strapi/changelog.md)
 
 ## Contact
 **Email**: support@upsnap.ai
