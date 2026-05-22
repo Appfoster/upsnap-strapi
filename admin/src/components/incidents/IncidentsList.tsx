@@ -67,7 +67,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   };
 
   const getRegionName = (regionId: string): string => {
-    const region = regions.find((item) => item?.id === regionId);
+    const region = regions?.find((item) => item?.id === regionId);
     return region?.name || regionId || 'N/A';
   };
 
