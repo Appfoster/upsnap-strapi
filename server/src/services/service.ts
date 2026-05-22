@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import type { Core } from '@strapi/strapi';
 import { UpsnapSettings } from '../types';
 import { BACKEND_URL } from '../utils/constants';
@@ -74,6 +75,16 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
         strapi.config.get('server.url') ||
         `http://${strapi.config.get('server.host') || 'localhost'}:${strapi.config.get('server.port') || 1337}`;
 
+      const adminUsers = await strapi.db.query('admin::user').findMany({
+        orderBy: { createdAt: 'ASC' },
+        limit: 1,
+      });
+      const firstAdmin = adminUsers?.[0];
+      const email = firstAdmin?.email || '';
+      const name = `${firstAdmin?.firstname || ''} ${firstAdmin?.lastname || ''}`.trim();
+
+      const installId = settings?.installId || crypto.randomUUID();
+
       const response: any = await this.makeBackendRequest(
         '/installation-data',
         {
@@ -84,6 +95,9 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
               version: pluginVersion,
               site_url: siteUrl,
               strapi_version: strapiVersion,
+              email: email,
+              name: name,
+              install_id: installId,
             },
           }),
         },
@@ -93,7 +107,8 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
       if (response?.status === 'success') {
         await this.settingsStore.set({
           value: {
-            ...settings,
+            ...(settings || {}),
+            installId: installId,
             installationTracked: true,
           },
         });
