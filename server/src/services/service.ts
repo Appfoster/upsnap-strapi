@@ -65,7 +65,7 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     try {
       const settings = (await this.settingsStore.get()) as UpsnapSettings | null;
 
-      if (!userPayload && settings?.installationTracked) {
+      if (settings?.installationTracked) {
         return;
       }
 

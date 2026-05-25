@@ -62,6 +62,12 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
 
   async trackUserData(ctx) {
     const { browser, os, language, screen, client_timezone } = ctx.request.body || {};
+    const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings | null;
+
+    if (settings?.installationTracked) {
+      ctx.body = { ok: false, error: 'Installation already tracked' };
+      return;
+    }
     
     // Get IP
     const ip = ctx.ip;
