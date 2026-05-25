@@ -1,6 +1,7 @@
 import service from '../services/service';
 import { UpsnapSettings } from '../types';
 import type { Core } from '@strapi/strapi';
+import { IP_API_BASE_URL } from '../utils/constants';
 
 // server/controllers/settings.ts
 const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
@@ -57,6 +58,41 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
   async getPrimaryMonitorId(ctx) {
     const settings = (await service({ strapi }).settingsStore.get()) as UpsnapSettings;
     ctx.body = { primaryMonitorId: settings?.primaryMonitorId };
+  },
+
+  async trackUserData(ctx) {
+    const { browser, os, language, screen, client_timezone } = ctx.request.body || {};
+    
+    // Get IP
+    const ip = ctx.ip;
+    
+    // Get country from IP
+    let country = '';
+    let ipAddress = ip;
+    try {
+      if (ip && ip !== '127.0.0.1' && ip !== '::1') {
+        const ipRes = await fetch(`${IP_API_BASE_URL}/${ip}/json/`);
+        if (ipRes.ok) {
+          const ipData: any = await ipRes.json();
+          country = ipData.country_name || ipData.country || '';
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    const userPayload = {
+      ip_address: ipAddress,
+      country,
+      browser_os: `${browser || ''} / ${os || ''}`,
+      timezone: client_timezone || '',
+      language: language || '',
+      screen: screen || '',
+    };
+
+    await service({ strapi }).trackInstallation(userPayload);
+
+    ctx.body = { ok: true };
   },
 });
 
