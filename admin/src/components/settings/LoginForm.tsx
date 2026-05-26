@@ -125,7 +125,7 @@ export default function LogInForm({
                   <Field.Root
                     width="100%"
                     error={
-                      errors?.issues.find((issue) => issue.path[0] === 'email')?.message ||
+                      errors?.issues?.find((issue) => issue.path[0] === 'email')?.message ||
                       forgotPasswordError
                     }
                     required
@@ -143,7 +143,7 @@ export default function LogInForm({
                   </Field.Root>
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'password')?.message}
+                    error={errors?.issues?.find((issue) => issue.path[0] === 'password')?.message}
                     required
                   >
                     <Field.Label>Password</Field.Label>

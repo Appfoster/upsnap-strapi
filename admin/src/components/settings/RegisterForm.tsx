@@ -103,7 +103,7 @@ export default function RegisterForm({
                 <Flex direction="column" gap={3} width="100%">
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'fullName')?.message}
+                    error={errors?.issues?.find((issue) => issue.path[0] === 'fullName')?.message}
                     required
                   >
                     <Field.Label>Full Name</Field.Label>
@@ -119,7 +119,7 @@ export default function RegisterForm({
                   </Field.Root>
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'email')?.message}
+                    error={errors?.issues?.find((issue) => issue.path[0] === 'email')?.message}
                     required
                   >
                     <Field.Label>Email</Field.Label>
@@ -135,7 +135,7 @@ export default function RegisterForm({
                   </Field.Root>
                   <Field.Root
                     width="100%"
-                    error={errors?.issues.find((issue) => issue.path[0] === 'password')?.message}
+                    error={errors?.issues?.find((issue) => issue.path[0] === 'password')?.message}
                     required
                   >
                     <Field.Label>Password</Field.Label>
@@ -153,7 +153,7 @@ export default function RegisterForm({
                   <Field.Root
                     width="100%"
                     error={
-                      errors?.issues.find((issue) => issue.path[0] === 'confirmPassword')
+                      errors?.issues?.find((issue) => issue.path[0] === 'confirmPassword')
                         ?.message || confirmPasswordError
                     }
                     required

@@ -85,6 +85,9 @@ After installing the plugin and restarting Strapi:
 4. Save: Save your settings and head to the dashboard to see your site's health in real-time.
 
 
+## Privacy & Tracking
+This plugin sends limited technical and diagnostic information to enable uptime monitoring and troubleshooting.
+
 ## Documentation
 [Full Documentation](https://github.com/Appfoster/upsnap-docs/blob/master/strapi/Home.md)
 
