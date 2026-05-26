@@ -199,7 +199,7 @@ export default function MonitorsTable({
                       {monitor.tag_ids && monitor.tag_ids.length > 0 && (
                         <Flex wrap="wrap" gap={1} width="300px">
                           {monitor.tag_ids.map((tagId) => {
-                            const tag = availableTags.find((tag) => tag.id === tagId);
+                            const tag = availableTags?.find((tag) => tag.id === tagId);
                             if (!tag) return null;
                             return (
                               <Badge

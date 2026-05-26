@@ -21,6 +21,15 @@ export default {
       },
     },
     {
+      method: 'POST',
+      path: '/track-user-data',
+      handler: 'settings.trackUserData',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
       method: 'GET',
       path: '/monitor/:id',
       handler: 'monitor.getById',
