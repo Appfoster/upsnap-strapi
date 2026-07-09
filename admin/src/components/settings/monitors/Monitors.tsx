@@ -1,4 +1,4 @@
-import { CardContent, Flex, CardBody, Alert, Button, Box } from '@strapi/design-system';
+import { Flex, Alert, Button, Box, Typography } from '@strapi/design-system';
 import { Plus, Trash } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
 import MonitorsTable from './MonitorsTable';
@@ -7,7 +7,6 @@ import { getPrimaryMonitorId, getUserDetails, request } from '../../../utils/hel
 import { useEffect, useState } from 'react';
 import { Monitor } from '../../../utils/types';
 import { toast } from 'react-toastify';
-import MonitorForm from './MonitorForm';
 import { ConfirmationModal } from '../../DeleteConfirmation';
 
 async function getMonitors() {
@@ -21,11 +20,10 @@ async function getMonitors() {
   return res.monitorsData.data;
 }
 
-export default function Monitors({ onTabChange }: { onTabChange: (tab: string) => void }) {
+export default function Monitors() {
   const navigate = useNavigate();
   const [monitors, setMonitors] = useState<Monitor[]>();
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>();
-  const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
@@ -45,12 +43,13 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
       setLoading(true);
       const res = await getMonitors();
       if (res?.monitors?.message === 'Invalid authentication token') {
-        onTabChange('api_key');
+        navigate('/plugins/upsnap/settings?show=login');
+        return;
       }
       setMonitors(res.monitors);
     } catch (e) {
       console.error('Error loading monitors:', e);
-      onTabChange('api_key');
+      navigate('/plugins/upsnap/settings?show=login');
     } finally {
       setLoading(false);
     }
@@ -75,12 +74,7 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
   };
 
   const handleEditMonitor = (monitor: Monitor) => {
-    setSelectedMonitor(monitor);
-    setShowEdit(true);
-  };
-  const handleCancelEdit = () => {
-    setSelectedMonitor(undefined);
-    setShowEdit(false);
+    navigate(`/plugins/upsnap/monitors/${monitor.id}/edit`);
   };
   const handleDelete = async (monitor: Monitor) => {
     if (!monitor.id) return;
@@ -152,53 +146,52 @@ export default function Monitors({ onTabChange }: { onTabChange: (tab: string) =
 
   return (
     <Box width="100%">
+      <Flex justifyContent="space-between" alignItems="start" marginBottom={4}>
+        <Flex direction="column" gap={1} alignItems="flex-start">
+          <Typography variant="beta" fontWeight="bold">
+            Monitors
+          </Typography>
+          <Typography variant="pi" textColor="neutral600">
+            Manage the sites, ports, and keywords you're monitoring
+          </Typography>
+        </Flex>
+      </Flex>
       {alertMessage && (
-        <Box width="100%" padding={3}>
+        <Box width="100%" paddingBottom={3}>
           <Alert closeLabel="Close" title="">
             {alertMessage.charAt(0).toUpperCase() + alertMessage.slice(1)}
           </Alert>
         </Box>
       )}
-      {!showEdit && (
-        <Flex direction="column" alignItems="flex-start" gap={4}>
-          <Flex
-            alignItems="end"
-            width="100%"
-            justifyContent="end"
-            gap={2}
-            direction={{ initial: 'column', medium: 'row' }}
-          >
-            <Button startIcon={<Plus />} variant={'secondary'} size="M" onClick={handleAddMonitor}>
-              Add Monitor
+      <Flex direction="column" alignItems="flex-start" gap={4}>
+        <Flex
+          alignItems="end"
+          width="100%"
+          justifyContent="end"
+          gap={2}
+          direction={{ initial: 'column', medium: 'row' }}
+        >
+          <Button startIcon={<Plus />} variant={'secondary'} size="M" onClick={handleAddMonitor}>
+            Add Monitor
+          </Button>
+          {bulkDeleteIds.length > 0 && (
+            <Button
+              startIcon={<Trash />}
+              variant="danger-light"
+              size="M"
+              onClick={handleBulkDelete}
+            >
+              Bulk Delete
             </Button>
-            {bulkDeleteIds.length > 0 && (
-              <Button
-                startIcon={<Trash />}
-                variant="danger-light"
-                size="M"
-                onClick={handleBulkDelete}
-              >
-                Bulk Delete
-              </Button>
-            )}
-          </Flex>
-          <MonitorsTable
-            monitors={monitors}
-            onEdit={handleEditMonitor}
-            handleDelete={handleDelete}
-            setBulkDeleteIds={setBulkDeleteIds}
-          />
+          )}
         </Flex>
-      )}
-      {showEdit && selectedMonitor && (
-        <MonitorForm
-          monitor={selectedMonitor}
-          mode="edit"
-          handleCancelEdit={handleCancelEdit}
-          load={load}
+        <MonitorsTable
+          monitors={monitors}
+          onEdit={handleEditMonitor}
+          handleDelete={handleDelete}
+          setBulkDeleteIds={setBulkDeleteIds}
         />
-      )}
-      {/* Delete Confirmation Modal */}
+      </Flex>
       <ConfirmationModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}

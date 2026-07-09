@@ -23,13 +23,14 @@ import {
   Alert,
   Link,
   IconButton,
-  Dots
+  Dots,
+  VisuallyHidden,
 } from '@strapi/design-system';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getPrimaryMonitorId, request } from '../../utils/helpers';
 import { Search, FileCsv, FilePdf, CaretUp, CaretDown } from '@strapi/icons';
-import { formatCheckType } from '../../utils/helpers';
+import { formatCheckType, formatRelativeTime, formatDateTime } from '../../utils/helpers';
 import {
   fetchIncidentsFromBackend,
   getSortField,
@@ -47,6 +48,7 @@ import {
 import { toast } from 'react-toastify';
 import IncidentsFilter from './IncidentsFilter';
 import LoadingCard from '../reachability/LoadingCard';
+import { useHasToken } from '../../hooks/useHasToken';
 
 interface IncidentsListProps {
   defaultMonitorId?: string;
@@ -95,6 +97,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   }, []);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
   const [monitors, setMonitors] = useState<any[]>([]);
   const [selectedMonitorId, setSelectedMonitorId] = useState<string>('');
   const [incidentTypeFilters, setIncidentTypeFilters] = useState<string[]>([]);
@@ -111,6 +114,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   });
   const [monitor, setMonitor] = useState<Monitor | null>(null);
   const [hasNoMonitors, setHasNoMonitors] = useState(false);
+  const hasToken = useHasToken();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [regions, setRegions] = useState<Region[]>([]);
@@ -151,14 +155,14 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
               id: 2,
               check_type: 'ssl',
               region: 'eu-west-1',
-              error_message: 'certificate expires in 7 days',
+              error_message: 'Certificate expires in 7 days',
               status_code: 200,
               timestamp: 1773931500, // Mar 19, 2026, 02:45 PM UTC
             },
             {
               id: 3,
               check_type: 'broken_links',
-              region: 'ap-southeast-1',
+              region: 'ap-south-1',
               error_message: 'Not Found: /about/team',
               status_code: 404,
               timestamp: 1773929820, // Mar 19, 2026, 02:17 PM UTC
@@ -166,7 +170,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
             {
               id: 4,
               check_type: 'domain',
-              region: 'eu-central-1',
+              region: 'sa-east-1',
               error_message: 'Domain expires in 14 days',
               status_code: 200,
               timestamp: 1773878400, // Mar 19, 2026, 12:00 AM UTC
@@ -219,6 +223,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
       }
 
       if (fetchedMonitors.length > 0) {
+        setHasNoMonitors(false);
         if (monitorIdFromQuery && fetchedMonitors.some((m: any) => m.id === monitorIdFromQuery)) {
           setSelectedMonitorId(monitorIdFromQuery);
         } else {
@@ -299,6 +304,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
         toast.error('Error fetching incidents');
       } finally {
         setIsLoading(false);
+        setHasLoadedOnce(true);
       }
     },
     [effectiveMonitorId, timeRangeParam, incidentTypeFilters, regionFilter, sortOption, pageSize]
@@ -457,7 +463,12 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
   return (
     <>
       <Box marginBottom={4}>
-        <Flex justifyContent="space-between" alignItems="start">
+        <Flex
+          justifyContent="space-between"
+          alignItems="start"
+          direction={{ initial: 'column', medium: 'row' }}
+          gap={3}
+        >
           <Flex direction="column" gap={2} justifyContent="start" alignItems="start">
             <Typography variant="beta">Incidents</Typography>
             <Typography variant="epsilon" textColor="neutral600">
@@ -471,7 +482,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
             </Typography>
           </Flex>
           {monitors.length > 0 && (
-            <Box width="300px">
+            <Box width={{ initial: '100%', medium: '300px' }}>
               <SingleSelect
                 aria-label="Select Monitor"
                 value={selectedMonitorId}
@@ -489,22 +500,41 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
       </Box>
       {hasNoMonitors && (
         <Flex direction="column" gap={4} paddingBottom={4} width="100%">
-          <Alert
-            closeLabel=""
-            variant="warning"
-            title="This is a demo preview of your incidents page."
-            action={
-              <Link href="#" onClick={(event: any) =>{
-                event.preventDefault();
-                navigate('/plugins/upsnap/settings');
-              }}>
-                Register
-              </Link>
-            }
-            width="100%"
-          >
-            Register here to start monitoring your sites and see real incident data here.
-          </Alert>
+          {hasToken ? (
+            <Alert
+              closeLabel=""
+              variant="warning"
+              title="You don't have any monitors yet."
+              action={
+                <Link href="#" onClick={(event: any) => {
+                  event.preventDefault();
+                  navigate('/plugins/upsnap/monitors');
+                }}>
+                  Go to Monitors
+                </Link>
+              }
+              width="100%"
+            >
+              Add a monitor to start seeing real incident data here.
+            </Alert>
+          ) : (
+            <Alert
+              closeLabel=""
+              variant="warning"
+              title="This is a demo preview of your incidents page."
+              action={
+                <Link href="#" onClick={(event: any) =>{
+                  event.preventDefault();
+                  navigate('/plugins/upsnap/settings');
+                }}>
+                  Register
+                </Link>
+              }
+              width="100%"
+            >
+              Register here to start monitoring your sites and see real incident data here.
+            </Alert>
+          )}
         </Flex>
       )}
       <Box
@@ -516,9 +546,14 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
         borderWidth="1px"
       >
         <Box padding={4}>
-          <Flex justifyContent="space-between" alignItems="start">
-            <Flex gap={3}>
-              <Box width="200px">
+          <Flex
+            justifyContent="space-between"
+            alignItems="start"
+            direction={{ initial: 'column', large: 'row' }}
+            gap={3}
+          >
+            <Flex gap={3} wrap="wrap" width={{ initial: '100%', large: 'auto' }}>
+              <Box width={{ initial: '100%', small: '200px' }}>
                 <SingleSelect
                   aria-label="Select Time Frame"
                   value={normalizedTimeRange || '24h'}
@@ -530,7 +565,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
                   <SingleSelectOption value="1M">Last 30 Days</SingleSelectOption>
                 </SingleSelect>
               </Box>
-              <Box width="300px">
+              <Box width={{ initial: '100%', small: '300px' }}>
                 <TextInput
                   value={searchValue}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -542,7 +577,7 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
                 />
               </Box>
             </Flex>
-            <Flex gap={2}>
+            <Flex gap={2} wrap="wrap">
               <IncidentsFilter
                 incidentTypeFilters={incidentTypeFilters}
                 regionFilter={regionFilter}
@@ -569,9 +604,20 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
             </Flex>
           </Flex>
         </Box>
-        <Table colCount={5} rowCount={incidents.length || 5}>
+        <Box overflow="auto">
+        <Table
+          colCount={6}
+          rowCount={incidents.length || 5}
+          style={{
+            opacity: isLoading && hasLoadedOnce ? 0.6 : 1,
+            transition: 'opacity 0.15s ease',
+          }}
+        >
           <Thead>
             <Tr>
+              <Th>
+                <VisuallyHidden>Status</VisuallyHidden>
+              </Th>
               {['Check Type', 'Region', 'Message', 'Status Code', 'Occurred At'].map((header) => {
                 const currentSort = sortOption?.includes(header) ? sortOption : null;
                 const isDescending = currentSort?.includes('↓');
@@ -598,50 +644,81 @@ export default function IncidentsList({ defaultMonitorId }: IncidentsListProps) 
             </Tr>
           </Thead>
           <Tbody>
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce ? (
               <Tr>
-                <Td colSpan={5}>
+                <Td colSpan={6}>
                   <LoadingCard />
                 </Td>
               </Tr>
             ) : incidents.length === 0 ? (
               <Tr>
-                <Td colSpan={5}>
+                <Td colSpan={6}>
                   <EmptyStateLayout content="No incidents found" />
                 </Td>
               </Tr>
             ) : (
-              incidents.map((incident: any) => (
-                <Tr key={incident.id}>
-                  <Td>
-                    <Typography>{formatCheckType(incident.check_type)}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{getRegionName(incident.region)}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{incident.error_message || 'N/A'}</Typography>
-                  </Td>
-                  <Td>
-                    {incident.status_code ? (
-                      <Badge {...getBadgeColor(incident.status_code)}>{incident.status_code}</Badge>
-                    ) : (
-                      <Typography>N/A</Typography>
-                    )}
-                  </Td>
-                  <Td>
-                    <Typography>
-                      {incident.timestamp && new Date(incident.timestamp * 1000).toLocaleString()}
-                    </Typography>
-                  </Td>
-                </Tr>
-              ))
+              incidents.map((incident: any) => {
+                const isResolved = incident.status === 'resolved';
+                const occurredAt = incident.timestamp
+                  ? new Date(incident.timestamp * 1000).toISOString()
+                  : null;
+
+                return (
+                  <Tr
+                    key={incident.id}
+                    onClick={() =>
+                      navigate(
+                        `/plugins/upsnap/incidents/${incident.id}?monitorId=${effectiveMonitorId}`
+                      )
+                    }
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Td>
+                      <Box
+                        borderRadius="50%"
+                        width="8px"
+                        height="8px"
+                        background={isResolved ? 'success500' : 'danger500'}
+                      />
+                    </Td>
+                    <Td>
+                      <Typography>{formatCheckType(incident.check_type)}</Typography>
+                    </Td>
+                    <Td>
+                      <Typography>{getRegionName(incident.region)}</Typography>
+                    </Td>
+                    <Td>
+                      <Typography>{incident.error_message || 'N/A'}</Typography>
+                    </Td>
+                    <Td>
+                      {incident.status_code ? (
+                        <Badge {...getBadgeColor(incident.status_code)}>
+                          {incident.status_code}
+                        </Badge>
+                      ) : (
+                        <Typography>N/A</Typography>
+                      )}
+                    </Td>
+                    <Td>
+                      <span title={occurredAt ? formatDateTime(occurredAt) : undefined}>
+                        <Typography>{formatRelativeTime(occurredAt)}</Typography>
+                      </span>
+                    </Td>
+                  </Tr>
+                );
+              })
             )}
           </Tbody>
         </Table>
+        </Box>
         {!hasNoMonitors && totalPages > 1 && (
-          <Box padding={4}>
-            <Flex justifyContent="space-between" alignItems="center">
+          <Box padding={4} overflow="auto">
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              direction={{ initial: 'column', large: 'row' }}
+              gap={3}
+            >
               <Flex>
                 <Typography variant="sigma">
                   Showing {Math.max(1, (currentPage - 1) * pageSize + 1)} to{' '}

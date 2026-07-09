@@ -92,7 +92,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getUptimeHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, force_fetch } = ctx.request.body;
     const uptimeHealthCheckData: any = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
       {
@@ -103,7 +103,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         body: JSON.stringify({
           url: monitorUrl,
           checks: ['uptime'],
-          force_fetch: false,
+          force_fetch: !!force_fetch,
         }),
       }
     );
@@ -122,7 +122,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getSslHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, force_fetch } = ctx.request.body;
 
     const sslHealthCheckData: any = await service({ strapi }).makeBackendRequest(`/healthcheck`, {
       method: 'POST',
@@ -132,7 +132,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       body: JSON.stringify({
         url: monitorUrl,
         checks: ['ssl'],
-        force_fetch: false,
+        force_fetch: !!force_fetch,
       }),
     });
     const summaryOk = sslHealthCheckData?.result?.summary?.ok;
@@ -148,7 +148,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getDomainHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, force_fetch } = ctx.request.body;
 
     const domainHealthCheckData: any = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -160,7 +160,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         body: JSON.stringify({
           url: monitorUrl,
           checks: ['domain'],
-          force_fetch: false,
+          force_fetch: !!force_fetch,
         }),
       }
     );
@@ -177,7 +177,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getLighthouseHealthCheck(ctx) {
-    const { monitorUrl, strategy } = ctx.request.body;
+    const { monitorUrl, strategy, force_fetch } = ctx.request.body;
 
     const lighthouseHealthCheckData: any = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -190,7 +190,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
           url: monitorUrl,
           checks: ['lighthouse'],
           strategy: strategy || 'desktop',
-          force_fetch: false,
+          force_fetch: !!force_fetch,
         }),
       }
     );
@@ -211,7 +211,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getBrokenLinksHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, force_fetch } = ctx.request.body;
 
     const brokenLinksHealthCheckData: any = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -223,7 +223,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         body: JSON.stringify({
           url: monitorUrl,
           checks: ['broken_links'],
-          force_fetch: false,
+          force_fetch: !!force_fetch,
         }),
       }
     );
@@ -246,7 +246,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async getMixedContentHealthCheck(ctx) {
-    const { monitorUrl } = ctx.request.body;
+    const { monitorUrl, force_fetch } = ctx.request.body;
 
     const mixedContentHealthCheckData = await service({ strapi }).makeBackendRequest(
       `/healthcheck`,
@@ -258,7 +258,7 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
         body: JSON.stringify({
           url: monitorUrl,
           checks: ['mixed_content'],
-          force_fetch: false,
+          force_fetch: !!force_fetch,
         }),
       }
     );
@@ -381,6 +381,23 @@ const monitor = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
     );
     ctx.body = { incidentsData };
+  },
+
+  async getIncidentDetail(ctx) {
+    const { incidentId } = ctx.params;
+    const { monitorId } = ctx.query;
+
+    if (!monitorId) {
+      ctx.status = 400;
+      ctx.body = { error: 'monitorId is required' };
+      return;
+    }
+
+    const incidentData = await service({ strapi }).makeBackendRequest(
+      `/user/monitors/incidents/${incidentId}?monitorId=${monitorId}`,
+      { method: 'GET' }
+    );
+    ctx.body = { incidentData };
   },
 
 async exportIncidents(ctx) {

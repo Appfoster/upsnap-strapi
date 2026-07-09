@@ -44,7 +44,7 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
 
         await store.set({
           value: {
-            ...current,
+            ...service({ strapi }).withoutAccountCaches(current),
             token: apiToken,
             primaryMonitorId: monitorId,
           },
@@ -80,7 +80,7 @@ const userDetails = ({ strapi }: { strapi: Core.Strapi }) => ({
 
         await store.set({
           value: {
-            ...current,
+            ...service({ strapi }).withoutAccountCaches(current),
             token: apiToken,
           },
         });

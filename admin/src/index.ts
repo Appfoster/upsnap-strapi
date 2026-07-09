@@ -2,6 +2,7 @@ import { getTranslation } from './utils/getTranslation';
 import { PLUGIN_ID } from './pluginId';
 import { Initializer } from './components/Initializer';
 import { PluginIcon } from './components/PluginIcon';
+import { ChartCircle } from '@strapi/icons';
 
 export default {
   register(app: any) {
@@ -24,6 +25,28 @@ export default {
       initializer: Initializer,
       isReady: false,
       name: PLUGIN_ID,
+    });
+
+    app.widgets.register({
+      icon: ChartCircle,
+      title: {
+        id: getTranslation('widget.monitor-status.title'),
+        defaultMessage: 'Monitor status',
+      },
+      component: async () => {
+        const { MonitorStatusWidget } = await import('./components/widgets/MonitorStatusWidget');
+
+        return MonitorStatusWidget;
+      },
+      pluginId: PLUGIN_ID,
+      id: 'monitor-status',
+      link: {
+        label: {
+          id: getTranslation('widget.monitor-status.link'),
+          defaultMessage: 'View all monitors',
+        },
+        href: `/plugins/${PLUGIN_ID}/monitors`,
+      },
     });
   },
 

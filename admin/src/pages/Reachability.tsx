@@ -2,7 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Box, Card, CardContent, CardBody, Typography, Divider, Link } from '@strapi/design-system';
 import { Main } from '@strapi/design-system';
 import { useNavigate } from 'react-router-dom';
-import { getRangeTimestamps, request, getPrimaryMonitorId } from '../utils/helpers';
+import { getRangeTimestamps, request } from '../utils/helpers';
+import { useMonitorId } from '../hooks/useMonitorId';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
@@ -31,15 +32,11 @@ export default function Reachability() {
   const [loadingRegions, setLoadingRegions] = useState<Set<string>>(new Set());
   const [responseTimeRange, setResponseTimeRange] = useState<string | null>('last_24_hours');
   const navigate = useNavigate();
-  const [monitorId, setMonitorId] = useState<string | null>();
+  const monitorId = useMonitorId();
 
   useEffect(() => {
-    (async () => {
-      const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
-      setMonitorId(fetchedMonitorId);
-    })();
-  }, []);
+    if (monitorId === null) navigate('/plugins/upsnap/settings');
+  }, [monitorId]);
 
   const fetchResponseTimeDataForRegions = async (
     regions: { id: string; is_primary: boolean; name: string }[],

@@ -1,36 +1,35 @@
-// admin/src/pages/Settings/index.tsx
 import { useState, useEffect } from 'react';
-import SettingsTabs from '../components/settings/SettingsTabs';
-import { handleLogout, request } from '../utils/helpers';
+import { useSearchParams } from 'react-router-dom';
+import { handleLogout, notifyAccountChanged, request } from '../utils/helpers';
 import LogInForm from '../components/settings/LoginForm';
 import RegisterForm from '../components/settings/RegisterForm';
-import { Alert, Box, Flex, Button } from '@strapi/design-system';
+import ApiKeyManagement from '../components/settings/ApiKeyManagement';
+import { Alert, Box, Flex, Button, Main, Card, CardBody, Tabs, Typography } from '@strapi/design-system';
 import { toast } from 'react-toastify';
 
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState('monitors');
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [showLogin, setShowLogin] = useState(searchParams.get('show') === 'login');
+  const [showRegister, setShowRegister] = useState(!showLogin);
   const [showExpiredMessage, setShowExpiredMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    request('/settings', {
-      method: 'GET',
-    }).then((res) => {
-      if (!res?.token) {
-        setShowRegister(true);
-        setShowLogin(false);
-      }
+  const [token, setToken] = useState<string | null | undefined>(undefined);
+  const [activeTab, setActiveTab] = useState('auth');
+
+  const loadSettings = () => {
+    request('/settings', { method: 'GET' }).then((res) => {
+      setToken(res?.token || null);
     });
-  }, []);
-  const handleTabChange = (tab: string) => {
-    if (tab === 'api_key') {
-      setShowLogin(true);
-      setShowRegister(false);
-      return;
-    }
-    setActiveTab(tab);
   };
+
+  const handleAccountChanged = () => {
+    loadSettings();
+    notifyAccountChanged();
+  };
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
   const logOut = async () => {
     setLoading(true);
@@ -38,58 +37,83 @@ export default function Settings() {
     if (result) {
       toast.success('Logged out successfully.');
       setLoading(false);
-      setShowLogin(true);
+      setToken(null);
+      setShowLogin(false);
+      setShowRegister(true);
+      notifyAccountChanged();
       return;
     }
     setLoading(false);
     toast.error('Not able to log out, please try again.');
-    return;
   };
 
-  return (
-    <>
-      {showExpiredMessage && (
-        <Box margin={2}>
-          <Alert closeLabel="Close" title="" variant="danger">
-            {showExpiredMessage.charAt(0).toUpperCase() + showExpiredMessage.slice(1)}
-          </Alert>
+  if (token === undefined) return null;
+
+  if (token) {
+    return (
+      <Main>
+        <Box padding={4}>
+          <Flex justifyContent="space-between" alignItems="center" marginBottom={4}>
+            <Typography variant="beta">Settings</Typography>
+            <Button variant="danger-light" onClick={logOut} loading={loading}>
+              Log out
+            </Button>
+          </Flex>
+          <Card width="100%">
+            <ApiKeyManagement currentToken={token} onSaved={handleAccountChanged} />
+          </Card>
         </Box>
-      )}
-      {showLogin && (
-        <LogInForm
-          setShowLoginForm={setShowLogin}
-          setShowRegisterForm={setShowRegister}
-          setShowExpiredMessage={setShowExpiredMessage}
-          onTabChange={handleTabChange}
-        />
-      )}
-      {showRegister && (
-        <RegisterForm
-          setShowRegisterForm={setShowRegister}
-          setShowLoginForm={setShowLogin}
-          setShowExpiredMessage={setShowExpiredMessage}
-          onTabChange={handleTabChange}
-        />
-      )}
-      {!showLogin && !showRegister && (
-        <>
-          <Box width="100%" paddingRight={8}>
-            <Flex justifyContent="end">
-              <Button onClick={logOut} loading={loading}>
-                Log out
-              </Button>
-            </Flex>
+      </Main>
+    );
+  }
+
+  return (
+    <Main>
+      <Box padding={4}>
+        <Typography variant="beta" marginBottom={4}>
+          Settings
+        </Typography>
+        {showExpiredMessage && (
+          <Box marginBottom={4}>
+            <Alert closeLabel="Close" title="" variant="danger">
+              {showExpiredMessage.charAt(0).toUpperCase() + showExpiredMessage.slice(1)}
+            </Alert>
           </Box>
-          <SettingsTabs
-            tabs={[
-              { name: 'Monitors', value: 'monitors' },
-              { name: 'Notification Channels', value: 'notification_channels' },
-            ]}
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-          />
-        </>
-      )}
-    </>
+        )}
+        <Card width="100%">
+          <CardBody width="100%" direction="column">
+            <Tabs.Root value={activeTab} onValueChange={setActiveTab} variant="simple">
+              <Tabs.List aria-label="Settings">
+                <Tabs.Trigger value="auth">Register / Sign In</Tabs.Trigger>
+                <Tabs.Trigger value="api-key">API Key Management</Tabs.Trigger>
+              </Tabs.List>
+              <Tabs.Content value="auth">
+                <Box paddingTop={4} paddingBottom={4}>
+                  {showLogin && (
+                    <LogInForm
+                      setShowLoginForm={setShowLogin}
+                      setShowRegisterForm={setShowRegister}
+                      setShowExpiredMessage={setShowExpiredMessage}
+                      onTabChange={handleAccountChanged}
+                    />
+                  )}
+                  {showRegister && (
+                    <RegisterForm
+                      setShowRegisterForm={setShowRegister}
+                      setShowLoginForm={setShowLogin}
+                      setShowExpiredMessage={setShowExpiredMessage}
+                      onTabChange={handleAccountChanged}
+                    />
+                  )}
+                </Box>
+              </Tabs.Content>
+              <Tabs.Content value="api-key">
+                <ApiKeyManagement currentToken={null} onSaved={handleAccountChanged} />
+              </Tabs.Content>
+            </Tabs.Root>
+          </CardBody>
+        </Card>
+      </Box>
+    </Main>
   );
 }

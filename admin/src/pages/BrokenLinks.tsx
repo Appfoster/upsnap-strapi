@@ -11,8 +11,9 @@ import {
   Grid,
   Main,
 } from '@strapi/design-system';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getPrimaryMonitorId, request } from '../utils/helpers';
+import { useNavigate } from 'react-router-dom';
+import { request } from '../utils/helpers';
+import { useMonitorId } from '../hooks/useMonitorId';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import BrokenLinksTable from '../components/broken-links/BrokenLinksTable';
@@ -26,16 +27,12 @@ export default function BrokenLinks() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
-  const [monitorId, setMonitorId] = useState<string | null>();
   const navigate = useNavigate();
+  const monitorId = useMonitorId();
 
   useEffect(() => {
-    (async () => {
-      const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
-      setMonitorId(fetchedMonitorId);
-    })();
-  }, []);
+    if (monitorId === null) navigate('/plugins/upsnap/settings');
+  }, [monitorId]);
 
   // Fetch monitor details
   useEffect(() => {

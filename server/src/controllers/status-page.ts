@@ -1,5 +1,7 @@
+import fs from 'fs';
 import service from '../services/service';
 import type { Core } from '@strapi/strapi';
+import { BACKEND_URL } from '../utils/constants';
 
 // server/controllers/settings.ts
 const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
@@ -24,10 +26,10 @@ const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async saveStatusPages(ctx) {
-    const { name, monitor_ids, is_published } = ctx.request.body;
+    const { ...data } = ctx.request.body;
     const statusPagesData = await service({ strapi }).makeBackendRequest(`/user/status-pages`, {
       method: 'POST',
-      body: JSON.stringify({ name, monitor_ids, is_published }),
+      body: JSON.stringify(data),
     });
     ctx.body = { statusPagesData };
   },
@@ -65,6 +67,84 @@ const statusPage = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
     );
     ctx.body = { statusPagesData };
+  },
+
+  async uploadAsset(ctx) {
+    const { id } = ctx.params;
+    const file = (ctx.request.files as any)?.file;
+    const { asset_type } = ctx.request.body as any;
+
+    if (!file || !asset_type) {
+      ctx.status = 400;
+      ctx.body = { error: 'file and asset_type are required' };
+      return;
+    }
+
+    const token = await service({ strapi }).getToken();
+    const buffer = fs.readFileSync(file.filepath || file.path);
+    const formData = new FormData();
+    formData.append(
+      'file',
+      new Blob([buffer], { type: file.mimetype || file.type }),
+      file.originalFilename || file.newFilename || file.name || 'upload'
+    );
+    formData.append('asset_type', asset_type);
+
+    const response = await fetch(`${BACKEND_URL}/user/status-pages/${id}/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const uploadData = await response.json();
+    ctx.body = { uploadData };
+  },
+
+  async removeAsset(ctx) {
+    const { id } = ctx.params;
+    const { asset_type } = ctx.query;
+    const statusPagesData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}/upload?asset_type=${asset_type}`,
+      { method: 'DELETE' }
+    );
+    ctx.body = { statusPagesData };
+  },
+
+  async getAnnouncements(ctx) {
+    const { id } = ctx.params;
+    const announcementsData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}/announcements`,
+      { method: 'GET' }
+    );
+    ctx.body = { announcementsData };
+  },
+
+  async createAnnouncement(ctx) {
+    const { id } = ctx.params;
+    const { ...data } = ctx.request.body;
+    const announcementsData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}/announcements`,
+      { method: 'POST', body: JSON.stringify(data) }
+    );
+    ctx.body = { announcementsData };
+  },
+
+  async updateAnnouncement(ctx) {
+    const { id, announcementId } = ctx.params;
+    const { ...data } = ctx.request.body;
+    const announcementsData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}/announcements/${announcementId}`,
+      { method: 'PUT', body: JSON.stringify(data) }
+    );
+    ctx.body = { announcementsData };
+  },
+
+  async deleteAnnouncement(ctx) {
+    const { id, announcementId } = ctx.params;
+    const announcementsData = await service({ strapi }).makeBackendRequest(
+      `/user/status-pages/${id}/announcements/${announcementId}`,
+      { method: 'DELETE' }
+    );
+    ctx.body = { announcementsData };
   },
 });
 
