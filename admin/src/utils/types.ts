@@ -27,6 +27,7 @@ export interface Monitor {
   last_status: string | null;
   channel_ids: string[];
   tag_ids: string[];
+  last_checked_at?: string | null;
 }
 
 type ServiceLastChecks = Record<
@@ -262,12 +263,82 @@ export type UserDetails = {
   updated_at?: string; // local cache timestamp (ISO string)
 };
 
+export interface TokenStatus {
+  hasToken: boolean;
+  status?: string;
+  plan?: string | null;
+  planLimits?: PlanLimits | null;
+  monitorsCount?: number | null;
+  checkedAt?: string;
+}
+
+export interface BillingStatus {
+  hasToken: boolean;
+  planName?: string | null;
+  subscriptionStatus?: string | null;
+  currentPeriodEnd?: string | null;
+  cancelAtPeriodEnd?: boolean;
+  checkedAt?: string;
+}
+
+export interface ExpiryAlert {
+  monitorId: string;
+  monitorName: string;
+  type: 'ssl' | 'domain';
+  daysRemaining: number;
+}
+
+export interface ExpirySummary {
+  hasToken: boolean;
+  alerts: ExpiryAlert[];
+  checkedAt?: string;
+}
+
+export interface CustomizationState {
+  header: { title: string; company_name: string; description: string };
+  footer: {
+    footer_text: string;
+    contact_email: string;
+    copyright_text: string;
+    display_powered_by: boolean;
+  };
+  links: { support_url: string; privacy_url: string; tos_url: string };
+  password_prompt: string;
+  display_config: {
+    accent_color: string;
+    history_range_days: number;
+    show_uptime_percentage: boolean;
+  };
+}
+
+export const DEFAULT_CUSTOMIZATION: CustomizationState = {
+  header: { title: '', company_name: '', description: '' },
+  footer: { footer_text: '', contact_email: '', copyright_text: '', display_powered_by: true },
+  links: { support_url: '', privacy_url: '', tos_url: '' },
+  password_prompt: 'This status page is password protected. Please enter the password to continue.',
+  display_config: { accent_color: '#0066cc', history_range_days: 30, show_uptime_percentage: true },
+};
+
 export interface StatusPage {
   id: string;
   name: string;
   monitor_ids: string[];
+  is_published?: boolean;
+  is_protected?: boolean;
+  customization?: CustomizationState & { asset_urls?: { logo?: string; favicon?: string } };
   created_at: string;
   updated_at: string;
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  type: 'info' | 'warning' | 'critical';
+  status: 'active' | 'inactive';
+  is_dismissible: boolean;
+  start_at: string;
+  end_at?: string | null;
 }
 
 export const statusPageSchema = z.object({

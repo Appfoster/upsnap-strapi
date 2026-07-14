@@ -26,18 +26,36 @@ const settings = ({ strapi }: { strapi: Core.Strapi }) => ({
         return;
       }
     }
-    
+
     const store = service({ strapi }).settingsStore;
     const current = ((await store.get()) as UpsnapSettings) || {};
 
     await store.set({
       value: {
-        ...current,
+        ...service({ strapi }).withoutAccountCaches(current),
         token,
       },
     });
 
     ctx.body = { ok: true };
+  },
+
+  async getTokenStatus(ctx) {
+    const forceRefresh = ctx.query.force === 'true';
+    const result = await service({ strapi }).getTokenStatus(forceRefresh);
+    ctx.body = result;
+  },
+
+  async getBillingStatus(ctx) {
+    const forceRefresh = ctx.query.force === 'true';
+    const result = await service({ strapi }).getBillingStatus(forceRefresh);
+    ctx.body = result;
+  },
+
+  async getExpirySummary(ctx) {
+    const forceRefresh = ctx.query.force === 'true';
+    const result = await service({ strapi }).getExpirySummary(forceRefresh);
+    ctx.body = result;
   },
 
   async setPrimaryMonitorId(ctx) {

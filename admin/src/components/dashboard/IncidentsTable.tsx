@@ -91,6 +91,7 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
       <Box marginBottom={4}>
         <Typography variant="beta">Recent 20 Incidents</Typography>
       </Box>
+      <Box overflow="auto">
       <Table colCount={6} rowCount={incidentsData?.incidents?.length || 2}>
         <Thead>
           <Tr>
@@ -181,6 +182,7 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
           )}
         </Tbody>
       </Table>
+      </Box>
     </Box>
   );
 };

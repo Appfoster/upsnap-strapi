@@ -1,5 +1,14 @@
 import axios from 'axios';
-import { MonitorSettings, Region, UserDetails, TagsApiResponse, Tag } from './types';
+import {
+  MonitorSettings,
+  Region,
+  UserDetails,
+  TagsApiResponse,
+  Tag,
+  TokenStatus,
+  BillingStatus,
+  ExpirySummary,
+} from './types';
 import { Monitor } from './types';
 import { REGIONS, MONITOR_TYPE } from './constants';
 import { setUserDetails } from './userStorage';
@@ -74,6 +83,79 @@ export const formatCheckType = (key?: string | null) => {
   const parts = k.split('_').filter(Boolean);
   return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 };
+
+const SHORT_MONTHS = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+/**
+ * just now / N min ago / N hr ago / N d ago / "3 Jun" / "3 Jun '23" (cross-year)
+ */
+export function formatRelativeTime(dateString?: string | null): string {
+  if (!dateString) return '—';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '—';
+
+  const diffMs = Date.now() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+
+  if (diffMin < 1) return 'just now';
+  if (diffMin < 60) return `${diffMin} min ago`;
+
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr} hr ago`;
+
+  const diffDays = Math.floor(diffHr / 24);
+  if (diffDays <= 6) return `${diffDays} d ago`;
+
+  const now = new Date();
+  const day = date.getDate();
+  const month = SHORT_MONTHS[date.getMonth()];
+  if (date.getFullYear() === now.getFullYear()) return `${day} ${month}`;
+  return `${day} ${month} '${String(date.getFullYear()).slice(-2)}`;
+}
+
+export const ACCOUNT_CHANGED_EVENT = 'upsnap:account-changed';
+
+export function notifyAccountChanged() {
+  window.dispatchEvent(new Event(ACCOUNT_CHANGED_EVENT));
+}
+
+export async function getTokenStatus(force = false): Promise<TokenStatus | null> {
+  try {
+    const result = await request(`/token-status${force ? '?force=true' : ''}`, {
+      method: 'GET',
+    });
+    return result || null;
+  } catch (error) {
+    console.error('Error fetching token status:', error);
+    return null;
+  }
+}
+
+export async function getBillingStatus(force = false): Promise<BillingStatus | null> {
+  try {
+    const result = await request(`/billing-status${force ? '?force=true' : ''}`, {
+      method: 'GET',
+    });
+    return result || null;
+  } catch (error) {
+    console.error('Error fetching billing status:', error);
+    return null;
+  }
+}
+
+export async function getExpirySummary(force = false): Promise<ExpirySummary | null> {
+  try {
+    const result = await request(`/expiry-summary${force ? '?force=true' : ''}`, {
+      method: 'GET',
+    });
+    return result || null;
+  } catch (error) {
+    console.error('Error fetching expiry summary:', error);
+    return null;
+  }
+}
 
 export function formatDateTime(isoTimestamp: string) {
   if (!isoTimestamp) return '-';

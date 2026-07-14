@@ -1,7 +1,12 @@
-import { Typography, Button, Box, Flex, Link } from '@strapi/design-system';
+import { Typography, Button, Box, Flex, Link, SingleSelect, SingleSelectOption } from '@strapi/design-system';
 import { ArrowsCounterClockwise, ArrowLeft } from '@strapi/icons';
 import { RegionsDropdown } from './RegionsDropdown';
 import { Region } from '../utils/types';
+
+interface MonitorOption {
+  id: string;
+  name: string;
+}
 
 interface PageHeaderProps {
   title: string;
@@ -14,6 +19,9 @@ interface PageHeaderProps {
   onRegionChange?: (regionId: string) => void;
   selectedRegions?: Region[];
   showBackButton?: boolean;
+  monitors?: MonitorOption[];
+  selectedMonitorId?: string | null;
+  onMonitorChange?: (monitorId: string) => void;
 }
 
 export default function PageHeader({
@@ -27,6 +35,9 @@ export default function PageHeader({
   onRegionChange,
   selectedRegions = [],
   showBackButton = false,
+  monitors = [],
+  selectedMonitorId = null,
+  onMonitorChange,
 }: PageHeaderProps) {
   // Extract only the hostname (domain) from the URL
   const displayUrl = (() => {
@@ -93,6 +104,22 @@ export default function PageHeader({
             direction={{ initial: 'column', medium: 'row' }}
             gap={4}
           >
+            {monitors.length > 0 && onMonitorChange && (
+              <Box style={{ minWidth: 220 }}>
+                <SingleSelect
+                  aria-label="Select Monitor"
+                  value={selectedMonitorId || ''}
+                  onChange={(val: string | number) => val && onMonitorChange(String(val))}
+                >
+                  {monitors.map((monitor) => (
+                    <SingleSelectOption key={monitor.id} value={monitor.id}>
+                      {monitor.name}
+                    </SingleSelectOption>
+                  ))}
+                </SingleSelect>
+              </Box>
+            )}
+
             {regionsDropdown && onRegionChange && (
               <Box style={{ minWidth: 180 }}>
                 <RegionsDropdown

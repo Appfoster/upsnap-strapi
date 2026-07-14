@@ -18,7 +18,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 import CreateMonitor from './monitors/new';
+import EditMonitor from './monitors/edit';
+import MonitorsPage from './Monitors';
+import NotificationChannelsPage from './NotificationChannels';
 import IncidentsPage from './Incidents';
+import IncidentDetail from './incidents/detail';
+import TokenStatusBanner from '../components/TokenStatusBanner';
+import ExpiryBanner from '../components/ExpiryBanner';
 
 const StyledContainer = styled(ToastContainer)`
   // https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
@@ -44,6 +50,8 @@ const App = () => {
         <Layouts.Header title="Upsnap" subtitle="Website health monitoring" />
         <Layouts.Content>
           <StyledContainer position="top-right" autoClose={3000} />
+          <TokenStatusBanner />
+          <ExpiryBanner />
           <Routes>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -54,10 +62,14 @@ const App = () => {
             <Route path="/domain-check" element={<DomainCheck />} />
             <Route path="/mixed-content" element={<MixedContent />} />
             <Route path="/incidents" element={<IncidentsPage />} />
+            <Route path="/incidents/:incidentId" element={<IncidentDetail />} />
             <Route path="/status-pages" element={<ListStatusPages />} />
             <Route path="/status-pages/new" element={<CreateStatusPage />} />
             <Route path="/status-pages/:id" element={<UpdateStatusPage />} />
+            <Route path="/monitors" element={<MonitorsPage />} />
             <Route path="/monitors/new" element={<CreateMonitor />} />
+            <Route path="/monitors/:id/edit" element={<EditMonitor />} />
+            <Route path="/notification-channels" element={<NotificationChannelsPage />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<Page.Error />} />
           </Routes>

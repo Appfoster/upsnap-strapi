@@ -28,10 +28,27 @@ export default function KeywordInput({
   onMatchAllChange,
 }: KeywordInputProps) {
   const [keywordInput, setKeywordInput] = useState('');
+  const [inputError, setInputError] = useState('');
+
+  const MAX_KEYWORDS = 2;
+  const MAX_KEYWORD_LENGTH = 100;
 
   const handleAddKeyword = () => {
     const trimmedInput = keywordInput.trim();
     if (!trimmedInput) return;
+
+    if (keywords.length >= MAX_KEYWORDS) {
+      setInputError(`Maximum of ${MAX_KEYWORDS} keywords allowed`);
+      return;
+    }
+    if (trimmedInput.length > MAX_KEYWORD_LENGTH) {
+      setInputError(`Keyword must be ${MAX_KEYWORD_LENGTH} characters or fewer`);
+      return;
+    }
+    if (keywords.some((k) => k.text.toLowerCase() === trimmedInput.toLowerCase())) {
+      setInputError('This keyword has already been added');
+      return;
+    }
 
     const newKeyword: Keyword = {
       text: trimmedInput,
@@ -40,6 +57,7 @@ export default function KeywordInput({
       is_regex: false,
     };
 
+    setInputError('');
     onKeywordsChange([...keywords, newKeyword]);
     setKeywordInput('');
   };
@@ -75,6 +93,7 @@ export default function KeywordInput({
           <Flex alignItems="center" gap={3}>
             <Switch
               checked={matchAll}
+              disabled={keywords.length < 2}
               onCheckedChange={(checked: boolean) => onMatchAllChange(checked)}
             />
             <Typography variant="omega" fontWeight="500">
@@ -87,19 +106,26 @@ export default function KeywordInput({
             <TextInput
               type="text"
               placeholder="Enter keyword"
+              maxLength={MAX_KEYWORD_LENGTH}
               value={keywordInput}
-              onChange={(e: any) => setKeywordInput(e.target.value)}
+              onChange={(e: any) => {
+                setKeywordInput(e.target.value);
+                if (inputError) setInputError('');
+              }}
               onKeyDown={handleKeyPress}
             />
           </Box>
-          <Button disabled={!keywordInput.trim()} onClick={handleAddKeyword}>
+          <Button
+            disabled={!keywordInput.trim() || keywords.length >= MAX_KEYWORDS}
+            onClick={handleAddKeyword}
+          >
             Add
           </Button>
         </Flex>
-        {error && (
+        {(inputError || error) && (
           <Box marginTop={2}>
             <Typography variant="omega" textColor="danger600">
-              {error}
+              {inputError || error}
             </Typography>
           </Box>
         )}

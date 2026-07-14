@@ -31,6 +31,33 @@ export default {
     },
     {
       method: 'GET',
+      path: '/token-status',
+      handler: 'settings.getTokenStatus',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/billing-status',
+      handler: 'settings.getBillingStatus',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/expiry-summary',
+      handler: 'settings.getExpirySummary',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
       path: '/monitor/:id',
       handler: 'monitor.getById',
       config: {
@@ -195,6 +222,60 @@ export default {
       method: 'DELETE',
       path: '/status-pages/:id',
       handler: 'statusPage.deleteStatusPages',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/status-pages/:id/upload',
+      handler: 'statusPage.uploadAsset',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/status-pages/:id/upload',
+      handler: 'statusPage.removeAsset',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/status-pages/:id/announcements',
+      handler: 'statusPage.getAnnouncements',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/status-pages/:id/announcements',
+      handler: 'statusPage.createAnnouncement',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/status-pages/:id/announcements/:announcementId',
+      handler: 'statusPage.updateAnnouncement',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/status-pages/:id/announcements/:announcementId',
+      handler: 'statusPage.deleteAnnouncement',
       config: {
         policies: [],
         auth: false,
@@ -375,6 +456,15 @@ export default {
       method: 'POST',
       path: '/monitor/incidents/export',
       handler: 'monitor.exportIncidents',
+      config: {
+        policies: [],
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/monitor/incidents/:incidentId',
+      handler: 'monitor.getIncidentDetail',
       config: {
         policies: [],
         auth: false,

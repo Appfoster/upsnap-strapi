@@ -11,8 +11,9 @@ import {
   Main,
   Badge,
 } from '@strapi/design-system';
-import { useParams, useNavigate } from 'react-router-dom';
-import { formatDate, request, getPrimaryMonitorId } from '../utils/helpers';
+import { useNavigate } from 'react-router-dom';
+import { formatDate, request } from '../utils/helpers';
+import { useMonitorId } from '../hooks/useMonitorId';
 import DetailRow from '../components/reachability/DetailRow';
 import StatusCard from '../components/reachability/StatusCard';
 import LoadingCard from '../components/reachability/LoadingCard';
@@ -27,15 +28,11 @@ export default function MixedContent() {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<MonitorData | null>(null);
   const navigate = useNavigate();
-  const [monitorId, setMonitorId] = useState<string | null>();
+  const monitorId = useMonitorId();
 
   useEffect(() => {
-    (async () => {
-      const fetchedMonitorId = await getPrimaryMonitorId();
-      if (!fetchedMonitorId) navigate('/plugins/upsnap/settings');
-      setMonitorId(fetchedMonitorId);
-    })();
-  }, []);
+    if (monitorId === null) navigate('/plugins/upsnap/settings');
+  }, [monitorId]);
   const getMixedContentData = async (url: string, forceFetch: boolean = false) => {
     try {
       setLoading(true);

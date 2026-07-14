@@ -173,7 +173,10 @@ export const ResponseTimeChart = ({
   return (
     <Box width="100%">
       <Card>
-        <CardHeader display="flex" style={{ justifyContent: 'space-between' }}>
+        <CardHeader
+          display="flex"
+          style={{ justifyContent: 'space-between', flexWrap: 'wrap', rowGap: 8 }}
+        >
           <Typography variant="delta" marginLeft={2} padding={3}>
             Response Time
           </Typography>
