@@ -147,24 +147,26 @@ export const HealthCards = ({ monitorData, isLoading }: Props) => {
     }
   };
   const handleView = async (type: string) => {
+    const monitorId = monitorData?.monitor?.id;
+    const suffix = monitorId ? `?monitorId=${monitorId}` : '';
     switch (type) {
       case 'reachability':
-        navigate('/plugins/upsnap/reachability');
+        navigate(`/plugins/upsnap/reachability${suffix}`);
         break;
       case 'broken_links':
-        navigate('/plugins/upsnap/broken-links');
+        navigate(`/plugins/upsnap/broken-links${suffix}`);
         break;
       case 'security_certificates':
-        navigate('/plugins/upsnap/security-certificates');
+        navigate(`/plugins/upsnap/security-certificates${suffix}`);
         break;
       case 'domain_check':
-        navigate('/plugins/upsnap/domain-check');
+        navigate(`/plugins/upsnap/domain-check${suffix}`);
         break;
       case 'lighthouse':
-        navigate('/plugins/upsnap/lighthouse');
+        navigate(`/plugins/upsnap/lighthouse${suffix}`);
         break;
       case 'mixed_content':
-        navigate('/plugins/upsnap/mixed-content');
+        navigate(`/plugins/upsnap/mixed-content${suffix}`);
         break;
     }
   };

@@ -34,11 +34,9 @@ import { fetchMonitorSettings, request, settingsToConfig } from '../../../utils/
 interface Props {
   monitor?: Monitor | null;
   mode: 'create' | 'edit';
-  handleCancelEdit?: () => void;
-  load?: () => void;
 }
 
-export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: Props) {
+export default function MonitorForm({ monitor, mode }: Props) {
   const [monitorType, setMonitorType] = useState<string>(MONITOR_TYPE.WEBSITE);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -487,9 +485,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
         toast.success(
           mode === 'create' ? 'Monitor created successfully' : 'Monitor updated successfully'
         );
-        if (load) load();
-        if (handleCancelEdit) handleCancelEdit();
-        navigate('/plugins/upsnap/settings');
+        navigate('/plugins/upsnap/monitors');
       } else {
         toast.error(result.monitorsData.data?.message || 'Something went wrong.');
       }
@@ -557,11 +553,7 @@ export default function MonitorForm({ monitor, mode, handleCancelEdit, load }: P
   };
 
   const handleCancel = () => {
-    if (mode === 'edit' && handleCancelEdit) {
-      handleCancelEdit();
-      return;
-    }
-    navigate('/plugins/upsnap/settings');
+    navigate('/plugins/upsnap/monitors');
   };
   return (
     <>

@@ -13,12 +13,13 @@ import { StatisticsCards } from '../components/dashboard/StatisticsCards';
 import { HealthCards } from '../components/dashboard/HealthCards';
 import { ResponseTimeChart } from '../components/dashboard/ResponseTimeChart';
 import { IncidentsTable } from '../components/dashboard/IncidentsTable';
-import { useNavigate } from 'react-router-dom';
-import { RegionsDropdown } from '../components/RegionsDropdown';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 
 import LoadingCard from '../components/reachability/LoadingCard';
 import ShowBlurImage from '../components/ShowBlurImage';
+import SelectPrimaryMonitorAlert from '../components/SelectPrimaryMonitorAlert';
+import { useHasToken } from '../hooks/useHasToken';
 
 export default function Dashboard() {
   const [monitorData, setMonitorData] = useState<MonitorData | null>(null);
@@ -39,12 +40,20 @@ export default function Dashboard() {
     return 'default';
   });
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [monitorId, setMonitorId] = useState<string | null>();
+  const [monitors, setMonitors] = useState<{ id: string; name: string }[]>([]);
   const [showImageBlur, setShowImageBlur] = useState(false);
+  const hasToken = useHasToken();
   const MAX_MONITOR_RETRIES = 3;
 
   useEffect(() => {
     (async () => {
+      const queryMonitorId = searchParams.get('monitorId');
+      if (queryMonitorId) {
+        setMonitorId(queryMonitorId);
+        return;
+      }
       const fetchedMonitorId = await getPrimaryMonitorId();
       if (!fetchedMonitorId) {
         setShowImageBlur(true);
@@ -53,6 +62,17 @@ export default function Dashboard() {
       setMonitorId(fetchedMonitorId);
     })();
   }, []);
+
+  useEffect(() => {
+    request('/monitors', { method: 'GET' }).then((res) => {
+      setMonitors(res?.monitorsData?.data?.monitors || []);
+    });
+  }, []);
+
+  const handleMonitorChange = (newMonitorId: string) => {
+    setMonitorId(newMonitorId);
+    setSearchParams({ monitorId: newMonitorId });
+  };
 
   function getRegionResponseTimeData(): Record<string, RegionResponseTimeData> {
     const rt = responseTimeData?.response_time;
@@ -130,6 +150,17 @@ export default function Dashboard() {
     const monitor = await fetchMonitorDataWithRetry();
     setMonitorData(monitor);
 
+    // Switching monitors can switch which regions are valid — reset to the new
+    // monitor's primary region rather than keep the previous monitor's selection.
+    if (monitor?.monitor.regions && Array.isArray(monitor.monitor.regions)) {
+      const primaryRegion = monitor.monitor.regions.find((r) => r.is_primary);
+      const nextRegion = primaryRegion?.id || 'default';
+      if (nextRegion !== selectedRegion) {
+        setSelectedRegion(nextRegion);
+        return;
+      }
+    }
+
     request(`/monitor/${monitorId}/uptime-stats?region=${selectedRegion}`, {
       method: 'GET',
     }).then((res) => {
@@ -163,25 +194,29 @@ export default function Dashboard() {
         {!monitorData || isLoading ? (
           showImageBlur ? (
             <Flex direction="column" alignItems="center" gap={4} padding={4}>
-              <Alert
-                closeLabel="Close"
-                margin={1}
-                variant="warning"
-                title="Need to register for this feature. Your dashboard will look like this once registered."
-                action={
-                  <Link href="#"  
-                    onClick={(event: any) => {
-                      event.preventDefault();
-                      navigate('/plugins/upsnap/settings');
-                  }}>
-                    Register
-                  </Link>
-                }
-              >
-                Register to unlock complete monitoring insights - last 24-hour histograms, uptime
-                statistics, response time charts, live incident notifications, a public status page,
-                and more.
-              </Alert>
+              {hasToken ? (
+                <SelectPrimaryMonitorAlert />
+              ) : (
+                <Alert
+                  closeLabel="Close"
+                  margin={1}
+                  variant="warning"
+                  title="Need to register for this feature. Your dashboard will look like this once registered."
+                  action={
+                    <Link href="#"
+                      onClick={(event: any) => {
+                        event.preventDefault();
+                        navigate('/plugins/upsnap/settings');
+                    }}>
+                      Register
+                    </Link>
+                  }
+                >
+                  Register to unlock complete monitoring insights - last 24-hour histograms, uptime
+                  statistics, response time charts, live incident notifications, a public status page,
+                  and more.
+                </Alert>
+              )}
               <ShowBlurImage forPage="dashboard" />
             </Flex>
           ) : (
@@ -192,6 +227,9 @@ export default function Dashboard() {
             <PageHeader
               title={'Dashboard'}
               monitorUrl={monitorData?.monitor?.config?.meta?.url || ''}
+              monitors={monitors}
+              selectedMonitorId={monitorId}
+              onMonitorChange={handleMonitorChange}
               regionsDropdown={true}
               selectedRegions={monitorData?.monitor?.regions}
               regionId={selectedRegion}

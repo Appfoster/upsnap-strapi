@@ -39,6 +39,8 @@ import { toast } from 'react-toastify';
 import { ConfirmationModal } from '../../components/DeleteConfirmation';
 import ShowBlurImage from '../../components/ShowBlurImage';
 import LoadingCard from '../../components/reachability/LoadingCard';
+import SelectPrimaryMonitorAlert from '../../components/SelectPrimaryMonitorAlert';
+import { useHasToken } from '../../hooks/useHasToken';
 
 export default function ListStatusPages() {
   const [statusPages, setStatusPages] = useState<any[]>([]);
@@ -49,6 +51,7 @@ export default function ListStatusPages() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const [showImageBlur, setShowImageBlur] = useState(false);
+  const hasToken = useHasToken();
 
   useEffect(() => {
     (async () => {
@@ -180,23 +183,27 @@ export default function ListStatusPages() {
     <>
       {showImageBlur ? (
         <Flex direction="column" alignItems="center" gap={4} padding={4}>
-          <Alert
-            closeLabel=""
-            variant="warning"
-            title="Need to register for this feature. Your status pages will look like this once registered."
-            action={
-              <Link href="#"  
-                onClick={(event: any) => {
-                event.preventDefault();
-                navigate('/plugins/upsnap/settings');
-              }}>
-                Register
-              </Link>
-            }
-          >
-            Register to activate this feature and get a public status page accessible via a
-            shareable link.
-          </Alert>
+          {hasToken ? (
+            <SelectPrimaryMonitorAlert />
+          ) : (
+            <Alert
+              closeLabel=""
+              variant="warning"
+              title="Need to register for this feature. Your status pages will look like this once registered."
+              action={
+                <Link href="#"
+                  onClick={(event: any) => {
+                  event.preventDefault();
+                  navigate('/plugins/upsnap/settings');
+                }}>
+                  Register
+                </Link>
+              }
+            >
+              Register to activate this feature and get a public status page accessible via a
+              shareable link.
+            </Alert>
+          )}
           <ShowBlurImage forPage="status_page" />
         </Flex>
       ) : (

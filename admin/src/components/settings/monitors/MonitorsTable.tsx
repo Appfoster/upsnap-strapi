@@ -14,11 +14,20 @@ import {
   Badge,
   Loader,
   VisuallyHidden,
+  Link,
 } from '@strapi/design-system';
 import { toast } from 'react-toastify';
 import { Pencil, Trash } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
-import { fetchTags, getPrimaryMonitorId, setPrimaryMonitorId } from '../../../utils/helpers';
+import {
+  fetchTags,
+  getPrimaryMonitorId,
+  setPrimaryMonitorId,
+  enrichMonitorWithPrimaryRegionStatus,
+  formatRelativeTime,
+  formatDateTime,
+  request,
+} from '../../../utils/helpers';
 import { Monitor, Tag } from '../../../utils/types';
 
 // ========== Types ==========
@@ -45,9 +54,11 @@ export interface MonitorsTableProps {
   setBulkDeleteIds: any;
 }
 
+const EMPTY_MONITORS: Monitor[] = [];
+
 /* ------------------------------------------------------------------ */
 export default function MonitorsTable({
-  monitors = [],
+  monitors = EMPTY_MONITORS,
   onChange,
   onEdit,
   handleDelete,
@@ -58,11 +69,34 @@ export default function MonitorsTable({
   const isInternalUpdate = useRef(false);
   const [primaryMonitorId, setPrimaryMonitorIdState] = useState<string | null>(null);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [uptimeByMonitor, setUptimeByMonitor] = useState<Record<string, number | null>>({});
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchTags(setLoading, setAvailableTags);
+  }, [monitors]);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(
+      monitors
+        .filter((monitor) => monitor.id)
+        .map((monitor) =>
+          request(`/monitor/${monitor.id}/uptime-stats?region=default`, { method: 'GET' }).then(
+            (res) => [
+              monitor.id,
+              res?.uptimeStatsData?.data?.uptime_stats?.day?.uptime_percentage ?? null,
+            ]
+          )
+        )
+    ).then((entries) => {
+      if (cancelled) return;
+      setUptimeByMonitor(Object.fromEntries(entries));
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [monitors]);
 
   useEffect(() => {
@@ -141,7 +175,7 @@ export default function MonitorsTable({
   return (
     <Box width="100%">
       <Box borderColor="neutral200" hasRadius overflow="auto">
-        <Table colCount={4} rowCount={monitors.length}>
+        <Table colCount={6} rowCount={monitors.length}>
           <Thead>
             <Tr>
               <Th>
@@ -161,6 +195,14 @@ export default function MonitorsTable({
               </Th>
 
               <Th>
+                <Typography>Uptime</Typography>
+              </Th>
+
+              <Th>
+                <Typography>Last Checked</Typography>
+              </Th>
+
+              <Th>
                 <Typography>Status</Typography>
               </Th>
               <Th>
@@ -170,7 +212,13 @@ export default function MonitorsTable({
           </Thead>
 
           <Tbody>
-            {monitors.map((monitor, index) => (
+            {monitors.map((monitor, index) => {
+              const lastCheckedAt =
+                enrichMonitorWithPrimaryRegionStatus(monitor).last_check_at ||
+                monitor.last_checked_at ||
+                null;
+
+              return (
               <Tr key={monitor.id ?? 'default'}>
                 {/* Checkbox */}
                 <Td>
@@ -183,7 +231,14 @@ export default function MonitorsTable({
                 {/* Name + status */}
                 <Td>
                   <Flex gap={2} alignItems="self-start" direction="column">
-                    <Typography fontWeight="semiBold">{monitor.name}</Typography>
+                    <Link
+                      onClick={(e: any) => {
+                        e.preventDefault();
+                        navigate(`/plugins/upsnap/dashboard?monitorId=${monitor.id}`);
+                      }}
+                    >
+                      <Typography fontWeight="semiBold">{monitor.name}</Typography>
+                    </Link>
                     <Flex direction="row" gap={1}>
                       <Badge
                         size="S"
@@ -197,7 +252,7 @@ export default function MonitorsTable({
                         {monitor.config.meta.url}
                       </Typography>
                       {monitor.tag_ids && monitor.tag_ids.length > 0 && (
-                        <Flex wrap="wrap" gap={1} width="300px">
+                        <Flex wrap="wrap" gap={1} width="100%">
                           {monitor.tag_ids.map((tagId) => {
                             const tag = availableTags?.find((tag) => tag.id === tagId);
                             if (!tag) return null;
@@ -220,6 +275,22 @@ export default function MonitorsTable({
                   </Flex>
                 </Td>
 
+                {/* Uptime */}
+                <Td>
+                  <Typography>
+                    {monitor.id && uptimeByMonitor[monitor.id] != null
+                      ? `${uptimeByMonitor[monitor.id]}%`
+                      : '—'}
+                  </Typography>
+                </Td>
+
+                {/* Last checked */}
+                <Td>
+                  <span title={lastCheckedAt ? formatDateTime(lastCheckedAt) : undefined}>
+                    <Typography>{formatRelativeTime(lastCheckedAt)}</Typography>
+                  </span>
+                </Td>
+
                 {/* Channel type */}
                 <Td>
                   <Badge
@@ -230,7 +301,7 @@ export default function MonitorsTable({
                       ? monitor?.service_last_checks?.default?.uptime?.last_status === 'up'
                         ? 'Up'
                         : 'Down'
-                      : 'Inactive'}
+                      : 'Paused'}
                   </Badge>
                 </Td>
                 <Td>
@@ -257,7 +328,8 @@ export default function MonitorsTable({
                   </Flex>
                 </Td>
               </Tr>
-            ))}
+              );
+            })}
           </Tbody>
         </Table>
       </Box>

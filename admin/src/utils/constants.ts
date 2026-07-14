@@ -3,8 +3,18 @@ import { IntervalPartition } from "./types";
 export const PLAN_TYPES = {
   FREE: 'free',
   PRO: 'pro',
+  AGENCY: 'agency',
   TRIAL: 'trial',
 };
+
+export interface BillingLike {
+  planName?: string | null;
+}
+
+export const hasActivePaidPlan = (billing?: BillingLike | null): boolean =>
+  !!billing?.planName && billing.planName !== PLAN_TYPES.FREE;
+
+export const BILLING_UPGRADE_DISMISS_KEY = 'upsnap_expiry_upgrade_banner_dismissed';
 
 export const PLAN_LIMITS = {
   TRIAL: {
@@ -145,12 +155,12 @@ export const PARTITIONS = [
 ];
 
 export const INCIDENT_CHECK_TYPES = {
-  ssl: "Security certificate",
+  ssl: "Security Certificate",
   uptime: "Uptime",
   lighthouse: "Lighthouse",
   domain: "Domain",
-  broken_links: "Broken links",
-  mixed_content: "Mixed content",
+  broken_links: "Broken Links",
+  mixed_content: "Mixed Content",
 };
 
 export const INCIDENTS_EXPORT_TYPES = {
