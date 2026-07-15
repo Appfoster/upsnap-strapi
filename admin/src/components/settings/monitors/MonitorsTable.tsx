@@ -239,20 +239,31 @@ export default function MonitorsTable({
                     >
                       <Typography fontWeight="semiBold">{monitor.name}</Typography>
                     </Link>
-                    <Flex direction="row" gap={1}>
-                      <Badge
-                        size="S"
-                        active={monitor.is_enabled}
-                        textColor="primary500"
-                        background="neutral150"
-                      >
-                        {monitor.service_type}
-                      </Badge>
-                      <Typography variant="pi" textColor="neutral500">
-                        {monitor.config.meta.url}
-                      </Typography>
+                    <Flex direction="column" gap={1} alignItems="flex-start" width="100%">
+                      <Flex direction="row" gap={1} alignItems="center" width="100%">
+                        <Badge
+                          size="S"
+                          active={monitor.is_enabled}
+                          textColor="primary500"
+                          background="neutral150"
+                          shrink={0}
+                          minWidth="fit-content"
+                        >
+                          {monitor.service_type}
+                        </Badge>
+                        <Box maxWidth="320px" overflow="hidden">
+                          <Typography
+                            variant="pi"
+                            textColor="neutral500"
+                            ellipsis
+                            title={monitor.config.meta.url}
+                          >
+                            {monitor.config.meta.url}
+                          </Typography>
+                        </Box>
+                      </Flex>
                       {monitor.tag_ids && monitor.tag_ids.length > 0 && (
-                        <Flex wrap="wrap" gap={1} width="100%">
+                        <Flex wrap="wrap" gap={1}>
                           {monitor.tag_ids.map((tagId) => {
                             const tag = availableTags?.find((tag) => tag.id === tagId);
                             if (!tag) return null;

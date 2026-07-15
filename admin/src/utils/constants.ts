@@ -26,7 +26,7 @@ export const PLAN_LIMITS = {
   },
 };
 
-export const DASHBOARD_URL = 'https://upsnap.ai';
+export const DASHBOARD_URL = 'https://app.upsnap.ai';
 
 export const STATS_PAGE_URL = 'https://stats.upsnap.ai';
 

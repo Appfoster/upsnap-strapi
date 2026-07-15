@@ -149,7 +149,7 @@ export default function IncidentDetail() {
             </Typography>
           </Flex>
           <Badge
-            size="L"
+            size="M"
             backgroundColor={isResolved ? 'success100' : 'danger100'}
             textColor={isResolved ? 'success700' : 'danger700'}
           >
@@ -191,7 +191,7 @@ export default function IncidentDetail() {
                       Suggested Actions
                     </Typography>
                     <Divider marginTop={3} marginBottom={3} />
-                    <Box as="ol" style={{ paddingLeft: 20 }}>
+                    <Box tag="ol" style={{ paddingLeft: 20 }}>
                       {incident.suggested_actions.map((action, idx) => (
                         <li key={idx}>
                           <Typography variant="omega">{action}</Typography>
@@ -221,7 +221,7 @@ export default function IncidentDetail() {
                         <Typography variant="delta" fontWeight="bold">
                           Likely Causes
                         </Typography>
-                        <Box as="ul" style={{ paddingLeft: 20 }}>
+                        <Box tag="ul" style={{ paddingLeft: 20 }}>
                           {aiSummary.likely_causes.map((cause, idx) => (
                             <li key={idx}>
                               <Typography variant="omega">{cause}</Typography>
@@ -235,7 +235,7 @@ export default function IncidentDetail() {
                         <Typography variant="delta" fontWeight="bold">
                           What To Check
                         </Typography>
-                        <Box as="ul" style={{ paddingLeft: 20 }}>
+                        <Box tag="ul" style={{ paddingLeft: 20 }}>
                           {aiSummary.what_to_check.map((item, idx) => (
                             <li key={idx}>
                               <Typography variant="omega">{item}</Typography>
