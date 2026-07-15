@@ -66,32 +66,32 @@ export default function CustomizationTab({
           Header
         </Typography>
         <Flex direction="column" gap={4} marginTop={3} alignItems="stretch">
-          <Field.Root>
+          <Field.Root hint={`${value.header.title.length}/${FIELD_LIMITS.title}`}>
             <Field.Label>Page Title</Field.Label>
             <Field.Input
               value={value.header.title}
               maxLength={FIELD_LIMITS.title}
               onChange={(e: any) => updateHeader('title', e.target.value)}
             />
-            <Field.Hint>{value.header.title.length}/{FIELD_LIMITS.title}</Field.Hint>
+            <Field.Hint />
           </Field.Root>
-          <Field.Root>
+          <Field.Root hint={`${value.header.company_name.length}/${FIELD_LIMITS.company_name}`}>
             <Field.Label>Company Name</Field.Label>
             <Field.Input
               value={value.header.company_name}
               maxLength={FIELD_LIMITS.company_name}
               onChange={(e: any) => updateHeader('company_name', e.target.value)}
             />
-            <Field.Hint>{value.header.company_name.length}/{FIELD_LIMITS.company_name}</Field.Hint>
+            <Field.Hint />
           </Field.Root>
-          <Field.Root>
+          <Field.Root hint={`${value.header.description.length}/${FIELD_LIMITS.description}`}>
             <Field.Label>Header Description</Field.Label>
             <Textarea
               value={value.header.description}
               maxLength={FIELD_LIMITS.description}
               onChange={(e: any) => updateHeader('description', e.target.value)}
             />
-            <Field.Hint>{value.header.description.length}/{FIELD_LIMITS.description}</Field.Hint>
+            <Field.Hint />
           </Field.Root>
         </Flex>
       </Box>

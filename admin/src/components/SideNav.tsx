@@ -114,9 +114,11 @@ const SideNav = () => {
             {to === 'monitors' && paid === true && downCount > 0 && (
               <Box position="absolute" top="0.2rem" right="1.2rem">
                 <Tooltip label={`${downCount} monitor${downCount === 1 ? '' : 's'} down`}>
-                  <Badge size="S" textColor="neutral0" background="danger600">
-                    {downCount}
-                  </Badge>
+                  <span style={{ display: 'inline-flex', cursor: 'default' }}>
+                    <Badge size="S" textColor="neutral0" background="danger600">
+                      {downCount}
+                    </Badge>
+                  </span>
                 </Tooltip>
               </Box>
             )}

@@ -303,12 +303,15 @@ export const RegionsMultiSelect: React.FC<RegionsMultiSelectProps> = ({
                     >
                       <Checkbox
                         checked={isSelected}
-                        onChange={() => handleToggleRegion(region.id)}
+                        onCheckedChange={() => handleToggleRegion(region.id)}
                       />
 
                       <Typography flex="1">{region.name || region.id}</Typography>
 
-                      <Checkbox checked={isPrimary} onChange={() => handleSetPrimary(region.id)}>
+                      <Checkbox
+                        checked={isPrimary}
+                        onCheckedChange={() => handleSetPrimary(region.id)}
+                      >
                         Primary
                       </Checkbox>
                     </Flex>

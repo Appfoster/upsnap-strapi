@@ -371,7 +371,7 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
                         />
                         <Field.Error />
                       </Field.Root>
-                      <Field.Root>
+                      <Field.Root hint={`${customization.password_prompt.length}/100`}>
                         <Field.Label>Password Prompt Message</Field.Label>
                         <Textarea
                           value={customization.password_prompt}
@@ -380,7 +380,7 @@ export default function CreateUpdateForm({ statusPage, mode }: Props) {
                             setCustomization((prev) => ({ ...prev, password_prompt: e.target.value }))
                           }
                         />
-                        <Field.Hint>{customization.password_prompt.length}/100</Field.Hint>
+                        <Field.Hint />
                       </Field.Root>
                     </Flex>
                   )}
