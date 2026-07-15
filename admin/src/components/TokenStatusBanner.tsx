@@ -14,6 +14,7 @@ const STATUS_MESSAGES: Record<string, string> = {
 
 export default function TokenStatusBanner() {
   const [tokenStatus, setTokenStatus] = useState<TokenStatus | null>(null);
+  const [dismissed, setDismissed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function TokenStatusBanner() {
   }, []);
 
   if (
+    dismissed ||
     !tokenStatus?.hasToken ||
     !tokenStatus.status ||
     tokenStatus.status === 'active' ||
@@ -37,6 +39,7 @@ export default function TokenStatusBanner() {
     <Box paddingLeft={4} paddingRight={4} paddingTop={2}>
       <Alert
         closeLabel="Close"
+        onClose={() => setDismissed(true)}
         variant="danger"
         title="Action required"
         action={

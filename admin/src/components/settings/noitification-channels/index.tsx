@@ -369,7 +369,7 @@ const IntegrationsPage: React.FC = () => {
   };
 
   return (
-    <Box padding={2}>
+    <Box padding={4}>
       <Flex
         direction={{ initial: 'column', medium: 'row' }}
         alignItems="stretch"

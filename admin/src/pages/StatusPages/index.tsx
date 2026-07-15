@@ -180,9 +180,9 @@ export default function ListStatusPages() {
   };
 
   return (
-    <>
+    <Box padding={4}>
       {showImageBlur ? (
-        <Flex direction="column" alignItems="center" gap={4} padding={4}>
+        <Flex direction="column" alignItems="center" gap={4}>
           {hasToken ? (
             <SelectPrimaryMonitorAlert />
           ) : (
@@ -377,6 +377,6 @@ export default function ListStatusPages() {
           </Card>
         </>
       )}
-    </>
+    </Box>
   );
 }
