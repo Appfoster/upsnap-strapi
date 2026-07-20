@@ -1,5 +1,10 @@
-// export const BACKEND_URL = 'https://api.upsnap.ai/v1';
-export const BACKEND_URL = 'https://upsnap-api.appfoster.site/v1';
+// Upsnap API base URL. Resolved at runtime from the host Strapi app's
+// environment so builds/publishes never bake in a specific environment.
+// Override via the host app's .env, e.g. UPSNAP_API_URL=https://your-upsnap-api.example.com/v1
+export const BACKEND_URL = (process.env.UPSNAP_API_URL || 'https://api.upsnap.ai/v1').replace(
+  /\/+$/,
+  ''
+);
 
 export const IP_API_BASE_URL = 'https://ipapi.co';
 
