@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Widget } from '@strapi/admin/strapi-admin';
-import { Badge, Box, Flex, IconButton, Link, TextInput, Typography } from '@strapi/design-system';
-import { Cross, Search, WarningCircle } from '@strapi/icons';
+import { Badge, Box, Flex, Link, TextInput, Typography } from '@strapi/design-system';
+import { Lock, Search } from '@strapi/icons';
 import { useNavigate } from 'react-router-dom';
 import {
   ACCOUNT_CHANGED_EVENT,
@@ -10,7 +10,7 @@ import {
   getBillingStatus,
   request,
 } from '../../utils/helpers';
-import { BILLING_UPGRADE_DISMISS_KEY, DASHBOARD_URL, hasActivePaidPlan } from '../../utils/constants';
+import { DASHBOARD_URL, hasActivePaidPlan } from '../../utils/constants';
 import { Monitor, HistogramPoint } from '../../utils/types';
 import { PLUGIN_ID } from '../../pluginId';
 import { HistogramChart } from '../dashboard/Histogram';
@@ -38,28 +38,28 @@ function getMonitorStatus(monitor: Monitor): Status {
   return enrichMonitorWithPrimaryRegionStatus(monitor).last_status === 'up' ? 'up' : 'down';
 }
 
-function UpgradeStrip({ onDismiss }: { onDismiss: () => void }) {
+function ProGate() {
   return (
     <Flex
-      background="alternative600"
-      padding={2}
-      borderRadius="4px"
-      justifyContent="space-between"
+      direction="column"
       alignItems="center"
-      gap={2}
+      justifyContent="center"
+      gap={3}
+      height="100%"
+      padding={6}
     >
-      <Flex gap={2} alignItems="center">
-        <WarningCircle fill="neutral0" width="1rem" height="1rem" />
-        <Typography variant="pi" textColor="neutral0">
-          Live monitor status is a Pro feature.{' '}
-          <Link href={DASHBOARD_URL} isExternal color="neutral0" style={{ textDecoration: 'underline' }}>
-            Upgrade now →
-          </Link>
+      <Lock fill="primary600" width="2rem" height="2rem" />
+      <Flex direction="column" alignItems="center" gap={1}>
+        <Typography variant="delta" textAlign="center">
+          Live monitor status is a Pro feature
+        </Typography>
+        <Typography variant="pi" textColor="neutral600" textAlign="center">
+          Upgrade your plan to see the real-time status of your monitors here.
         </Typography>
       </Flex>
-      <IconButton label="Close" variant="ghost" onClick={onDismiss}>
-        <Cross fill="neutral0" />
-      </IconButton>
+      <Link href={DASHBOARD_URL} isExternal>
+        Upgrade now →
+      </Link>
     </Flex>
   );
 }
@@ -74,14 +74,11 @@ export function MonitorStatusWidget() {
   const [search, setSearch] = useState('');
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [paid, setPaid] = useState<boolean | null>(null);
-  const [dismissedUpgrade, setDismissedUpgrade] = useState(
-    () => sessionStorage.getItem(BILLING_UPGRADE_DISMISS_KEY) === 'true'
-  );
+  const [billingResolved, setBillingResolved] = useState(false);
   const [accountTick, setAccountTick] = useState(0);
 
   useEffect(() => {
     const handler = () => {
-      setDismissedUpgrade(false);
       setAccountTick((tick) => tick + 1);
     };
     window.addEventListener(ACCOUNT_CHANGED_EVENT, handler);
@@ -90,8 +87,11 @@ export function MonitorStatusWidget() {
 
   useEffect(() => {
     let cancelled = false;
+    setBillingResolved(false);
     getBillingStatus().then((billing) => {
-      if (!cancelled) setPaid(billing?.hasToken ? hasActivePaidPlan(billing) : null);
+      if (cancelled) return;
+      setPaid(billing?.hasToken ? hasActivePaidPlan(billing) : null);
+      setBillingResolved(true);
     });
     return () => {
       cancelled = true;
@@ -153,7 +153,8 @@ export function MonitorStatusWidget() {
   }, [monitors, statusFilter, sortKey, search, extras]);
 
   if (error) return <Widget.Error />;
-  if (!monitors) return <Widget.Loading />;
+  if (!monitors || !billingResolved) return <Widget.Loading />;
+  if (paid === false) return <ProGate />;
   if (monitors.length === 0) return <Widget.NoData>No monitors yet</Widget.NoData>;
 
   const counts = monitors.reduce(
@@ -166,14 +167,6 @@ export function MonitorStatusWidget() {
 
   return (
     <Flex direction="column" alignItems="stretch" gap={2} height="100%">
-      {paid === false && !dismissedUpgrade && (
-        <UpgradeStrip
-          onDismiss={() => {
-            sessionStorage.setItem(BILLING_UPGRADE_DISMISS_KEY, 'true');
-            setDismissedUpgrade(true);
-          }}
-        />
-      )}
       <Typography variant="pi" textColor="neutral500">
         {monitors.length} monitor{monitors.length === 1 ? '' : 's'} · {counts.up} up ·{' '}
         {counts.down} down · {counts.paused} paused
